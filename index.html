@@ -822,93 +822,28 @@ async function savePresencesTurno(turno){
 // GÉRANT: PROTOCOLES
 // ============================================================
 function renderProtocoles(){
-  const sec=(id,icon,titleFr,titleAr,content)=>`<div class="card" id="manual-${id}" style="margin-bottom:8px">
-    <h3 style="cursor:pointer;font-size:.9rem" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'':'none'">
-      ${icon} ${titleFr} <span class="tri-ar">${titleAr}</span> <span style="font-size:.7rem;color:var(--tx3);margin-left:auto">▼</span>
-    </h3>
-    <div style="font-size:.82rem;line-height:1.6;color:var(--tx)">${content}</div>
-  </div>`;
-
   document.getElementById('p-protocoles').innerHTML=`
-    <div class="section-header"><h2>Manuel du Gerant<span class="tri-ar">دليل المسؤول</span><span class="tri-es">Manual del Gerente</span></h2></div>
+    <div class="section-header"><h2>Protocoles<span class="tri-ar">البروتوكولات</span></h2></div>
 
-    ${sec('intro','📱','Pourquoi cette app existe','علاش هاد التطبيق كاين',`
-      <p>Cette app remplace le papier et le WhatsApp. Tout ce qui se passe dans ton local est enregistre : qui a travaille, qui etait absent, quel uniforme a chacun, quand le planning a ete publie.</p>
-      <p><strong>Direction voit tout en temps reel.</strong> Tu es responsable de maintenir ces donnees a jour.</p>
-      <p class="tri-ar">هاد التطبيق كيعوّض الورقة والواتساب. كلشي اللي كيوقع فاللوكال ديالك كيتسجّل : شكون خدم، شكون غاب، شنو ديال اللباس عند كل واحد. الإدارة كتشوف كلشي فالوقت الحقيقي. نتا المسؤول باش تبقى المعلومات صحيحة.</p>
-    `)}
+    <div style="text-align:center;padding:30px 10px">
+      <div style="font-size:2.5rem;margin-bottom:12px">🎓</div>
+      <h3 style="font-size:1.1rem;margin-bottom:8px">Demonstration complete<span class="tri-ar">الجولة الكاملة</span></h3>
+      <p style="font-size:.82rem;color:var(--tx2);max-width:360px;margin:0 auto 16px">Apprenez a utiliser toute l'application en 5 minutes. Le tour vous guide pas a pas dans chaque section.<span class="tri-ar">تعلّم تستعمل التطبيق كامل ف5 دقائق. الجولة كتوجّهك خطوة بخطوة.</span></p>
+      <button class="btn-cta" onclick="startFullDemo()" style="padding:16px 40px;font-size:1rem">
+        Demarrer la demonstration<br><span style="font-size:.85em;opacity:.8">بدا الجولة الكاملة</span>
+      </button>
+    </div>
 
-    ${sec('equipe','👥','Ton equipe — la base de tout','الفريق ديالك — الأساس ديال كلشي',`
-      <p><strong>Qu'est-ce que c'est :</strong> La liste officielle des personnes qui travaillent dans ton local.</p>
-      <p><strong>Pourquoi c'est important :</strong> Si quelqu'un n'est pas ici, il n'existe pas dans le systeme. Il n'apparait pas dans les presences, ni dans le planning.</p>
-      <p><strong style="color:var(--gn)">+ Employe</strong> : Ajoute quelqu'un le premier jour ou il arrive. Pas apres.</p>
-      <p><strong style="color:var(--ac2)">Modifier</strong> : Corrige le nom, le poste ou la date si tu t'es trompe.</p>
-      <p><strong style="color:var(--rd)">Desactiver</strong> : Quand quelqu'un part. Ne le supprime JAMAIS — desactive-le. Son historique est conserve.</p>
-      <p style="color:var(--rd)"><strong>⚠️ Si tu ne le fais pas :</strong> Le systeme a des donnees fausses. Direction voit des chiffres qui ne correspondent pas a la realite.</p>
-      <p class="tri-ar">هادي ليست الموظفين الرسمية. إلا ما كانش شي واحد هنا، ما كاينش فالسيستم. زيدو أول يوم كيجي. عدّلو إلا غلطتي. نحّيه (ما تمسحوش) ملي كيمشي. إلا ما درتش هادشي، الإدارة كتشوف أرقام غالطة.</p>
-    `)}
-
-    ${sec('presences','📋','Presences — le registre le plus important','الحضور — أهم تسجيل فاليوم',`
-      <p><strong>Qu'est-ce que c'est :</strong> La preuve que chaque personne a travaille ce jour-la.</p>
-      <p><strong>Pourquoi c'est important :</strong> C'est la base pour calculer les jours travailles, les absences et les paies.</p>
-      <p><strong style="color:var(--gn)">Turno Matin (08:00 – 16:30)</strong> : Coche qui est venu le matin. Cloture AVANT 16:30.</p>
-      <p><strong style="color:var(--or)">Turno Soir (16:00 – 03:30)</strong> : Coche qui est venu le soir. Cloture AVANT 03:30.</p>
-      <p>✅ Checkbox vert = present. ☐ Sans coche = absent (choisis le motif).</p>
-      <p>🔒 <strong>Cloturer</strong> : Ferme le turno definitivement. UNE SEULE FOIS par turno par jour. Si tu te trompes, contacte RH.</p>
-      <p style="color:var(--rd)"><strong>⚠️ Si tu ne le fais pas :</strong> Direction recoit une alerte. RH te contacte. Les donnees du jour sont perdues.</p>
-      <p class="tri-ar">الحضور هو الدليل أن كل واحد خدم ذاك النهار. الصباح: سكّر قبل 16:30. العشية: سكّر قبل 03:30. ✅ = حاضر. ☐ = غايب. الإغلاق مرة وحدة فاليوم. إلا ما سكّرتيش، الإدارة كتلقا إنذار و RH كيتواصل معاك.</p>
-    `)}
-
-    ${sec('planning','📅','Planning — le programme de la semaine','البلانينغ — برنامج السيمانة',`
-      <p><strong>Qu'est-ce que c'est :</strong> L'affectation des turnos pour chaque employe pendant 7 jours.</p>
-      <p><strong>Pourquoi c'est important :</strong> Sans planning publie, les presences ne peuvent pas etre divisees en Matin/Soir.</p>
-      <p><strong>Quand :</strong> Le dimanche avant 00:00 (limite absolue : lundi 03:00).</p>
-      <p><strong>Comment :</strong> Clique sur chaque case :<br>
-        <span style="color:var(--gn)">■ M</span> = Matin &nbsp; <span style="color:var(--or)">■ S</span> = Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> = Repos</p>
-      <p><strong>Enregistrer</strong> : Sauvegarde un brouillon (personne ne le voit).</p>
-      <p><strong style="color:var(--ac2)">Publier</strong> : Rend le planning officiel. Alimente automatiquement les presences Matin/Soir de toute la semaine.</p>
-      <p style="color:var(--rd)"><strong>⚠️ Si tu ne publies pas :</strong> Alerte rouge pour toi, RH et Direction. Ton equipe ne sait pas ses turnos.</p>
-      <p class="tri-ar">البلانينغ هو توزيع الشيفتات على 7 أيام. بلا بلانينغ، الحضور ما يمكنش يتقسّم. نشرو نهار الحد قبل نص الليل. M = صباح، S = عشية، OFF = راحة. إلا ما نشرتيش، إنذار أحمر للجميع.</p>
-    `)}
-
-    ${sec('absences','📝','Absences — quand quelqu\'un ne vient pas','الغياب — ملي شي واحد ما جاش',`
-      <p><strong>Pourquoi c'est important :</strong> Difference entre une falta justifiee et injustifiee. Protege le local legalement.</p>
-      <p><strong>Motifs :</strong> Maladie, Personnel, Sans preavis, Autre.</p>
-      <p style="color:var(--rd)"><strong>"Sans preavis"</strong> est le plus grave : genere une alerte immediate pour RH et Direction.</p>
-      <p><strong>⚠️ Si tu ne le registres pas :</strong> L'absence reste sans motif. Ca peut sembler une erreur du systeme.</p>
-      <p class="tri-ar">الغياب خاصك تسجّلو مع السبب. "بلا ما خبّر" هو أخطر حاجة وكيطلع إنذار فوري ل RH والإدارة.</p>
-    `)}
-
-    ${sec('uniformes','👕','Uniformes — controle de la ropa','اللباس — مراقبة ديال لحوايج',`
-      <p><strong>Pourquoi c'est important :</strong> Les uniformes coutent de l'argent. Il faut les recuperer quand quelqu'un part.</p>
-      <p><strong>Nouvelle piece</strong> : Cree un type de vetement (t-shirt, tablier, casquette...).</p>
-      <p><strong>Attribuer</strong> : Donne une piece a un employe avec la taille et la date.</p>
-      <p><strong>Marquer retour</strong> : Quand l'employe rend l'uniforme en partant.</p>
-      <p style="color:var(--or)"><strong>IMPORTANT :</strong> Un employe desactive ne disparait PAS de la liste Uniformes tant qu'il n'a pas tout rendu.</p>
-      <p style="color:var(--rd)"><strong>⚠️ Si tu ne fais pas le suivi :</strong> RH recoit une alerte. Le cout de l'uniforme reste non recupere.</p>
-      <p class="tri-ar">اللباس كيكلّف الفلوس. خاصك ترجّعو ملي كيمشي شي واحد. الموظف اللي مشا ما كيتنحاش من اللباس حتى يرجّع كلشي.</p>
-    `)}
-
-    ${sec('demandes','📤','Demandes — demander du renfort','الطلبات — طلب التعزيزات',`
-      <p><strong>Pourquoi c'est important :</strong> Laisse une trace officielle. <strong style="color:var(--rd)">N'utilise JAMAIS WhatsApp pour ca.</strong></p>
-      <p>Urgence haute ou urgente : RH recoit une alerte immediate.</p>
-      <p class="tri-ar">هاد الطلب رسمي وكيبقا مسجّل. <strong>ما تستعملش الواتساب لهادشي.</strong> الاستعجال العالي كيطلع إنذار فوري ل RH.</p>
-    `)}
-
-    ${sec('regles','⭐','Les regles d\'or du gerant','القواعد الذهبية ديال المسؤول',`
-      <div style="display:grid;gap:8px">
-        <div style="padding:8px;background:var(--s2);border-radius:6px">📅 <strong>Dimanche avant 00:00</strong> : Publier le planning de la semaine suivante<br><span class="tri-ar">الحد قبل نص الليل : نشر البلانينغ</span></div>
-        <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ <strong>Chaque jour avant 16:30</strong> : Cloturer les presences Matin<br><span class="tri-ar">كل نهار قبل 16:30 : سكّر حضور الصباح</span></div>
-        <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 <strong>Chaque jour avant 03:30</strong> : Cloturer les presences Soir<br><span class="tri-ar">كل نهار قبل 03:30 : سكّر حضور العشية</span></div>
-        <div style="padding:8px;background:var(--s2);border-radius:6px">🆕 <strong>Nouvel employe arrive</strong> : L'ajouter a Equipe le meme jour<br><span class="tri-ar">موظف جديد جا : زيدو فالفريق نفس النهار</span></div>
-        <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 <strong>Employe part</strong> : Desactiver + enregistrer retour uniforme<br><span class="tri-ar">موظف مشا : نحّيه + سجّل رجوع اللباس</span></div>
-        <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 <strong>JAMAIS WhatsApp</strong> pour demander du personnel → utilise Demandes<br><span class="tri-ar">ما تستعملش الواتساب باش تطلب موظفين → استعمل الطلبات</span></div>
+    <div class="card" style="margin-top:10px">
+      <h3 style="font-size:.88rem">⭐ Regles d'or du gerant <span class="tri-ar">القواعد الذهبية</span></h3>
+      <div style="display:grid;gap:6px;font-size:.82rem;margin-top:8px">
+        <div style="padding:8px;background:var(--s2);border-radius:6px">📅 <strong>Dimanche avant 00:00</strong> : Publier le planning<span class="tri-ar">الحد قبل نص الليل : نشر البلانينغ</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ <strong>Chaque jour avant 16:30</strong> : Cloturer Matin<span class="tri-ar">كل نهار قبل 16:30 : سكّر الصباح</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 <strong>Chaque jour avant 03:30</strong> : Cloturer Soir<span class="tri-ar">كل نهار قبل 03:30 : سكّر العشية</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">🆕 <strong>Nouvel employe</strong> : Ajouter le jour meme<span class="tri-ar">موظف جديد : زيدو نفس النهار</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 <strong>Employe part</strong> : Desactiver + retour uniforme<span class="tri-ar">موظف مشا : نحّيه + رجّع اللباس</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 <strong>JAMAIS WhatsApp</strong> pour du personnel → Demandes<span class="tri-ar">ما تستعملش الواتساب → استعمل الطلبات</span></div>
       </div>
-    `)}
-
-    <div style="margin-top:16px;text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-      <button class="btn btn-g" onclick="restartTour()" style="padding:8px 20px">Revoir le tour / الجولة من جديد</button>
-      <button class="btn btn-p" onclick="startDemoTour()" style="padding:8px 20px">Demonstration complete / جولة كاملة</button>
     </div>
   `;
 }
@@ -1926,80 +1861,133 @@ function hb(key){return `<button class="help-btn" onclick="event.stopPropagation
 // ============================================================
 // NIVEL 2 — INTERACTIVE GUIDED TOUR (with action prompts)
 // ============================================================
-const TOUR_STEPS=[
-  {sel:'button[data-idx="0"]',t:'1/6 — Equipe / الفريق',
-    d:'Ici vous gerez votre equipe. <strong>Essayez : cliquez sur le bouton "+ Employe" pour voir le formulaire.</strong>',
-    a:'هنا كتدبّر الفريق ديالك. <strong>جرّب : ضغط على "+ موظف" باش تشوف الفورمولير.</strong>',
-    action:()=>document.querySelector('button[data-idx="0"]')?.click()},
-  {sel:'button[data-idx="1"]',t:'2/6 — Presences / الحضور',
-    d:'Chaque jour vous pointez qui est venu. <strong>Matin: 08:00–16:30 / Soir: 16:00–03:30.</strong> Cochez ✅ = present, decochez = absent.',
-    a:'كل نهار كتسجّل شكون جا. <strong>الصباح: 08:00–16:30 / العشية: 16:00–03:30.</strong> علّم ✅ = حاضر، نحي = غايب.',
-    action:()=>document.querySelector('button[data-idx="1"]')?.click()},
-  {sel:'button[data-idx="2"]',t:'3/6 — Planning / البلانينغ',
-    d:'Le dimanche, planifiez la semaine suivante. <strong>Cliquez sur les cases pour choisir M/S/OFF.</strong> Publiez avant minuit.',
-    a:'نهار الحد خطّط السيمانة الجاية. <strong>ضغط على الخانات باش تختار صباح/عشية/راحة.</strong> نشر قبل نص الليل.',
-    action:()=>document.querySelector('button[data-idx="2"]')?.click()},
-  {sel:'button[data-idx="3"]',t:'4/6 — Absences / الغياب',
-    d:'Signalez les absences avec le motif. <strong>Cliquez "+ Absence" pour voir le formulaire.</strong>',
-    a:'بلّغ على الغياب مع السبب. <strong>ضغط "+ غياب" باش تشوف الفورمولير.</strong>',
-    action:()=>document.querySelector('button[data-idx="3"]')?.click()},
-  {sel:'button[data-idx="5"]',t:'5/6 — Uniformes / اللباس',
-    d:'Controlez qui a un uniforme et qui l\'a rendu. Quand un employe part, <strong>marquez "Retour"</strong> avant de le desactiver.',
-    a:'تابع شكون عندو لباس وشكون رجّعو. ملي كيمشي شي واحد، <strong>سجّل "رجوع"</strong> قبل ما تنحيه.',
-    action:()=>document.querySelector('button[data-idx="5"]')?.click()},
-  {sel:'button[data-idx="6"]',t:'6/6 — Protocoles / البروتوكولات',
-    d:'Toutes les regles sont ici. <strong>Vous pouvez relancer ce tour a tout moment depuis cette page.</strong> Bonne gestion !',
-    a:'كل القواعد هنا. <strong>تقدر ترجع تشوف هاد الجولة وقتما بغيت من هاد الصفحة.</strong> تدبير مزيان!',
-    action:()=>document.querySelector('button[data-idx="6"]')?.click()},
+// ============================================================
+// FULL INTERACTIVE DEMO TOUR (8 steps)
+// ============================================================
+const DEMO_STEPS=[
+  {type:'center',t:'Bienvenue / مرحبا',
+    d:`<p style="font-size:.9rem">Bienvenue sur <strong>Tima RRHH</strong>.</p>
+<p>Cette app gere tout ton local : equipe, horaires, presences et uniformes. <strong>Direction voit tout en temps reel.</strong> Tu es responsable de maintenir les donnees a jour.</p>
+<p>Ce tour t'enseigne tout en 5 minutes.</p>`,
+    a:'مرحبا ف Tima RRHH. هاد التطبيق كيدبّر كلشي فاللوكال ديالك. الإدارة كتشوف كلشي. هاد الجولة غادي تعلّمك كلشي ف5 دقائق.',
+    btn:'Commencer / نبداو'},
+  {type:'tab',tab:0,sel:'.btn-p',t:'1/7 — Equipe / الفريق',
+    d:`<p><strong>Ton equipe est la base de tout.</strong> Si quelqu'un n'est pas ici, il n'existe pas dans le systeme.</p>
+<p style="color:var(--gn)"><strong>+ Employe</strong> : Ajoute chaque personne le premier jour ou elle arrive.</p>
+<p style="color:var(--ac2)"><strong>Modifier</strong> : Corrige nom, poste ou date.</p>
+<p style="color:var(--rd)"><strong>Desactiver</strong> : Quand quelqu'un part. Ne le supprime JAMAIS.</p>
+<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne le fais pas : Direction voit des chiffres faux.</p>`,
+    a:'الفريق هو الأساس. كل موظف جديد خاصك تزيدو هنا أول نهار. ملي كيمشي شي واحد نحّيه (ما تمسحوش). إلا ما درتش هادشي الإدارة كتشوف أرقام غالطة.'},
+  {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'2/7 — Presences / الحضور',
+    d:`<p><strong>Le registre le plus important du jour.</strong> La preuve que chaque personne a travaille.</p>
+<p><span style="color:var(--gn)">☀️ Matin : 08:00 – 16:30</span> &nbsp; <span style="color:var(--or)">🌙 Soir : 16:00 – 03:30</span></p>
+<p>✅ = present &nbsp; ☐ = absent (choisis le motif)</p>
+<p>🔒 <strong>Cloturer</strong> : UNE seule fois par turno. Si tu te trompes, contacte RH.</p>
+<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne le fais pas : Direction recoit alerte, donnees du jour perdues.</p>`,
+    a:'الحضور هو أهم حاجة فاليوم. الصباح سكّرو قبل 16:30، العشية قبل 03:30. ✅ = حاضر. ☐ = غايب. الإغلاق مرة وحدة. إلا ما سكّرتيش الإدارة كتلقا إنذار.'},
+  {type:'tab',tab:2,sel:'.plan-grid,.config-box',t:'3/7 — Planning / البلانينغ',
+    d:`<p><strong>Le programme des shifts pour 7 jours.</strong> Sans planning, les presences ne se divisent pas en Matin/Soir.</p>
+<p>📅 <strong>Deadline : dimanche avant 00:00</strong> (limite absolue lundi 03:00).</p>
+<p>Clic sur chaque case : <span style="color:var(--gn)">■ M</span> Matin &nbsp; <span style="color:var(--or)">■ S</span> Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> Repos</p>
+<p><strong>Enregistrer</strong> = brouillon. <strong style="color:var(--ac2)">Publier</strong> = officiel → alimente les presences automatiquement.</p>
+<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne publies pas : alerte rouge pour toi, RH et Direction.</p>`,
+    a:'البلانينغ ديال السيمانة. نشرو الحد قبل نص الليل. M = صباح، S = عشية، OFF = راحة. إلا ما نشرتيش إنذار أحمر للجميع.'},
+  {type:'tab',tab:3,sel:'.btn-p',t:'4/7 — Absences / الغياب',
+    d:`<p>Quand quelqu'un ne vient pas, <strong>enregistre-le avec le motif</strong>.</p>
+<p>Motifs : Maladie, Personnel, <strong style="color:var(--rd)">Sans preavis</strong> (le plus grave → alerte immediate RH + Direction), Autre.</p>
+<p>Ca protege ton local legalement et permet a RH de suivre.</p>
+<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne le registres pas : l'absence reste sans motif.</p>`,
+    a:'ملي شي واحد ما جاش سجّلو مع السبب. "بلا ما خبّر" هو أخطر حاجة. كيطلع إنذار فوري.'},
+  {type:'tab',tab:5,sel:'.btn-p',t:'5/7 — Uniformes / اللباس',
+    d:`<p><strong>Controle ce que chaque employe a recu.</strong> Les uniformes coutent de l'argent.</p>
+<p>Quand quelqu'un part → <strong>Marquer retour</strong> avant de desactiver.</p>
+<p style="color:var(--or)">Un employe desactive ne disparait PAS tant qu'il n'a pas rendu l'uniforme.</p>
+<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne fais pas le suivi : RH recoit alerte, cout non recupere.</p>`,
+    a:'تابع اللباس ديال كل واحد. ملي كيمشي شي واحد سجّل الرجوع قبل ما تنحيه. ما كيتنحاش حتى يرجّع كلشي.'},
+  {type:'tab',tab:4,sel:'.btn-cta',t:'6/7 — Demandes / الطلبات',
+    d:`<p>Quand tu as besoin de renfort, <strong>demande-le ICI — jamais par WhatsApp</strong>.</p>
+<p>Ca reste enregistre officiellement. Urgence haute = RH alerte immediate.</p>`,
+    a:'ملي كتحتاج موظفين زايدين، طلبهم هنا ماشي بالواتساب. كيبقا مسجّل رسميا.'},
+  {type:'center',t:'⭐ Regles d\'or / القواعد الذهبية',
+    d:`<div style="display:grid;gap:8px;text-align:left;font-size:.84rem">
+      <div style="padding:8px;background:var(--s2);border-radius:6px">📅 Dimanche avant 00:00 → publier planning<span class="tri-ar">الحد قبل نص الليل → نشر البلانينغ</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ Chaque jour avant 16:30 → cloturer Matin<span class="tri-ar">كل نهار قبل 16:30 → سكّر الصباح</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 Chaque jour avant 03:30 → cloturer Soir<span class="tri-ar">كل نهار قبل 03:30 → سكّر العشية</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">🆕 Nouvel employe → ajouter le jour meme<span class="tri-ar">موظف جديد → زيدو نفس النهار</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 Employe part → desactiver + retour uniforme<span class="tri-ar">موظف مشا → نحّيه + رجّع اللباس</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 Personnel = Demandes, JAMAIS WhatsApp<span class="tri-ar">طلب موظفين = الطلبات، ماشي واتساب</span></div>
+    </div>`,
+    a:'',btn:"J'ai compris / فهمت ✅"}
 ];
-let tourIdx=0;
 
-function startTour(){
-  if(localStorage.getItem('tima_tour_done')&&!arguments[0])return;
-  tourIdx=0;showTourStep();
-}
+let demoIdx=0;
 
-function showTourStep(){
-  if(tourIdx>=TOUR_STEPS.length){endTour();return}
-  const step=TOUR_STEPS[tourIdx];
-  // Navigate to the tab first
-  if(step.action)step.action();
+function startFullDemo(){demoIdx=0;showDemoStep();}
+function startTour(){if(!localStorage.getItem('tima_tour_done'))startFullDemo();}
+function restartTour(){startFullDemo();}
+function startDemoTour(){startFullDemo();}
+
+function showDemoStep(){
+  if(demoIdx>=DEMO_STEPS.length){endDemo();return}
+  const step=DEMO_STEPS[demoIdx];
+  const tc=document.getElementById('tourContainer');
+
+  if(step.type==='center'){
+    // Full-screen centered panel
+    tc.innerHTML=`<div class="tour-overlay" style="display:flex;align-items:center;justify-content:center">
+      <div class="tour-popup" style="position:relative;top:auto;left:auto;max-width:400px;text-align:center">
+        <h4 style="font-size:1.05rem;color:var(--ac2);margin-bottom:10px">${step.t}</h4>
+        ${step.d}
+        <div class="tar" style="margin:10px 0">${step.a}</div>
+        <div class="tour-btns" style="justify-content:center">
+          <button class="btn btn-s btn-g" onclick="endDemo()">Passer / تجاوز</button>
+          <button class="btn btn-p" onclick="demoIdx++;showDemoStep()" style="padding:10px 24px">${step.btn||'Suivant / التالي →'}</button>
+        </div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  // Tab-based step: navigate first
+  const tabBtn=document.querySelector(`button[data-idx="${step.tab}"]`);
+  if(tabBtn)tabBtn.click();
+
   setTimeout(()=>{
     const el=document.querySelector(step.sel);
-    if(!el){tourIdx++;showTourStep();return}
-    const r=el.getBoundingClientRect();
-    const popTop=r.bottom+12>window.innerHeight-200?Math.max(10,r.top-220):r.bottom+12;
-    document.getElementById('tourContainer').innerHTML=`<div class="tour-overlay"></div>
-      <div class="tour-highlight" style="top:${r.top-4}px;left:${r.left-4}px;width:${r.width+8}px;height:${r.height+8}px"></div>
-      <div class="tour-popup" style="top:${popTop}px;left:${Math.min(Math.max(10,r.left),window.innerWidth-330)}px">
-        <div class="tour-step" style="color:var(--ac2)">${step.t}</div>
-        <p>${step.d}</p>
-        <div class="tar">${step.a}</div>
-        <div class="tour-btns">
-          <button class="btn btn-s btn-g" onclick="endTour()">Passer / تجاوز</button>
-          <button class="btn btn-s btn-p" onclick="tourIdx++;showTourStep()">Suivant / التالي &rarr;</button>
+    if(el){
+      const r=el.getBoundingClientRect();
+      const popTop=r.bottom+16>window.innerHeight-250?Math.max(10,r.top-280):r.bottom+16;
+      tc.innerHTML=`<div class="tour-overlay"></div>
+        <div class="tour-highlight" style="top:${r.top-6}px;left:${r.left-6}px;width:${r.width+12}px;height:${r.height+12}px"></div>
+        <div class="tour-popup" style="top:${popTop}px;left:${Math.min(Math.max(10,r.left),window.innerWidth-340)}px;max-width:340px">
+          <div class="tour-step" style="color:var(--ac2);font-size:.78rem">${step.t}</div>
+          ${step.d}
+          <div class="tar" style="margin-top:8px">${step.a}</div>
+          <div class="tour-btns">
+            <button class="btn btn-s btn-g" onclick="endDemo()">Passer / تجاوز</button>
+            <button class="btn btn-s btn-p" onclick="demoIdx++;showDemoStep()">Suivant / التالي →</button>
+          </div>
+        </div>`;
+    } else {
+      // No element found, just show text
+      tc.innerHTML=`<div class="tour-overlay" style="display:flex;align-items:center;justify-content:center">
+        <div class="tour-popup" style="position:relative;top:auto;left:auto;max-width:380px">
+          <div class="tour-step" style="color:var(--ac2)">${step.t}</div>
+          ${step.d}
+          <div class="tar" style="margin-top:8px">${step.a}</div>
+          <div class="tour-btns">
+            <button class="btn btn-s btn-g" onclick="endDemo()">Passer / تجاوز</button>
+            <button class="btn btn-s btn-p" onclick="demoIdx++;showDemoStep()">Suivant / التالي →</button>
+          </div>
         </div>
       </div>`;
-  },400);
+    }
+  },500);
 }
 
-function endTour(){
+function endDemo(){
   document.getElementById('tourContainer').innerHTML='';
   localStorage.setItem('tima_tour_done','1');
-}
-function restartTour(){startTour(true)}
-
-// --- NIVEL 5: Full Demo Tour (all roles) ---
-function startDemoTour(){
-  const tabs=getTabs();
-  const keyMap={plantillaG:'equipe',presences:'presences',planning:'planning',absences:'absences',demandes:'demandes',uniformes:'uniformes',protocoles:'protocoles',effectifs:'equipe',recrutement:'recrutement',absHist:'absences',alertes:'alertes',resume:'resume'};
-  const demoSteps=tabs.map((t,i)=>{const k=keyMap[t.id]||'';return{sel:`button[data-idx="${i}"]`,t:t.label,d:HELP[k]?.b?.split('<br>')[0]||'Section '+t.label,a:HELP[k]?.a?.substring(0,120)||'',action:()=>document.querySelector(`button[data-idx="${i}"]`)?.click()}});
-  tourIdx=0;
-  const origSteps=[...TOUR_STEPS];
-  TOUR_STEPS.length=0;TOUR_STEPS.push(...demoSteps);
-  const origEnd=endTour;
-  endTour=function(){document.getElementById('tourContainer').innerHTML='';TOUR_STEPS.length=0;TOUR_STEPS.push(...origSteps);endTour=origEnd;};
-  showTourStep();
 }
 
 // --- NIVEL 3: Onboarding Checklist ---
