@@ -273,6 +273,7 @@ const SB_KEY='sb_publishable_70Zix-yB8KMyLOlEyO84hg_hVJIQtqB';
 const sb=window.supabase.createClient(SB_URL,SB_KEY);
 const LOCALES=['Vicio Malabata','Vicio Marjane',"Cluky's Marif",'Vicio Al Hoceima','Vicio Tetuan',"Cluky's Nador",'Vicio Rabat'];
 const POSTES=['Plonge','Polyvalent Cuisine','Polyvalent Salle','Operateur Laboratoire','Chef de Cuisine','Gerant Matin','Gerant Soir'];
+const POSTES_SPEC=['','Runner','Cajero/a','Control','Barista','Operario de Pollo','Operario de Burgers','Operario de Wraps y Bowls','Operario de Frituras','Pase','Lider de Cocina','Menage / Plonge','Encargado Economato','Operario de Produccion'];
 const PRENDAS=['T-shirt','Pantalon','Tablier','Casquette','Chaussures','Veste'];
 const TAILLES=['XS','S','M','L','XL','XXL'];
 const PIPE=['recu','entretien','selectionne','embauche'];
@@ -390,6 +391,17 @@ function retrySyncQueue(){processSheetsSyncQueue()}
 function showSyncBanner(){document.getElementById('syncBanner').style.display=''}
 function hideSyncBanner(){document.getElementById('syncBanner').style.display='none'}
 
+// Full dump of ALL active employees from Supabase → Google Sheets (overwrite)
+async function syncAllEmployeesToSheets(){
+  try{
+    const{data}=await sb.from('empleados').select('*').eq('actif',true).order('local').order('poste');
+    if(!data||!data.length)return;
+    const rows=data.map(e=>({id:e.id,nom:e.nom,poste:e.poste,poste_specifique:e.poste_specifique||'',local:e.local,statut:e.actif?'actif':'inactif',date_entree:e.date_entree||'',telephone:e.telephone||''}));
+    // Use 'fullSync' action which overwrites the sheet
+    fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'fullSync',table:'employes',rows})}).catch(e=>console.warn('Sheets full sync error:',e.message));
+  }catch(e){console.warn('syncAllEmployees error:',e.message)}
+}
+
 // ============================================================
 // UTILS
 // ============================================================
@@ -401,6 +413,10 @@ function tri(key){
 }
 function today(){return new Date().toISOString().slice(0,10)}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+// Lookup helpers to avoid JSON.stringify in onclick (breaks on apostrophes)
+function findEmp(id){return(appData.employes||[]).find(e=>e.id===id)}
+function findCand(id){return(appData.recrutements||[]).find(c=>c.id===id)}
+function findUni(id){return(appData.uniformes||[]).find(u=>u.id===id)}
 
 // ============================================================
 // LOGIN
@@ -519,10 +535,12 @@ function renderPlantillaG(){
     <div class="table-wrap"><table>
       <thead><tr><th>Nom / الإسم</th><th>Poste / البوسط</th><th>Entree / الدخول</th><th></th></tr></thead>
       <tbody>${emps.map(e=>`<tr>
-        <td><strong>${esc(e.nom)}</strong></td><td>${esc(e.poste)}</td><td>${e.date_entree||'—'}</td>
+        <td><strong>${esc(e.nom)}</strong></td>
+        <td>${esc(e.poste)}${e.poste_specifique?`<br><span style="font-size:.72rem;color:var(--tx3)">${esc(e.poste_specifique)}</span>`:''}</td>
+        <td>${e.date_entree||'—'}</td>
         <td style="white-space:nowrap">
-          <button class="btn btn-s btn-g" onclick='openEmpFormG(${JSON.stringify(e)})'>Modifier</button>
-          <span class="del-link" onclick="if(confirm('Desactiver ${esc(e.nom)} ? / بغيت تنحي ${esc(e.nom)}؟'))deactivateEmpG('${e.id}')">Desactiver</span>
+          <button class="btn btn-s btn-g" onclick="openEmpFormG(findEmp('${e.id}'))">Modifier</button>
+          <span class="del-link" onclick="if(confirm('Desactiver ?'))deactivateEmpG('${e.id}')">Desactiver</span>
         </td>
       </tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>'}</tbody>
     </table></div>
@@ -533,7 +551,8 @@ function openEmpFormG(emp){
   const e=emp||{};
   openModal(`<h3>${e.id?'Modifier':'Nouvel'} employe<span class="tri-ar">${e.id?'عدّل':'زيد'} موظف</span><span class="tri-es">${e.id?'Modificar':'Nuevo'} empleado</span></h3>
     <div class="fg"><label>Nom complet <span class="ar">الإسم الكامل</span></label><input id="fEmpNomG" value="${esc(e.nom||'')}"></div>
-    <div class="fg"><label>Poste <span class="ar">البوسط</span></label><select id="fEmpPosteG">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Poste general <span class="ar">البوسط العام</span></label><select id="fEmpPosteG">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Poste specifique <span class="ar">البوسط الدقيق</span></label><select id="fEmpSpecG"><option value="">— Aucun —</option>${POSTES_SPEC.filter(Boolean).map(p=>`<option ${p===e.poste_specifique?'selected':''}>${p}</option>`).join('')}</select></div>
     <div class="fg"><label>Date d'entree <span class="ar">تاريخ الدخول</span></label><input type="date" id="fEmpDateG" value="${e.date_entree||today()}"></div>
     <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveEmpG('${e.id||''}')">Enregistrer / سجّل</button></div>
   `);
@@ -542,29 +561,27 @@ function openEmpFormG(emp){
 async function saveEmpG(id){
   const nom=document.getElementById('fEmpNomG').value.trim();
   if(!nom){toast('Nom obligatoire / خاصك الإسم',true);return}
-  const poste=document.getElementById('fEmpPosteG').value,date_entree=document.getElementById('fEmpDateG').value;
+  const poste=document.getElementById('fEmpPosteG').value,poste_specifique=document.getElementById('fEmpSpecG').value,date_entree=document.getElementById('fEmpDateG').value;
   const marque=local.includes('Cluky')?"Cluky's":"Vicio";
   closeModal();
   if(id){
     const emp=appData.employes.find(e=>e.id===id);
-    if(emp){emp.nom=nom;emp.poste=poste;emp.date_entree=date_entree}
+    if(emp){emp.nom=nom;emp.poste=poste;emp.poste_specifique=poste_specifique;emp.date_entree=date_entree}
     renderPlantillaG();toast('Employe modifie / تعدّل');
-    sb.from('empleados').update({nom,poste,date_entree}).eq('id',id).then();
-    syncToSheets('employes',[{id,nom,local,poste,marque,date_entree,actif:true,telephone:''}]);
+    sb.from('empleados').update({nom,poste,poste_specifique,date_entree}).eq('id',id).then();
   }else{
-    const{data}=await sb.from('empleados').insert({nom,local,poste,date_entree,actif:true,marque}).select().single();
+    const{data}=await sb.from('empleados').insert({nom,local,poste,poste_specifique,date_entree,actif:true,marque}).select().single();
     if(data)appData.employes.push(data);
     toast('Employe ajoute / تزاد');renderPlantillaG();
-    syncToSheets('employes',[{id:data?.id||'',nom,local,poste,marque,date_entree,actif:true,telephone:''}]);
   }
+  syncAllEmployeesToSheets();
 }
 
 async function deactivateEmpG(id){
-  const emp=appData.employes.find(e=>e.id===id);
   appData.employes=appData.employes.filter(e=>e.id!==id);
   renderPlantillaG();toast('Employe desactive / الموظف تنحا');
   sb.from('empleados').update({actif:false}).eq('id',id).then();
-  syncToSheets('employes',[{id,nom:emp?.nom||'',local,poste:emp?.poste||'',marque:'',date_entree:'',actif:false,telephone:''}]);
+  syncAllEmployeesToSheets();
 }
 
 // ============================================================
@@ -737,7 +754,8 @@ async function renderPlanning(){
             }
             const cls=val==='M'?'c-m':val==='S'?'c-s':val==='OFF'?'c-off':'';
             const label=val==='M'?'M':val==='S'?'S':val==='OFF'?'OFF':'—';
-            return `<div class="pg cell ${cls}" onclick="cyclePlanCell('${key}',this)">${label}</div>`;
+            const specLabel=(val==='M'||val==='S')&&e.poste_specifique?`<br><span style="font-size:.55rem;opacity:.7">${esc(e.poste_specifique)}</span>`:'';
+            return `<div class="pg cell ${cls}" onclick="cyclePlanCell('${key}',this)" data-emp="${e.id}" data-spec="${esc(e.poste_specifique||'')}">${label}${specLabel}</div>`;
           }).join('')}`;
       }).join('')}
     </div></div>
@@ -784,7 +802,9 @@ function cyclePlanCell(key,el){
   const next=PLAN_CYCLE[(ci+1)%PLAN_CYCLE.length];
   if(next){planData[key]=next}else{delete planData[key]}
   el.className='pg cell '+(next==='M'?'c-m':next==='S'?'c-s':next==='OFF'?'c-off':'');
-  el.textContent=next||'—';
+  const spec=el.dataset.spec||'';
+  const specHtml=(next==='M'||next==='S')&&spec?'<br><span style="font-size:.55rem;opacity:.7">'+spec+'</span>':'';
+  el.innerHTML=(next||'—')+specHtml;
   // Re-check OFF warnings
   const empId=key.split('_')[0];
   const emp=(appData.employes||[]).find(e=>e.id===empId);
@@ -1013,10 +1033,12 @@ function renderEffectifs(){
 
 function empRows(emps){
   return emps.map(e=>`<tr>
-    <td><strong>${esc(e.nom)}</strong></td><td>${esc(e.local)}</td><td>${esc(e.poste)}</td><td>${e.date_entree||'—'}</td>
+    <td><strong>${esc(e.nom)}</strong></td><td>${esc(e.local)}</td>
+    <td>${esc(e.poste)}${e.poste_specifique?`<br><span style="font-size:.72rem;color:var(--tx3)">${esc(e.poste_specifique)}</span>`:''}</td>
+    <td>${e.date_entree||'—'}</td>
     <td style="white-space:nowrap">
-      <button class="btn btn-s btn-g" onclick='openEmpForm(${JSON.stringify(e)})'>Modifier</button>
-      <span class="del-link" onclick="if(confirm('Supprimer ${esc(e.nom)} ?'))delEmp('${e.id}')">Suppr.</span>
+      <button class="btn btn-s btn-g" onclick="openEmpForm(findEmp('${e.id}'))">Modifier</button>
+      <span class="del-link" onclick="if(confirm('Supprimer ?'))delEmp('${e.id}')">Suppr.</span>
     </td>
   </tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>';
 }
@@ -1034,7 +1056,8 @@ function openEmpForm(emp){
   openModal(`<h3>${e.id?'Modifier':'Nouvel'} employe<span class="tri-ar">${e.id?'عدّل':'زيد'} موظف</span></h3>
     <div class="fg"><label>Nom complet <span class="ar">الإسم الكامل</span></label><input id="fEmpNom" value="${esc(e.nom||'')}"></div>
     <div class="fg"><label>Local <span class="ar">اللوكال</span></label><select id="fEmpLocal">${LOCALES.map(l=>`<option ${l===e.local?'selected':''}>${l}</option>`).join('')}</select></div>
-    <div class="fg"><label>Poste <span class="ar">البوسط</span></label><select id="fEmpPoste">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Poste general <span class="ar">البوسط العام</span></label><select id="fEmpPoste">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Poste specifique <span class="ar">البوسط الدقيق</span></label><select id="fEmpSpec"><option value="">— Aucun —</option>${POSTES_SPEC.filter(Boolean).map(p=>`<option ${p===e.poste_specifique?'selected':''}>${p}</option>`).join('')}</select></div>
     <div class="fg"><label>Date d'entree <span class="ar">تاريخ الدخول</span></label><input type="date" id="fEmpDate" value="${e.date_entree||today()}"></div>
     <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveEmp('${e.id||''}')">Enregistrer / سجّل</button></div>
   `);
@@ -1043,29 +1066,27 @@ function openEmpForm(emp){
 async function saveEmp(id){
   const nom=document.getElementById('fEmpNom').value.trim();
   if(!nom){toast('Nom obligatoire / خاصك الإسم',true);return}
-  const loc=document.getElementById('fEmpLocal').value,poste=document.getElementById('fEmpPoste').value,date_entree=document.getElementById('fEmpDate').value;
+  const loc=document.getElementById('fEmpLocal').value,poste=document.getElementById('fEmpPoste').value,poste_specifique=document.getElementById('fEmpSpec').value,date_entree=document.getElementById('fEmpDate').value;
   closeModal();
   if(id){
     const emp=(appData.employes||[]).find(e=>e.id===id);
-    if(emp)Object.assign(emp,{nom,local:loc,poste,date_entree});
+    if(emp)Object.assign(emp,{nom,local:loc,poste,poste_specifique,date_entree});
     toast('Employe modifie / تعدّل');renderEffectifs();
-    sb.from('empleados').update({nom,local:loc,poste,date_entree}).eq('id',id).then();
-    syncToSheets('employes',[{id,nom,local:loc,poste,marque:loc.includes('Cluky')?"Cluky's":"Vicio",date_entree,actif:true,telephone:''}]);
+    sb.from('empleados').update({nom,local:loc,poste,poste_specifique,date_entree}).eq('id',id).then();
   }else{
     const marque=loc.includes('Cluky')?"Cluky's":"Vicio";
-    const{data}=await sb.from('empleados').insert({nom,local:loc,poste,date_entree,actif:true,marque}).select().single();
+    const{data}=await sb.from('empleados').insert({nom,local:loc,poste,poste_specifique,date_entree,actif:true,marque}).select().single();
     if(data)appData.employes.push(data);
     toast('Employe ajoute / تزاد');renderEffectifs();
-    syncToSheets('employes',[{id:data?.id||'',nom,local:loc,poste,marque,date_entree,actif:true,telephone:''}]);
   }
+  syncAllEmployeesToSheets();
 }
 
 async function delEmp(id){
-  const emp=(appData.employes||[]).find(e=>e.id===id);
   appData.employes=(appData.employes||[]).filter(e=>e.id!==id);
   toast('Employe supprime / الموظف تمسح');renderEffectifs();
   sb.from('empleados').update({actif:false}).eq('id',id).then();
-  syncToSheets('employes',[{id,nom:emp?.nom||'',local:emp?.local||'',poste:emp?.poste||'',marque:'',date_entree:'',actif:false,telephone:''}]);
+  syncAllEmployeesToSheets();
 }
 
 // ============================================================
@@ -1102,7 +1123,7 @@ function renderRecrutement(){
             ${c.notes?`<div class="mt">${esc(c.notes)}</div>`:''}
             <div class="pa">
               ${next.map(s=>`<button class="btn btn-s btn-g" onclick="moveCand('${c.id}','${s}')">&rarr; ${PIPE_LABELS[s]}</button>`).join('')}
-              <button class="btn btn-s btn-g" onclick='openCandForm(${JSON.stringify(c)})'>Modifier</button>
+              <button class="btn btn-s btn-g" onclick="openCandForm(findCand('${c.id}'))">Modifier</button>
             </div></div>`;
         }).join('')}
       </div>`;
@@ -1195,7 +1216,7 @@ function renderUniformes(){
       <tbody>${unis.map(u=>`<tr>
         <td>${esc(u.employe_nom)}</td><td>${esc(u.local)}</td><td>${esc(u.taille_haut)}</td><td>${u.taille_bas}</td>
         <td><span class="badge ${u.statut_livraison==='livre'?'b-gn':'b-or'}" style="cursor:pointer" onclick="toggleUni('${u.id}','${u.statut_livraison}')">${u.statut_livraison==='livre'?'Livre / تسلّم':'En attente / كيتسنّا'}</span></td>
-        <td><button class="btn btn-s btn-g" onclick='openUniForm(${JSON.stringify(u)})'>Modifier</button></td>
+        <td><button class="btn btn-s btn-g" onclick="openUniForm(findUni('${u.id}'))">Modifier</button></td>
       </tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucun uniforme / ما كاين حتا لباس</td></tr>'}</tbody>
     </table></div>
   `;
