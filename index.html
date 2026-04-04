@@ -622,7 +622,7 @@ async function saveEmpG(id){
   }else{
     const{data}=await sb.from('empleados').insert({nom,local,poste,poste_specifique,date_entree,actif:true,marque}).select().single();
     if(data)appData.employes.push(data);
-    toast('Employe ajoute / تزاد');renderPlantillaG();
+    toast('✅ Employe ajoute! N\'oubliez pas de lui attribuer un uniforme (onglet Uniformes) / تزاد الموظف! ما تنساش تعطيه اللباس (قسم اللباس)');renderPlantillaG();
   }
   syncAllEmployeesToSheets();
 }
@@ -813,7 +813,7 @@ async function savePresencesTurno(turno){
     appData.absences=[...(appData.absences||[]),...(ad||absToInsert)];
     syncToSheets('absences',ad||absToInsert);
   }
-  toast('Turno '+turno+' cloture / شيفت '+turno+' تسكّر');
+  toast(turno==='matin'?'✅ Matin cloture. Donnees sauvegardees. Pensez a cloturer le Soir avant 03:30 / الصباح تسكّر. الداتا تحفظات. ما تنساش تسكّر العشية قبل 03:30':'✅ Soir cloture. Donnees sauvegardees. Bon repos! / العشية تسكّرت. الداتا تحفظات. الله يعطيك الصحة!');
   renderPresences();
   renderChecklist();
 }
@@ -1053,7 +1053,7 @@ async function savePlanningGrid(publish){
   appData.plannings=data||rows;
   if(publish)planPublished=true;
   syncToSheets('plannings',data||rows);
-  toast(publish?'Planning publie / البلانينغ تنشر':'Planning enregistre / البلانينغ تسجّل');
+  toast(publish?'✅ Planning publie! Ton equipe peut le voir. Envoie-le au groupe WhatsApp / البلانينغ تنشر! الفريق يقدر يشوفو. صيفطو فالواتساب':'Planning enregistre (brouillon) / البلانينغ تسجّل (مسودة)');
   renderPlanning();
 }
 
@@ -1787,19 +1787,63 @@ async function initPublicPlanning(loc){
 // ============================================================
 
 // --- NIVEL 1: Contextual Help ---
+// ============================================================
+// NIVEL 1 — HELP TOOLTIPS (detailed with examples)
+// ============================================================
 const HELP={
-  equipe:{t:'Equipe / فريق اللوكال',b:'Gerez la liste des employes de votre local. Ajoutez, modifiez ou desactivez des employes. Chaque employe a un poste general et un poste specifique.',a:'هنا كتدبّر ليست الموظفين ديال اللوكال ديالك. زيد، عدّل، ولا نحي موظف. كل واحد عندو بوسط عام وبوسط دقيق.'},
-  presences:{t:'Presences / الحضور',b:'Enregistrez la presence de votre equipe par turno (Matin/Soir). Cochez les presents, marquez les absents avec un motif. Chaque turno ne peut etre cloture qu\'une seule fois.',a:'سجّل حضور الفريق ديالك حسب الشيفت (صباح/عشية). علّم اللي حاضر، وحدد سبب الغياب. كل شيفت كيتسكّر مرة وحدة بوحدها.'},
-  planning:{t:'Planning / البلانينغ',b:'Planifiez les shifts de votre equipe pour la semaine (Matin/Soir/OFF). Publiez avant dimanche minuit. Le planning publie alimente automatiquement les presences.',a:'خطط الشيفتات ديال الفريق ديالك للسيمانة (صباح/عشية/راحة). نشرو قبل ليلة الحد. البلانينغ المنشور كيغذّي الحضور أوتوماتيك.'},
-  absences:{t:'Absences / الغياب',b:'Consultez l\'historique des absences et signalez manuellement une absence avec motif et si l\'employe a prevenu.',a:'شوف تاريخ الغياب وبلّغ يدوي على غياب مع السبب وواش الموظف خبّر ولا لا.'},
-  demandes:{t:'Demandes / الطلبات',b:'Demandez du personnel supplementaire pour votre local. Indiquez le poste, l\'urgence et le motif.',a:'طلب موظفين زايدين للوكال ديالك. حدد البوسط، الاستعجال والسبب.'},
-  uniformes:{t:'Uniformes / اللباس',b:'Gerez les pieces d\'uniforme et leur attribution aux employes. Suivez le stock et les retours.',a:'دبّر قطع اللباس والتوزيع ديالهم على الموظفين. تابع الستوك والرجوع.'},
-  protocoles:{t:'Protocoles / البروتوكولات',b:'Les regles a suivre chaque jour et chaque semaine en tant que gerant.',a:'القواعد اللي خاصك تتبع كل نهار وكل سيمانة بحال المسؤول.'},
-  addEmp:{t:'Ajouter un employe / زيد موظف',b:'Remplissez le nom, poste general, poste specifique et date d\'entree.',a:'عمّر الإسم، البوسط العام، البوسط الدقيق وتاريخ الدخول.'},
-  cloturer:{t:'Cloturer / سكّر',b:'Ferme definitivement le pointage de ce turno. Une fois cloture, plus de modifications possibles.',a:'كيسكّر نهائيا الحضور ديال هاد الشيفت. من بعد ما تسكّر ما يمكنش تبدّل.'},
-  publier:{t:'Publier / نشر',b:'Rend le planning visible pour toute l\'equipe et alimente les presences de la semaine.',a:'كيخلّي البلانينغ باين للفريق كامل وكيغذّي الحضور ديال السيمانة.'},
-  modifier:{t:'Modifier / عدّل',b:'Ouvrir le formulaire pour modifier les informations de cet element.',a:'فتح الفورمولير باش تعدّل المعلومات ديال هاد العنصر.'},
-  desactiver:{t:'Desactiver / نحي',b:'L\'employe ne sera plus visible dans les listes actives mais reste dans l\'historique.',a:'الموظف ما غاديش يبان فالليستات النشطة ولكن كيبقا فالتاريخ.'}
+  equipe:{t:'📋 EQUIPE / فريق اللوكال',
+    b:`<strong>Qu'est-ce que c'est :</strong> La liste de tous les employes actifs de votre local.<br><br>
+<strong>Quand l'utiliser :</strong> Quand un nouvel employe arrive ou quand quelqu'un quitte.<br><br>
+<strong>Comment faire :</strong><br>1) Cliquez "+ Employe" pour ajouter<br>2) Remplissez nom, poste general et poste specifique<br>3) Cliquez "Enregistrer"<br><br>
+<strong>Exemple :</strong> Smail Naceh arrive comme Gerant Matin → + Employe → Smail Naceh → Gerant Matin → Enregistrer<br><br>
+<strong>Si vous ne le faites pas :</strong> L'employe n'apparaitra pas dans le planning ni les presences.`,
+    a:'هنا فين كتدبّر الفريق ديالك. كل موظف جديد خاصك تزيدو هنا باش يبان فالبلانينغ والحضور. إلا ما زدتوش، ما غاديش يبان فحتا بلاصة.'},
+  presences:{t:'📋 PRESENCES / الحضور',
+    b:`<strong>Qu'est-ce que c'est :</strong> Le registre quotidien de qui a travaille.<br><br>
+<strong>Quand l'utiliser :</strong><br>• Matin → cloturer entre 08:00 et 16:30<br>• Soir → cloturer entre 16:00 et 03:30<br><br>
+<strong>Comment faire :</strong><br>1) Cochez ✅ les employes presents<br>2) Laissez decoches les absents + choisissez le motif<br>3) Cliquez "Cloturer"<br><br>
+<strong>Exemple :</strong> Smail a travaille matin → ✅. Yahya n'est pas venu → ☐ + motif "sans preavis"<br><br>
+<strong>Si vous ne le faites pas :</strong> RH n'a pas de donnees, impossible de calculer les paies et les absences.`,
+    a:'هنا كتسجّل شكون خدم اليوم. الصباح سكّرو بين 08:00 و 16:30، العشية بين 16:00 و 03:30. علّم اللي جا، ونحي العلامة على اللي ما جاش مع السبب. إلا ما درتش هادشي، RH ما غاديش يكون عندو المعلومات.'},
+  planning:{t:'📅 PLANNING / البلانينغ',
+    b:`<strong>Qu'est-ce que c'est :</strong> Le programme des shifts de la semaine pour chaque employe.<br><br>
+<strong>Quand l'utiliser :</strong> Le dimanche avant 00:00 (limite lundi 03:00) pour la semaine suivante.<br><br>
+<strong>Comment faire :</strong><br>1) Cliquez sur chaque case pour choisir M (Matin) / S (Soir) / OFF<br>2) Verifiez que chaque employe a au moins un OFF<br>3) Cliquez "Publier"<br>4) Envoyez au groupe WhatsApp<br><br>
+<strong>Exemple :</strong> Smail → Lun:M Mar:M Mer:S Jeu:OFF Ven:M Sam:M Dim:S<br><br>
+<strong>Si vous ne le faites pas :</strong> Les presences ne seront pas divisees par turno. Alerte rouge pour RH et Direction.`,
+    a:'البلانينغ ديال السيمانة. خاصك تنشرو نهار الحد قبل نص الليل. ضغط على كل خانة باش تختار صباح/عشية/راحة. تأكّد كل واحد عندو يوم راحة. نشرو وصيفطو فالواتساب. إلا ما نشرتوش، غادي تطلع إنذار أحمر.'},
+  absences:{t:'📝 ABSENCES / الغياب',
+    b:`<strong>Qu'est-ce que c'est :</strong> L'historique des absences de votre equipe.<br><br>
+<strong>Quand l'utiliser :</strong> Quand un employe est absent et que vous voulez le signaler manuellement (en plus du pointage).<br><br>
+<strong>Comment faire :</strong><br>1) Cliquez "+ Absence"<br>2) Selectionnez l'employe, le motif, s'il a prevenu<br>3) Enregistrez<br><br>
+<strong>Si vous ne le faites pas :</strong> L'absence n'est pas documentee, pas de suivi possible.`,
+    a:'تاريخ الغياب ديال الفريق. إلا غاب شي واحد، بلّغ هنا مع السبب وواش خبّر ولا لا.'},
+  demandes:{t:'📤 DEMANDES / الطلبات',
+    b:`<strong>Qu'est-ce que c'est :</strong> Demander du personnel supplementaire a RH.<br><br>
+<strong>Quand l'utiliser :</strong> Quand vous manquez de personnel pour un poste.<br><br>
+<strong>Comment faire :</strong><br>1) Cliquez le bouton orange "Demander du personnel"<br>2) Choisissez le poste et l'urgence<br>3) Expliquez pourquoi<br><br>
+<strong>Si vous ne le faites pas :</strong> RH ne sait pas que vous avez besoin de renfort.`,
+    a:'هنا كتطلب موظفين زايدين من RH. ختار البوسط والاستعجال وعلاش كتحتاج.'},
+  uniformes:{t:'👕 UNIFORMES / اللباس',
+    b:`<strong>Qu'est-ce que c'est :</strong> Le suivi des uniformes de chaque employe.<br><br>
+<strong>Quand l'utiliser :</strong> A l'arrivee d'un nouvel employe, et quand quelqu'un part (devolution).<br><br>
+<strong>Comment faire :</strong><br>1) Creez les types de pieces (T-shirt, tablier...)<br>2) Attribuez a chaque employe avec la taille<br>3) Quand il part → "Marquer retour"<br><br>
+<strong>Si vous ne le faites pas :</strong> Perte de stock, employes sans uniforme, pas de controle des retours.`,
+    a:'تابع اللباس ديال كل موظف. زيد القطع، وزّعهم، ومن بعد ما يمشي شي واحد سجّل الرجوع.'},
+  protocoles:{t:'📜 PROTOCOLES / البروتوكولات',
+    b:'Toutes les regles et procedures a suivre en tant que gerant. Consultez cette page regulierement.',
+    a:'كل القواعد والإجراءات اللي خاصك تتبع. رجع لهاد الصفحة بانتظام.'},
+  addEmp:{t:'+ EMPLOYE / + موظف',
+    b:'Remplissez: nom complet, poste general (Polyvalent Cuisine, etc.), poste specifique (Runner, Cajero...), et date d\'entree. L\'employe apparaitra dans le planning et les presences.',
+    a:'عمّر الإسم الكامل، البوسط العام، البوسط الدقيق، وتاريخ الدخول. الموظف غادي يبان فالبلانينغ والحضور.'},
+  cloturer:{t:'🔒 CLOTURER / سكّر',
+    b:'Ferme definitivement le pointage de ce turno pour aujourd\'hui. Matin: 08:00-16:30. Soir: 16:00-03:30. Une fois cloture, impossible de modifier.',
+    a:'كيسكّر نهائيا الحضور ديال هاد الشيفت لليوم. الصباح: 08:00-16:30. العشية: 16:00-03:30. من بعد ما تسكّر ما يمكنش تبدّل.'},
+  publier:{t:'📢 PUBLIER / نشر',
+    b:'Rend le planning visible pour toute l\'equipe. Alimente automatiquement la division Matin/Soir des presences pour toute la semaine. Envoyez-le au groupe WhatsApp apres.',
+    a:'كيخلّي البلانينغ باين للفريق كامل. كيقسّم الحضور أوتوماتيك لصباح/عشية. صيفطو فالواتساب من بعد.'},
+  modifier:{t:'✏️ MODIFIER / عدّل',b:'Ouvrir le formulaire pour corriger les informations.',a:'فتح الفورمولير باش تصحح المعلومات.'},
+  desactiver:{t:'🚫 DESACTIVER / نحي',b:'L\'employe quitte l\'equipe active. Il reste dans l\'historique. N\'oubliez pas de recuperer son uniforme dans la section Uniformes.',a:'الموظف كيخرج من الفريق النشط. كيبقا فالتاريخ. ما تنساش ترجّع اللباس ديالو فقسم اللباس.'}
 };
 
 function showHelp(key){
@@ -1814,18 +1858,36 @@ function showHelp(key){
   </div>`;
 }
 function closeHelp(){document.getElementById('helpModalContainer').innerHTML='';}
-
 function hb(key){return `<button class="help-btn" onclick="event.stopPropagation();showHelp('${key}')">?</button>`}
 
-// --- NIVEL 2: Guided Tour ---
+// ============================================================
+// NIVEL 2 — INTERACTIVE GUIDED TOUR (with action prompts)
+// ============================================================
 const TOUR_STEPS=[
-  {sel:'button[data-idx="0"]',t:'Equipe / الفريق',d:'Ici vous gerez votre equipe : ajouter, modifier, desactiver des employes.',a:'هنا كتدبّر الفريق ديالك : زيد، عدّل، نحي موظفين.'},
-  {sel:'button[data-idx="1"]',t:'Presences / الحضور',d:'Pointez vos employes chaque jour par turno Matin et Soir.',a:'سجّل حضور الموظفين كل نهار حسب الشيفت صباح وعشية.'},
-  {sel:'button[data-idx="2"]',t:'Planning / البلانينغ',d:'Planifiez Matin/Soir/OFF pour chaque employe. Publiez avant dimanche.',a:'خطّط صباح/عشية/راحة لكل موظف. نشر قبل نهار الحد.'},
-  {sel:'button[data-idx="3"]',t:'Absences / الغياب',d:'Signalez et consultez les absences avec motifs.',a:'بلّغ وشوف الغياب مع الأسباب.'},
-  {sel:'button[data-idx="4"]',t:'Demandes / الطلبات',d:'Demandez du renfort pour votre local.',a:'طلب التعزيزات للوكال ديالك.'},
-  {sel:'button[data-idx="5"]',t:'Uniformes / اللباس',d:'Gerez les uniformes et le stock.',a:'دبّر اللباس والستوك.'},
-  {sel:'button[data-idx="6"]',t:'Protocoles / البروتوكولات',d:'Les regles a suivre au quotidien.',a:'القواعد اللي خاصك تتبع كل نهار.'}
+  {sel:'button[data-idx="0"]',t:'1/6 — Equipe / الفريق',
+    d:'Ici vous gerez votre equipe. <strong>Essayez : cliquez sur le bouton "+ Employe" pour voir le formulaire.</strong>',
+    a:'هنا كتدبّر الفريق ديالك. <strong>جرّب : ضغط على "+ موظف" باش تشوف الفورمولير.</strong>',
+    action:()=>document.querySelector('button[data-idx="0"]')?.click()},
+  {sel:'button[data-idx="1"]',t:'2/6 — Presences / الحضور',
+    d:'Chaque jour vous pointez qui est venu. <strong>Matin: 08:00–16:30 / Soir: 16:00–03:30.</strong> Cochez ✅ = present, decochez = absent.',
+    a:'كل نهار كتسجّل شكون جا. <strong>الصباح: 08:00–16:30 / العشية: 16:00–03:30.</strong> علّم ✅ = حاضر، نحي = غايب.',
+    action:()=>document.querySelector('button[data-idx="1"]')?.click()},
+  {sel:'button[data-idx="2"]',t:'3/6 — Planning / البلانينغ',
+    d:'Le dimanche, planifiez la semaine suivante. <strong>Cliquez sur les cases pour choisir M/S/OFF.</strong> Publiez avant minuit.',
+    a:'نهار الحد خطّط السيمانة الجاية. <strong>ضغط على الخانات باش تختار صباح/عشية/راحة.</strong> نشر قبل نص الليل.',
+    action:()=>document.querySelector('button[data-idx="2"]')?.click()},
+  {sel:'button[data-idx="3"]',t:'4/6 — Absences / الغياب',
+    d:'Signalez les absences avec le motif. <strong>Cliquez "+ Absence" pour voir le formulaire.</strong>',
+    a:'بلّغ على الغياب مع السبب. <strong>ضغط "+ غياب" باش تشوف الفورمولير.</strong>',
+    action:()=>document.querySelector('button[data-idx="3"]')?.click()},
+  {sel:'button[data-idx="5"]',t:'5/6 — Uniformes / اللباس',
+    d:'Controlez qui a un uniforme et qui l\'a rendu. Quand un employe part, <strong>marquez "Retour"</strong> avant de le desactiver.',
+    a:'تابع شكون عندو لباس وشكون رجّعو. ملي كيمشي شي واحد، <strong>سجّل "رجوع"</strong> قبل ما تنحيه.',
+    action:()=>document.querySelector('button[data-idx="5"]')?.click()},
+  {sel:'button[data-idx="6"]',t:'6/6 — Protocoles / البروتوكولات',
+    d:'Toutes les regles sont ici. <strong>Vous pouvez relancer ce tour a tout moment depuis cette page.</strong> Bonne gestion !',
+    a:'كل القواعد هنا. <strong>تقدر ترجع تشوف هاد الجولة وقتما بغيت من هاد الصفحة.</strong> تدبير مزيان!',
+    action:()=>document.querySelector('button[data-idx="6"]')?.click()},
 ];
 let tourIdx=0;
 
@@ -1837,35 +1899,38 @@ function startTour(){
 function showTourStep(){
   if(tourIdx>=TOUR_STEPS.length){endTour();return}
   const step=TOUR_STEPS[tourIdx];
-  const el=document.querySelector(step.sel);
-  if(!el){tourIdx++;showTourStep();return}
-  const r=el.getBoundingClientRect();
-  const tc=document.getElementById('tourContainer');
-  tc.innerHTML=`<div class="tour-overlay"></div>
-    <div class="tour-highlight" style="top:${r.top-4}px;left:${r.left-4}px;width:${r.width+8}px;height:${r.height+8}px"></div>
-    <div class="tour-popup" style="top:${r.bottom+12}px;left:${Math.min(r.left,window.innerWidth-330)}px">
-      <div class="tour-step">Etape ${tourIdx+1}/${TOUR_STEPS.length}</div>
-      <h4>${step.t}</h4>
-      <p>${step.d}</p>
-      <div class="tar">${step.a}</div>
-      <div class="tour-btns">
-        <button class="btn btn-s btn-g" onclick="endTour()">Passer / تجاوز</button>
-        <button class="btn btn-s btn-p" onclick="tourIdx++;showTourStep()">Suivant / التالي &rarr;</button>
-      </div>
-    </div>`;
+  // Navigate to the tab first
+  if(step.action)step.action();
+  setTimeout(()=>{
+    const el=document.querySelector(step.sel);
+    if(!el){tourIdx++;showTourStep();return}
+    const r=el.getBoundingClientRect();
+    const popTop=r.bottom+12>window.innerHeight-200?Math.max(10,r.top-220):r.bottom+12;
+    document.getElementById('tourContainer').innerHTML=`<div class="tour-overlay"></div>
+      <div class="tour-highlight" style="top:${r.top-4}px;left:${r.left-4}px;width:${r.width+8}px;height:${r.height+8}px"></div>
+      <div class="tour-popup" style="top:${popTop}px;left:${Math.min(Math.max(10,r.left),window.innerWidth-330)}px">
+        <div class="tour-step" style="color:var(--ac2)">${step.t}</div>
+        <p>${step.d}</p>
+        <div class="tar">${step.a}</div>
+        <div class="tour-btns">
+          <button class="btn btn-s btn-g" onclick="endTour()">Passer / تجاوز</button>
+          <button class="btn btn-s btn-p" onclick="tourIdx++;showTourStep()">Suivant / التالي &rarr;</button>
+        </div>
+      </div>`;
+  },400);
 }
 
 function endTour(){
   document.getElementById('tourContainer').innerHTML='';
   localStorage.setItem('tima_tour_done','1');
 }
-
 function restartTour(){startTour(true)}
 
 // --- NIVEL 5: Full Demo Tour (all roles) ---
 function startDemoTour(){
   const tabs=getTabs();
-  const demoSteps=tabs.map((t,i)=>({sel:`button[data-idx="${i}"]`,t:t.label,d:HELP[{plantillaG:'equipe',presences:'presences',planning:'planning',absences:'absences',demandes:'demandes',uniformes:'uniformes',protocoles:'protocoles',effectifs:'equipe',recrutement:'recrutement',absHist:'absences',alertes:'alertes',resume:'resume'}[t.id]||'']?.b||'Section '+t.label,a:HELP[{plantillaG:'equipe',presences:'presences',planning:'planning',absences:'absences',demandes:'demandes',uniformes:'uniformes',protocoles:'protocoles',effectifs:'equipe',recrutement:'recrutement',absHist:'absences',alertes:'alertes',resume:'resume'}[t.id]||'']?.a||''}));
+  const keyMap={plantillaG:'equipe',presences:'presences',planning:'planning',absences:'absences',demandes:'demandes',uniformes:'uniformes',protocoles:'protocoles',effectifs:'equipe',recrutement:'recrutement',absHist:'absences',alertes:'alertes',resume:'resume'};
+  const demoSteps=tabs.map((t,i)=>{const k=keyMap[t.id]||'';return{sel:`button[data-idx="${i}"]`,t:t.label,d:HELP[k]?.b?.split('<br>')[0]||'Section '+t.label,a:HELP[k]?.a?.substring(0,120)||'',action:()=>document.querySelector(`button[data-idx="${i}"]`)?.click()}});
   tourIdx=0;
   const origSteps=[...TOUR_STEPS];
   TOUR_STEPS.length=0;TOUR_STEPS.push(...demoSteps);
