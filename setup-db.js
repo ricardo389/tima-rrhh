@@ -10,7 +10,7 @@
  */
 
 const SUPABASE_URL = 'https://zkyvvrdatmvdttnfxucy.supabase.co';
-const SUPABASE_KEY = 'YOUR_SERVICE_KEY_HERE';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || 'YOUR_SERVICE_KEY_HERE';
 
 // ============================================================
 // SQL to create all tables — can also be pasted into SQL Editor
