@@ -1177,7 +1177,14 @@ function downloadPlanningPDF(){
   const pc=doc.internal.getNumberOfPages();
   for(let i=1;i<=pc;i++){doc.setPage(i);doc.setFontSize(7);doc.setTextColor(150);doc.text('Tima Grupo — '+local+' — '+wk,10,doc.internal.pageSize.height-5);doc.text('Page '+i+'/'+pc,doc.internal.pageSize.width-25,doc.internal.pageSize.height-5)}
   doc.save('Planning_'+local.replace(/[^a-zA-Z0-9]/g,'_')+'_'+wk+'.pdf');
-  toast('PDF telecharge / PDF تحمّل');
+  // Show WhatsApp reminder modal
+  openModal(`<div style="text-align:center;padding:10px">
+    <div style="font-size:2rem;margin-bottom:10px">✅</div>
+    <h3>PDF telecharge!<span class="tri-ar">PDF تحمّل!</span></h3>
+    <p style="font-size:.88rem;margin:12px 0;color:var(--tx)">N'oublie pas d'envoyer ce planning au <strong>groupe WhatsApp</strong> de ton equipe.<br>Ton equipe a besoin de connaitre ses turnos avant lundi.</p>
+    <p class="tri-ar" style="margin-bottom:14px">ما تنساش تصيفط هاد البلانينغ فڭروب الواتساب ديال الفريق ديالك. الفريق خاصو يعرف الشيفتات ديالو قبل الإثنين.</p>
+    <button class="btn btn-p" onclick="closeModal()" style="padding:10px 30px">Compris / فهمت ✅</button>
+  </div>`);
 }
 
 // ============================================================
@@ -1887,13 +1894,16 @@ const HELP={
 <strong>⏱ Temps :</strong> 2-3 minutes par turno.`,
     a:'هنا كتسجّل شكون خدم اليوم. الصباح سكّرو بين 08:00 و 16:30، العشية بين 16:00 و 03:30. علّم اللي جا، ونحي العلامة على اللي ما جاش مع السبب. إلا ما درتش هادشي، RH ما غاديش يكون عندو المعلومات.'},
   planning:{t:'📅 PLANNING / البلانينغ',
-    b:`<strong>Qu'est-ce que c'est :</strong> Le programme des shifts de la semaine pour chaque employe.<br><br>
-<strong>Quand l'utiliser :</strong> Le dimanche avant 00:00 (limite lundi 03:00) pour la semaine suivante.<br><br>
-<strong>Comment faire :</strong><br>1) Cliquez sur chaque case pour choisir M (Matin) / S (Soir) / OFF<br>2) Verifiez que chaque employe a au moins un OFF<br>3) Cliquez "Publier"<br>4) Envoyez au groupe WhatsApp<br><br>
-<strong>Exemple :</strong> Smail → Lun:M Mar:M Mer:S Jeu:OFF Ven:M Sam:M Dim:S<br><br>
-<strong>Si vous ne le faites pas :</strong> Les presences ne seront pas divisees par turno. Alerte rouge pour RH et Direction.<br><br>
+    b:`<strong>Qu'est-ce que c'est :</strong> Le programme des shifts de la semaine.<br><br>
+<strong>Quand :</strong> Dimanche avant 00:00 (limite lundi 03:00).<br><br>
+<strong>Comment :</strong><br>1) Cliquez sur chaque case : M / S / OFF<br>2) Verifiez qu'il y a au moins un OFF par employe<br>3) Cliquez "Publier" puis envoyez au WhatsApp<br><br>
+<strong style="color:var(--or)">⚠️ Enregistrer vs Publier :</strong><br>
+• <strong>Enregistrer</strong> = brouillon. Seul toi le vois. Utilise-le pendant que tu travailles le horaire.<br>
+• <strong>Publier</strong> = OFFICIEL. Ton equipe le voit. Les presences se divisent en Matin/Soir automatiquement. Impossible de depublier sans RH.<br><br>
+<strong style="color:var(--bl)">🔬 Operateurs Laboratoire :</strong><br>
+Les operateurs labo ont des horaires personnalises. Pour chaque jour, ecris manuellement l'heure d'entree et sortie (format HH:MM-HH:MM). Ex: 07:00-15:00.<br><br>
 <strong>⏱ Temps :</strong> 5-10 minutes par semaine.`,
-    a:'البلانينغ ديال السيمانة. خاصك تنشرو نهار الحد قبل نص الليل. ضغط على كل خانة باش تختار صباح/عشية/راحة. تأكّد كل واحد عندو يوم راحة. نشرو وصيفطو فالواتساب. إلا ما نشرتوش، غادي تطلع إنذار أحمر.'},
+    a:'البلانينغ ديال السيمانة. نشرو الحد قبل نص الليل. سجّل = مسودة غير نتا كتشوفها. نشر = رسمي الفريق كيشوفو والحضور كيتقسّم أوتوماتيك. أوبيراتور اللابو عندهم ساعات خاصة: كتب الدخول والخروج يدويا.'},
   absences:{t:'📝 ABSENCES / الغياب',
     b:`<strong>Qu'est-ce que c'est :</strong> L'historique des absences de votre equipe.<br><br>
 <strong>Quand l'utiliser :</strong> Quand un employe est absent et que vous voulez le signaler manuellement (en plus du pointage).<br><br>
@@ -1925,7 +1935,12 @@ const HELP={
     b:'Rend le planning visible pour toute l\'equipe. Alimente automatiquement la division Matin/Soir des presences pour toute la semaine. Envoyez-le au groupe WhatsApp apres.',
     a:'كيخلّي البلانينغ باين للفريق كامل. كيقسّم الحضور أوتوماتيك لصباح/عشية. صيفطو فالواتساب من بعد.'},
   modifier:{t:'✏️ MODIFIER / عدّل',b:'Ouvrir le formulaire pour corriger les informations.',a:'فتح الفورمولير باش تصحح المعلومات.'},
-  desactiver:{t:'🚫 DESACTIVER / نحي',b:'L\'employe quitte l\'equipe active. Il reste dans l\'historique. N\'oubliez pas de recuperer son uniforme dans la section Uniformes.',a:'الموظف كيخرج من الفريق النشط. كيبقا فالتاريخ. ما تنساش ترجّع اللباس ديالو فقسم اللباس.'}
+  desactiver:{t:'🚫 DESACTIVER ≠ BORRAR',
+    b:`<strong>Desactiver = l'employe est parti</strong> mais ses donnees sont conservees pour toujours : historique de presences, absences, uniformes.<br><br>
+<strong style="color:var(--rd)">JAMAIS borrar/supprimer.</strong> Si tu supprimes, tu perds TOUT son historique et c'est irrecuperable.<br><br>
+<strong>Procedure :</strong><br>1) Va dans Uniformes → Marquer retour<br>2) Reviens dans Equipe → Desactiver<br>3) Choisis le motif (demission, licenciement...) + note obligatoire<br><br>
+<strong>⏱ Temps :</strong> 2 minutes.`,
+    a:'تعطيل = الموظف مشا ولكن المعلومات ديالو كيبقاو محفوظين ديما: الحضور، الغياب، اللباس. ما تمسحش أبدا! إلا مسحتي كتخسر كلشي ما يمكنش ترجعو. أولا رجّع اللباس، من بعد نحّيه مع السبب والملاحظة.'}
 };
 
 function showHelp(key){
@@ -1963,10 +1978,11 @@ const DEMO_STEPS=[
     a:'أول حاجة : ضبط ساعات اللوكال ديالك. الصباح: دخول وخروج. العشية: دخول وخروج. هاد الساعات كيتستعملو فكلشي. مرة وحدة.'},
   {type:'tab',tab:0,sel:'.btn-p',t:'2/9 — Equipe / الفريق',
     d:`<p><strong>Ton equipe est la base.</strong> Si quelqu'un n'est pas ici, il n'existe pas.</p>
-<p style="color:var(--gn)"><strong>+ Employe</strong> : Ajoute chaque personne le <strong>premier jour</strong> ou elle arrive.</p>
+<p style="color:var(--gn)"><strong>+ Employe</strong> : Ajoute chaque personne le <strong>premier jour</strong>.</p>
 <p style="color:var(--ac2)"><strong>Modifier</strong> : Corrige nom, poste ou date.</p>
-<p style="color:var(--rd)"><strong>Desactiver</strong> : Quand quelqu'un part → motif obligatoire (demission, licenciement, etc.) + note. <strong>Ne supprime JAMAIS.</strong></p>`,
-    a:'الفريق هو الأساس. زيد كل موظف أول نهار كيجي. ملي كيمشي: نحّيه مع السبب (رنى، تسريح...) + ملاحظة. ما تمسحوش أبدا.'},
+<p style="color:var(--rd)"><strong>Desactiver ≠ Borrar.</strong> Desactiver conserve tout l'historique (presences, absences, uniformes). <strong>JAMAIS supprimer.</strong> Si tu supprimes → donnees perdues pour toujours.</p>
+<p>Procedure depart : 1) Uniformes → retour 2) Equipe → Desactiver + motif + note.</p>`,
+    a:'الفريق هو الأساس. تعطيل ≠ مسح. التعطيل كيحفظ كلشي (حضور، غياب، لباس). ما تمسحش أبدا! إلا مسحتي كتخسر كلشي. ملي كيمشي: 1) رجّع اللباس 2) نحّيه مع السبب.'},
   {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'3/9 — Presences / الحضور',
     d:`<p><strong>Le registre le plus important.</strong> La preuve que chaque personne a travaille.</p>
 <p><span style="color:var(--gn)">☀️ Matin</span> : cloturer dans la fenetre configuree. <span style="color:var(--or)">🌙 Soir</span> : idem.</p>
@@ -1974,11 +1990,12 @@ const DEMO_STEPS=[
 <p style="color:var(--rd);font-size:.78rem">⚠️ Pas de cloture = alerte Direction + donnees perdues.</p>`,
     a:'الحضور أهم حاجة. علّم اللي جا ✅، اللي ما جاش ☐ مع السبب. سكّر مرة وحدة. بلا إغلاق = إنذار + ضياع المعلومات.'},
   {type:'tab',tab:2,sel:'.plan-grid',t:'4/9 — Planning / البلانينغ',
-    d:`<p><strong>Le programme des shifts (7 jours).</strong> Sans planning → pas de division Matin/Soir.</p>
+    d:`<p><strong>Le programme des shifts (7 jours).</strong></p>
 <p>📅 <strong>Deadline : dimanche avant 00:00</strong> (limite lundi 03:00).</p>
 <p><span style="color:var(--gn)">■ M</span> Matin &nbsp; <span style="color:var(--or)">■ S</span> Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> Repos</p>
-<p><strong>Enregistrer</strong> = brouillon. <strong style="color:var(--ac2)">Publier</strong> = officiel.</p>`,
-    a:'البلانينغ: 7 أيام. نشرو الحد قبل نص الليل. M=صباح، S=عشية، OFF=راحة.'},
+<p style="color:var(--or)"><strong>Enregistrer</strong> = brouillon (toi seul). <strong style="color:var(--ac2)">Publier</strong> = officiel (equipe le voit, presences divisees auto). Impossible de depublier sans RH.</p>
+<p style="color:var(--bl)">🔬 <strong>Operateurs Labo</strong> : horaire libre, ecris HH:MM-HH:MM pour chaque jour.</p>`,
+    a:'سجّل = مسودة غير نتا. نشر = رسمي الفريق كيشوفو والحضور كيتقسّم. أوبيراتور اللابو: كتب الساعات يدويا.'},
   {type:'tab',tab:3,sel:'.btn-p',t:'5/9 — Absences / الغياب',
     d:`<p>Enregistre chaque absence avec le <strong>motif</strong>.</p>
 <p><strong style="color:var(--rd)">Sans preavis</strong> = le plus grave → alerte immediate RH + Direction.</p>
