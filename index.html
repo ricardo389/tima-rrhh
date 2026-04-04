@@ -629,7 +629,7 @@ async function saveEmpG(id){
 
 async function deactivateEmpG(id){
   appData.employes=appData.employes.filter(e=>e.id!==id);
-  renderPlantillaG();toast('Employe desactive / الموظف تنحا');
+  renderPlantillaG();toast('✅ Employe desactive. N\'oubliez pas le retour uniforme dans Uniformes / الموظف تنحا. ما تنساش ترجّع اللباس فقسم اللباس');
   sb.from('empleados').update({actif:false}).eq('id',id).then();
   syncAllEmployeesToSheets();
 }
@@ -822,32 +822,90 @@ async function savePresencesTurno(turno){
 // GÉRANT: PROTOCOLES
 // ============================================================
 function renderProtocoles(){
+  const sec=(id,icon,titleFr,titleAr,content)=>`<div class="card" id="manual-${id}" style="margin-bottom:8px">
+    <h3 style="cursor:pointer;font-size:.9rem" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'':'none'">
+      ${icon} ${titleFr} <span class="tri-ar">${titleAr}</span> <span style="font-size:.7rem;color:var(--tx3);margin-left:auto">▼</span>
+    </h3>
+    <div style="font-size:.82rem;line-height:1.6;color:var(--tx)">${content}</div>
+  </div>`;
+
   document.getElementById('p-protocoles').innerHTML=`
-    <div class="section-header"><h2>Protocoles du Gerant<span class="tri-ar">بروتوكولات المسؤول</span><span class="tri-es">Protocolos del Gerente</span></h2></div>
-    <div class="card">
-      <div style="display:flex;flex-direction:column;gap:14px;font-size:.88rem">
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1.2rem">📅</span>
-          <div><strong>Le dimanche (avant 00:00, limite 03:00 lundi)</strong> : publier le planning de la semaine suivante<br><span class="tri-ar">نهار الحد (قبل 00:00، الحد الأقصى 03:00 الإثنين) : نشر البلانينغ ديال السيمانة الجاية</span><br><span class="tri-es">El domingo (antes de 00:00, limite 03:00 lunes) : publicar el planning de la semana siguiente</span></div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1.2rem">✅</span>
-          <div><strong>Chaque jour matin (08:00 – 16:30)</strong> : cloturer les presences du turno Matin<br><span class="tri-ar">كل نهار فالصباح (08:00 – 16:30) : سكّر حضور الصباح</span><br><span class="tri-es">Cada dia manana (08:00 – 16:30) : cerrar presencias turno Manana</span></div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1.2rem">✅</span>
-          <div><strong>Chaque jour soir (16:00 – 03:30)</strong> : cloturer les presences du turno Soir<br><span class="tri-ar">كل نهار فالعشية (16:00 – 03:30) : سكّر حضور العشية</span><br><span class="tri-es">Cada dia noche (16:00 – 03:30) : cerrar presencias turno Noche</span></div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1.2rem">📤</span>
-          <div><strong>Apres publication du planning</strong> : envoyer au groupe WhatsApp du local<br><span class="tri-ar">من بعد ما تنشر البلانينغ : صيفطو فڭروب واتساب ديال اللوكال</span><br><span class="tri-es">Despues de publicar el planning : enviar al grupo WhatsApp del local</span></div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1.2rem">👁️</span>
-          <div><strong>Verifier que tous les employes ont pointe a leur heure</strong><br><span class="tri-ar">تأكّد أن كل الموظفين سجّلو فالوقت ديالهم</span><br><span class="tri-es">Verificar que todos los empleados ficharon a su hora</span></div>
-        </div>
+    <div class="section-header"><h2>Manuel du Gerant<span class="tri-ar">دليل المسؤول</span><span class="tri-es">Manual del Gerente</span></h2></div>
+
+    ${sec('intro','📱','Pourquoi cette app existe','علاش هاد التطبيق كاين',`
+      <p>Cette app remplace le papier et le WhatsApp. Tout ce qui se passe dans ton local est enregistre : qui a travaille, qui etait absent, quel uniforme a chacun, quand le planning a ete publie.</p>
+      <p><strong>Direction voit tout en temps reel.</strong> Tu es responsable de maintenir ces donnees a jour.</p>
+      <p class="tri-ar">هاد التطبيق كيعوّض الورقة والواتساب. كلشي اللي كيوقع فاللوكال ديالك كيتسجّل : شكون خدم، شكون غاب، شنو ديال اللباس عند كل واحد. الإدارة كتشوف كلشي فالوقت الحقيقي. نتا المسؤول باش تبقى المعلومات صحيحة.</p>
+    `)}
+
+    ${sec('equipe','👥','Ton equipe — la base de tout','الفريق ديالك — الأساس ديال كلشي',`
+      <p><strong>Qu'est-ce que c'est :</strong> La liste officielle des personnes qui travaillent dans ton local.</p>
+      <p><strong>Pourquoi c'est important :</strong> Si quelqu'un n'est pas ici, il n'existe pas dans le systeme. Il n'apparait pas dans les presences, ni dans le planning.</p>
+      <p><strong style="color:var(--gn)">+ Employe</strong> : Ajoute quelqu'un le premier jour ou il arrive. Pas apres.</p>
+      <p><strong style="color:var(--ac2)">Modifier</strong> : Corrige le nom, le poste ou la date si tu t'es trompe.</p>
+      <p><strong style="color:var(--rd)">Desactiver</strong> : Quand quelqu'un part. Ne le supprime JAMAIS — desactive-le. Son historique est conserve.</p>
+      <p style="color:var(--rd)"><strong>⚠️ Si tu ne le fais pas :</strong> Le systeme a des donnees fausses. Direction voit des chiffres qui ne correspondent pas a la realite.</p>
+      <p class="tri-ar">هادي ليست الموظفين الرسمية. إلا ما كانش شي واحد هنا، ما كاينش فالسيستم. زيدو أول يوم كيجي. عدّلو إلا غلطتي. نحّيه (ما تمسحوش) ملي كيمشي. إلا ما درتش هادشي، الإدارة كتشوف أرقام غالطة.</p>
+    `)}
+
+    ${sec('presences','📋','Presences — le registre le plus important','الحضور — أهم تسجيل فاليوم',`
+      <p><strong>Qu'est-ce que c'est :</strong> La preuve que chaque personne a travaille ce jour-la.</p>
+      <p><strong>Pourquoi c'est important :</strong> C'est la base pour calculer les jours travailles, les absences et les paies.</p>
+      <p><strong style="color:var(--gn)">Turno Matin (08:00 – 16:30)</strong> : Coche qui est venu le matin. Cloture AVANT 16:30.</p>
+      <p><strong style="color:var(--or)">Turno Soir (16:00 – 03:30)</strong> : Coche qui est venu le soir. Cloture AVANT 03:30.</p>
+      <p>✅ Checkbox vert = present. ☐ Sans coche = absent (choisis le motif).</p>
+      <p>🔒 <strong>Cloturer</strong> : Ferme le turno definitivement. UNE SEULE FOIS par turno par jour. Si tu te trompes, contacte RH.</p>
+      <p style="color:var(--rd)"><strong>⚠️ Si tu ne le fais pas :</strong> Direction recoit une alerte. RH te contacte. Les donnees du jour sont perdues.</p>
+      <p class="tri-ar">الحضور هو الدليل أن كل واحد خدم ذاك النهار. الصباح: سكّر قبل 16:30. العشية: سكّر قبل 03:30. ✅ = حاضر. ☐ = غايب. الإغلاق مرة وحدة فاليوم. إلا ما سكّرتيش، الإدارة كتلقا إنذار و RH كيتواصل معاك.</p>
+    `)}
+
+    ${sec('planning','📅','Planning — le programme de la semaine','البلانينغ — برنامج السيمانة',`
+      <p><strong>Qu'est-ce que c'est :</strong> L'affectation des turnos pour chaque employe pendant 7 jours.</p>
+      <p><strong>Pourquoi c'est important :</strong> Sans planning publie, les presences ne peuvent pas etre divisees en Matin/Soir.</p>
+      <p><strong>Quand :</strong> Le dimanche avant 00:00 (limite absolue : lundi 03:00).</p>
+      <p><strong>Comment :</strong> Clique sur chaque case :<br>
+        <span style="color:var(--gn)">■ M</span> = Matin &nbsp; <span style="color:var(--or)">■ S</span> = Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> = Repos</p>
+      <p><strong>Enregistrer</strong> : Sauvegarde un brouillon (personne ne le voit).</p>
+      <p><strong style="color:var(--ac2)">Publier</strong> : Rend le planning officiel. Alimente automatiquement les presences Matin/Soir de toute la semaine.</p>
+      <p style="color:var(--rd)"><strong>⚠️ Si tu ne publies pas :</strong> Alerte rouge pour toi, RH et Direction. Ton equipe ne sait pas ses turnos.</p>
+      <p class="tri-ar">البلانينغ هو توزيع الشيفتات على 7 أيام. بلا بلانينغ، الحضور ما يمكنش يتقسّم. نشرو نهار الحد قبل نص الليل. M = صباح، S = عشية، OFF = راحة. إلا ما نشرتيش، إنذار أحمر للجميع.</p>
+    `)}
+
+    ${sec('absences','📝','Absences — quand quelqu\'un ne vient pas','الغياب — ملي شي واحد ما جاش',`
+      <p><strong>Pourquoi c'est important :</strong> Difference entre une falta justifiee et injustifiee. Protege le local legalement.</p>
+      <p><strong>Motifs :</strong> Maladie, Personnel, Sans preavis, Autre.</p>
+      <p style="color:var(--rd)"><strong>"Sans preavis"</strong> est le plus grave : genere une alerte immediate pour RH et Direction.</p>
+      <p><strong>⚠️ Si tu ne le registres pas :</strong> L'absence reste sans motif. Ca peut sembler une erreur du systeme.</p>
+      <p class="tri-ar">الغياب خاصك تسجّلو مع السبب. "بلا ما خبّر" هو أخطر حاجة وكيطلع إنذار فوري ل RH والإدارة.</p>
+    `)}
+
+    ${sec('uniformes','👕','Uniformes — controle de la ropa','اللباس — مراقبة ديال لحوايج',`
+      <p><strong>Pourquoi c'est important :</strong> Les uniformes coutent de l'argent. Il faut les recuperer quand quelqu'un part.</p>
+      <p><strong>Nouvelle piece</strong> : Cree un type de vetement (t-shirt, tablier, casquette...).</p>
+      <p><strong>Attribuer</strong> : Donne une piece a un employe avec la taille et la date.</p>
+      <p><strong>Marquer retour</strong> : Quand l'employe rend l'uniforme en partant.</p>
+      <p style="color:var(--or)"><strong>IMPORTANT :</strong> Un employe desactive ne disparait PAS de la liste Uniformes tant qu'il n'a pas tout rendu.</p>
+      <p style="color:var(--rd)"><strong>⚠️ Si tu ne fais pas le suivi :</strong> RH recoit une alerte. Le cout de l'uniforme reste non recupere.</p>
+      <p class="tri-ar">اللباس كيكلّف الفلوس. خاصك ترجّعو ملي كيمشي شي واحد. الموظف اللي مشا ما كيتنحاش من اللباس حتى يرجّع كلشي.</p>
+    `)}
+
+    ${sec('demandes','📤','Demandes — demander du renfort','الطلبات — طلب التعزيزات',`
+      <p><strong>Pourquoi c'est important :</strong> Laisse une trace officielle. <strong style="color:var(--rd)">N'utilise JAMAIS WhatsApp pour ca.</strong></p>
+      <p>Urgence haute ou urgente : RH recoit une alerte immediate.</p>
+      <p class="tri-ar">هاد الطلب رسمي وكيبقا مسجّل. <strong>ما تستعملش الواتساب لهادشي.</strong> الاستعجال العالي كيطلع إنذار فوري ل RH.</p>
+    `)}
+
+    ${sec('regles','⭐','Les regles d\'or du gerant','القواعد الذهبية ديال المسؤول',`
+      <div style="display:grid;gap:8px">
+        <div style="padding:8px;background:var(--s2);border-radius:6px">📅 <strong>Dimanche avant 00:00</strong> : Publier le planning de la semaine suivante<br><span class="tri-ar">الحد قبل نص الليل : نشر البلانينغ</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ <strong>Chaque jour avant 16:30</strong> : Cloturer les presences Matin<br><span class="tri-ar">كل نهار قبل 16:30 : سكّر حضور الصباح</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 <strong>Chaque jour avant 03:30</strong> : Cloturer les presences Soir<br><span class="tri-ar">كل نهار قبل 03:30 : سكّر حضور العشية</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">🆕 <strong>Nouvel employe arrive</strong> : L'ajouter a Equipe le meme jour<br><span class="tri-ar">موظف جديد جا : زيدو فالفريق نفس النهار</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 <strong>Employe part</strong> : Desactiver + enregistrer retour uniforme<br><span class="tri-ar">موظف مشا : نحّيه + سجّل رجوع اللباس</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 <strong>JAMAIS WhatsApp</strong> pour demander du personnel → utilise Demandes<br><span class="tri-ar">ما تستعملش الواتساب باش تطلب موظفين → استعمل الطلبات</span></div>
       </div>
-    </div>
+    `)}
+
     <div style="margin-top:16px;text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-g" onclick="restartTour()" style="padding:8px 20px">Revoir le tour / الجولة من جديد</button>
       <button class="btn btn-p" onclick="startDemoTour()" style="padding:8px 20px">Demonstration complete / جولة كاملة</button>
@@ -1160,7 +1218,9 @@ async function saveAbsence(){
     date:document.getElementById('fAbsDate').value,motif:document.getElementById('fAbsMotif').value,
     prevenu:document.getElementById('fAbsAviso').value,reporte_par:document.getElementById('fAbsReport').value,
     notes:document.getElementById('fAbsNotes').value};
-  closeModal();toast('Absence enregistree / الغياب تسجّل');
+  const motif=row.motif;
+  closeModal();
+  toast(motif==='sans preavis'?'⚠️ Absence sans preavis enregistree. RH a ete notifie / غياب بلا ما خبّر تسجّل. RH تبلّغ':'✅ Absence enregistree / الغياب تسجّل');
   const{data}=await sb.from('absences').insert(row).select().single();
   appData.absences=appData.absences||[];appData.absences.unshift(data||row);
   syncToSheets('absences',[data||row]);
@@ -1796,21 +1856,24 @@ const HELP={
 <strong>Quand l'utiliser :</strong> Quand un nouvel employe arrive ou quand quelqu'un quitte.<br><br>
 <strong>Comment faire :</strong><br>1) Cliquez "+ Employe" pour ajouter<br>2) Remplissez nom, poste general et poste specifique<br>3) Cliquez "Enregistrer"<br><br>
 <strong>Exemple :</strong> Smail Naceh arrive comme Gerant Matin → + Employe → Smail Naceh → Gerant Matin → Enregistrer<br><br>
-<strong>Si vous ne le faites pas :</strong> L'employe n'apparaitra pas dans le planning ni les presences.`,
+<strong>Si vous ne le faites pas :</strong> L'employe n'apparaitra pas dans le planning ni les presences.<br><br>
+<strong>⏱ Temps :</strong> 1 minute par employe.`,
     a:'هنا فين كتدبّر الفريق ديالك. كل موظف جديد خاصك تزيدو هنا باش يبان فالبلانينغ والحضور. إلا ما زدتوش، ما غاديش يبان فحتا بلاصة.'},
   presences:{t:'📋 PRESENCES / الحضور',
     b:`<strong>Qu'est-ce que c'est :</strong> Le registre quotidien de qui a travaille.<br><br>
 <strong>Quand l'utiliser :</strong><br>• Matin → cloturer entre 08:00 et 16:30<br>• Soir → cloturer entre 16:00 et 03:30<br><br>
 <strong>Comment faire :</strong><br>1) Cochez ✅ les employes presents<br>2) Laissez decoches les absents + choisissez le motif<br>3) Cliquez "Cloturer"<br><br>
 <strong>Exemple :</strong> Smail a travaille matin → ✅. Yahya n'est pas venu → ☐ + motif "sans preavis"<br><br>
-<strong>Si vous ne le faites pas :</strong> RH n'a pas de donnees, impossible de calculer les paies et les absences.`,
+<strong>Si vous ne le faites pas :</strong> RH n'a pas de donnees, impossible de calculer les paies et les absences.<br><br>
+<strong>⏱ Temps :</strong> 2-3 minutes par turno.`,
     a:'هنا كتسجّل شكون خدم اليوم. الصباح سكّرو بين 08:00 و 16:30، العشية بين 16:00 و 03:30. علّم اللي جا، ونحي العلامة على اللي ما جاش مع السبب. إلا ما درتش هادشي، RH ما غاديش يكون عندو المعلومات.'},
   planning:{t:'📅 PLANNING / البلانينغ',
     b:`<strong>Qu'est-ce que c'est :</strong> Le programme des shifts de la semaine pour chaque employe.<br><br>
 <strong>Quand l'utiliser :</strong> Le dimanche avant 00:00 (limite lundi 03:00) pour la semaine suivante.<br><br>
 <strong>Comment faire :</strong><br>1) Cliquez sur chaque case pour choisir M (Matin) / S (Soir) / OFF<br>2) Verifiez que chaque employe a au moins un OFF<br>3) Cliquez "Publier"<br>4) Envoyez au groupe WhatsApp<br><br>
 <strong>Exemple :</strong> Smail → Lun:M Mar:M Mer:S Jeu:OFF Ven:M Sam:M Dim:S<br><br>
-<strong>Si vous ne le faites pas :</strong> Les presences ne seront pas divisees par turno. Alerte rouge pour RH et Direction.`,
+<strong>Si vous ne le faites pas :</strong> Les presences ne seront pas divisees par turno. Alerte rouge pour RH et Direction.<br><br>
+<strong>⏱ Temps :</strong> 5-10 minutes par semaine.`,
     a:'البلانينغ ديال السيمانة. خاصك تنشرو نهار الحد قبل نص الليل. ضغط على كل خانة باش تختار صباح/عشية/راحة. تأكّد كل واحد عندو يوم راحة. نشرو وصيفطو فالواتساب. إلا ما نشرتوش، غادي تطلع إنذار أحمر.'},
   absences:{t:'📝 ABSENCES / الغياب',
     b:`<strong>Qu'est-ce que c'est :</strong> L'historique des absences de votre equipe.<br><br>
