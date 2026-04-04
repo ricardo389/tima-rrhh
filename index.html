@@ -312,37 +312,43 @@ let appData={employes:[],presences:[],absences:[],plannings:[],demandes:[],recru
 async function loadAllData(){
   try{
     const todayStr=today();
+    // Load uniform data for all roles
+    const uniTypesP=sb.from('uniform_types').select('*').order('nom');
+    const uniAssignP=sb.from('uniform_assignments').select('*').order('created_at',{ascending:false});
+
     if(role==='gerant'&&local){
-      const [emp,pres,abs,dem]=await Promise.all([
+      const [emp,pres,abs,dem,ut,ua]=await Promise.all([
         sb.from('empleados').select('*').eq('local',local).eq('actif',true),
         sb.from('presences').select('*').eq('local',local).eq('date',todayStr),
         sb.from('absences').select('*').eq('local',local).order('date',{ascending:false}),
         sb.from('demandes_personnel').select('*').eq('local',local).order('date',{ascending:false}),
+        sb.from('uniform_types').select('*').eq('local',local).order('nom'),
+        sb.from('uniform_assignments').select('*').eq('local',local).order('created_at',{ascending:false}),
       ]);
-      appData={employes:emp.data||[],presences:pres.data||[],absences:abs.data||[],demandes:dem.data||[],plannings:[],today:todayStr,semaine:getWeekStr()};
-      // Load planning for current week
+      appData={employes:emp.data||[],presences:pres.data||[],absences:abs.data||[],demandes:dem.data||[],plannings:[],uniTypes:ut.data||[],uniAssign:ua.data||[],today:todayStr,semaine:getWeekStr()};
       const pl=await sb.from('plannings').select('*').eq('local',local).eq('semaine',getWeekStr());
       appData.plannings=pl.data||[];
       return true;
     }
     if(role==='rh'){
-      const [emp,abs,pres,dem,rec,uni]=await Promise.all([
+      const [emp,abs,pres,dem,rec,ut,ua]=await Promise.all([
         sb.from('empleados').select('*').eq('actif',true).order('local'),
         sb.from('absences').select('*').order('date',{ascending:false}).limit(500),
         sb.from('presences').select('*').order('date',{ascending:false}).limit(500),
         sb.from('demandes_personnel').select('*').order('date',{ascending:false}),
         sb.from('recrutements').select('*').order('created_at',{ascending:false}),
-        sb.from('uniformes').select('*'),
+        uniTypesP, uniAssignP,
       ]);
-      appData={employes:emp.data||[],absences:abs.data||[],presences:pres.data||[],demandes:dem.data||[],recrutements:rec.data||[],uniformes:uni.data||[],today:todayStr};
+      appData={employes:emp.data||[],absences:abs.data||[],presences:pres.data||[],demandes:dem.data||[],recrutements:rec.data||[],uniTypes:ut.data||[],uniAssign:ua.data||[],today:todayStr};
       return true;
     }
     if(role==='direction'){
-      const [emp,abs,pres,dem]=await Promise.all([
+      const [emp,abs,pres,dem,ut,ua]=await Promise.all([
         sb.from('empleados').select('*').eq('actif',true),
         sb.from('absences').select('*').order('date',{ascending:false}).limit(200),
         sb.from('presences').select('*').eq('date',todayStr),
         sb.from('demandes_personnel').select('*'),
+        uniTypesP, uniAssignP,
       ]);
       const emps=emp.data||[],absList=abs.data||[],presList=pres.data||[],demList=dem.data||[];
       const sevenAgo=new Date();sevenAgo.setDate(sevenAgo.getDate()-7);
@@ -352,7 +358,7 @@ async function loadAllData(){
       const reportedToday=new Set(presList.map(p=>p.local));
       const sansRapport=LOCALES.filter(l=>!reportedToday.has(l));
       const resumen=LOCALES.map(loc=>({local:loc,effectif:emps.filter(e=>e.local===loc).length,absencesAujourdhui:absList.filter(a=>a.local===loc&&a.date===todayStr).length,demandesOuvertes:demList.filter(d=>d.local===loc&&d.statut!=='pourvu').length}));
-      appData={alertes:{sansPreavis,postesOuverts,sansRapport,today:todayStr},resumen};
+      appData={alertes:{sansPreavis,postesOuverts,sansRapport,today:todayStr},resumen,employes:emps,uniTypes:ut.data||[],uniAssign:ua.data||[]};
       return true;
     }
     return false;
@@ -500,16 +506,18 @@ function getTabs(){
     {id:'planning',label:'Planning',render:renderPlanning},
     {id:'absences',label:'Absences',render:renderAbsences},
     {id:'demandes',label:'Demandes',render:renderDemandes},
+    {id:'uniformes',label:'Uniformes',render:renderUniformesGerant},
   ];
   if(role==='rh')return[
     {id:'effectifs',label:'Effectifs',render:renderEffectifs},
     {id:'recrutement',label:'Recrutement',render:renderRecrutement},
-    {id:'uniformes',label:'Uniformes',render:renderUniformes},
+    {id:'uniformes',label:'Uniformes',render:renderUniformesRH},
     {id:'absHist',label:'Abs. & Pres.',render:renderAbsHist},
   ];
   return[
     {id:'alertes',label:'Alertes',render:renderAlertes},
     {id:'resume',label:'Resume',render:renderResume},
+    {id:'uniformes',label:'Uniformes',render:renderUniformesDir},
   ];
 }
 
@@ -1197,65 +1205,209 @@ async function moveCand(id,etape){
 }
 
 // ============================================================
-// RH: UNIFORMES
+// UNIFORMES MODULE (all 3 roles)
 // ============================================================
-function renderUniformes(){
+function findAssign(id){return(appData.uniAssign||[]).find(a=>a.id===id)}
+function findType(id){return(appData.uniTypes||[]).find(t=>t.id===id)}
+function uniStockUsed(typeId){return(appData.uniAssign||[]).filter(a=>a.uniform_type_id===typeId&&!a.retourne).reduce((s,a)=>s+(a.quantite||1),0)}
+
+// --- GÉRANT VIEW ---
+function renderUniformesGerant(){
   const pg=document.getElementById('p-uniformes');
-  const unis=appData.uniformes||[];
-  const total=unis.length,livre=unis.filter(u=>u.statut_livraison==='livre').length,att=unis.filter(u=>u.statut_livraison==='en attente').length;
+  const types=appData.uniTypes||[],assigns=appData.uniAssign||[];
+  const emps=appData.employes||[];
 
   pg.innerHTML=`
-    <div class="stat-row">
-      <div class="stat"><div class="num">${total}</div><div class="label">Total<span class="tri-ar">المجموع</span></div></div>
-      <div class="stat"><div class="num" style="color:var(--gn)">${livre}</div><div class="label">Livres<span class="tri-ar">تسلّموا</span></div></div>
-      <div class="stat"><div class="num" style="color:var(--or)">${att}</div><div class="label">En attente<span class="tri-ar">كيتسنّاو</span></div></div>
-    </div>
-    <div class="section-header"><h2>${tri('uniformes')}</h2><button class="btn btn-p" onclick="openUniForm()">+ Uniforme / + لباس</button></div>
+    <div class="section-header"><h2>${tri('uniformes')}</h2></div>
+
+    <h3 style="font-size:.9rem;margin-bottom:8px;color:var(--ac2)">Pieces disponibles / القطع المتوفرة <span class="tri-es">Prendas disponibles</span></h3>
+    <div style="margin-bottom:10px"><button class="btn btn-p" onclick="openUniTypeForm()">+ Nouvelle piece / + قطعة جديدة</button></div>
     <div class="table-wrap"><table>
-      <thead><tr><th>Employe / الموظف</th><th>Local</th><th>Article / القطعة</th><th>Taille / المقاس</th><th>Statut / الحالة</th><th></th></tr></thead>
-      <tbody>${unis.map(u=>`<tr>
-        <td>${esc(u.employe_nom)}</td><td>${esc(u.local)}</td><td>${esc(u.taille_haut)}</td><td>${u.taille_bas}</td>
-        <td><span class="badge ${u.statut_livraison==='livre'?'b-gn':'b-or'}" style="cursor:pointer" onclick="toggleUni('${u.id}','${u.statut_livraison}')">${u.statut_livraison==='livre'?'Livre / تسلّم':'En attente / كيتسنّا'}</span></td>
-        <td><button class="btn btn-s btn-g" onclick="openUniForm(findUni('${u.id}'))">Modifier</button></td>
-      </tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucun uniforme / ما كاين حتا لباس</td></tr>'}</tbody>
+      <thead><tr><th>Piece / القطعة</th><th>Description</th><th>Stock total</th><th>Assigne</th><th>Dispo</th><th></th></tr></thead>
+      <tbody>${types.map(t=>{
+        const used=uniStockUsed(t.id);const dispo=t.stock_total-used;
+        return `<tr><td><strong>${esc(t.nom)}</strong></td><td style="color:var(--tx2);font-size:.75rem">${esc(t.description)}</td>
+        <td>${t.stock_total}</td><td>${used}</td>
+        <td style="color:${dispo<2?'var(--rd)':'var(--gn)'};font-weight:600">${dispo}</td>
+        <td><button class="btn btn-s btn-g" onclick="openUniTypeForm(findType('${t.id}'))">Modifier</button></td></tr>`;
+      }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucune piece / ما كاين حتا قطعة</td></tr>'}</tbody>
     </table></div>
+
+    <h3 style="font-size:.9rem;margin:18px 0 8px;color:var(--ac2)">Attributions / التوزيع <span class="tri-es">Asignaciones</span></h3>
+    <div style="margin-bottom:10px"><button class="btn btn-p" onclick="openUniAssignForm()">+ Attribuer uniforme / + عطي لباس</button></div>
+    ${renderAssignTable(assigns,true)}
   `;
 }
 
-function openUniForm(u){
-  const e=u||{};const emps=appData.employes||[];
-  openModal(`<h3>${e.id?'Modifier':'Attribuer'} uniforme<span class="tri-ar">${e.id?'عدّل':'عطي'} لباس</span></h3>
-    <div class="fg"><label>Employe <span class="ar">الموظف</span></label><select id="fUniEmp">${emps.map(emp=>`<option value="${emp.id}" data-nom="${esc(emp.nom)}" data-local="${esc(emp.local)}" ${emp.id===e.employe_id?'selected':''}>${emp.nom} — ${emp.local}</option>`).join('')}</select></div>
-    <div class="fg"><label>Taille haut <span class="ar">مقاس الفوق</span></label><select id="fUniPrenda">${TAILLES.map(t=>`<option ${t===e.taille_haut?'selected':''}>${t}</option>`).join('')}</select></div>
-    <div class="fg"><label>Taille bas <span class="ar">مقاس التحت</span></label><select id="fUniTaille">${TAILLES.map(t=>`<option ${t===e.taille_bas?'selected':''}>${t}</option>`).join('')}</select></div>
-    <div class="fg"><label>Statut <span class="ar">الحالة</span></label><select id="fUniStatut"><option ${e.statut_livraison==='en attente'?'selected':''}>en attente</option><option ${e.statut_livraison==='livre'?'selected':''}>livre</option></select></div>
-    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveUni('${e.id||''}')">Enregistrer / سجّل</button></div>
+// --- RH VIEW ---
+function renderUniformesRH(){
+  const pg=document.getElementById('p-uniformes');
+  const types=appData.uniTypes||[],assigns=appData.uniAssign||[],emps=appData.employes||[];
+
+  // Alarmes
+  const noDate=assigns.filter(a=>!a.date_livraison&&!a.retourne);
+  const inactiveNoReturn=assigns.filter(a=>{
+    if(a.retourne)return false;
+    const emp=emps.find(e=>e.id===a.employee_id);
+    return !emp; // employee deactivated = not in active list
+  });
+  const lowStock=types.filter(t=>(t.stock_total-uniStockUsed(t.id))<2);
+
+  const alertHtml=(noDate.length||inactiveNoReturn.length||lowStock.length)?`
+    <div style="margin-bottom:14px">
+      ${noDate.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Pas de date de livraison / ما كاينش تاريخ التسليم</div></div>`).join('')}
+      ${inactiveNoReturn.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Employe inactif sans retour / موظف خرج بلا ما رجّع</div></div>`).join('')}
+      ${lowStock.map(t=>`<div class="alert-card warn"><div class="at">🟠 ${esc(t.nom)} — ${esc(t.local)}</div><div class="ad">Stock bas: ${t.stock_total-uniStockUsed(t.id)} disponible(s) / ستوك قليل</div></div>`).join('')}
+    </div>`:'';
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('uniformes')}</h2></div>
+    ${alertHtml}
+    <div class="filter-bar"><select id="filtUniLocal" onchange="filterUniformesRH()"><option value="">Tous les locaux / كل اللوكالات</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select></div>
+
+    <h3 style="font-size:.9rem;margin-bottom:8px;color:var(--ac2)">Pieces par local</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Local</th><th>Piece</th><th>Stock</th><th>Assigne</th><th>Dispo</th></tr></thead>
+      <tbody id="uniTypesBodyRH">${uniTypesRowsRH(types)}</tbody>
+    </table></div>
+
+    <h3 style="font-size:.9rem;margin:18px 0 8px;color:var(--ac2)">Toutes les attributions</h3>
+    <div id="uniAssignBodyRH">${renderAssignTable(assigns,true)}</div>
+  `;
+}
+
+function uniTypesRowsRH(types){
+  return types.map(t=>{
+    const used=uniStockUsed(t.id),dispo=t.stock_total-used;
+    return `<tr><td>${esc(t.local)}</td><td><strong>${esc(t.nom)}</strong></td><td>${t.stock_total}</td><td>${used}</td><td style="color:${dispo<2?'var(--rd)':'var(--gn)'};font-weight:600">${dispo}</td></tr>`;
+  }).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--tx2)">Aucune piece</td></tr>';
+}
+
+function filterUniformesRH(){
+  const fl=document.getElementById('filtUniLocal').value;
+  let types=appData.uniTypes||[],assigns=appData.uniAssign||[];
+  if(fl){types=types.filter(t=>t.local===fl);assigns=assigns.filter(a=>a.local===fl)}
+  document.getElementById('uniTypesBodyRH').innerHTML=uniTypesRowsRH(types);
+  document.getElementById('uniAssignBodyRH').innerHTML=renderAssignTable(assigns,true);
+}
+
+// --- DIRECTION VIEW ---
+function renderUniformesDir(){
+  const pg=document.getElementById('p-uniformes');
+  const types=appData.uniTypes||[],assigns=appData.uniAssign||[];
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('uniformes')}</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">
+      ${LOCALES.map(loc=>{
+        const locAssigns=assigns.filter(a=>a.local===loc);
+        const circ=locAssigns.filter(a=>!a.retourne).length;
+        const ret=locAssigns.filter(a=>a.retourne).length;
+        const pend=locAssigns.filter(a=>!a.retourne&&!a.date_livraison).length;
+        const lowTypes=(types.filter(t=>t.local===loc)).filter(t=>(t.stock_total-uniStockUsed(t.id))<2).length;
+        const alertCount=pend+lowTypes;
+        if(!circ&&!ret&&!locAssigns.length)return '';
+        return `<div class="card">
+          <h3>${esc(loc)}</h3>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px">
+            <div class="stat"><div class="num">${circ}</div><div class="label">En circulation<span class="tri-ar">متوزعين</span></div></div>
+            <div class="stat"><div class="num" style="color:var(--gn)">${ret}</div><div class="label">Retournes<span class="tri-ar">ترجعو</span></div></div>
+            <div class="stat"><div class="num" style="color:var(--or)">${circ-ret>0?circ:0}</div><div class="label">Pendants<span class="tri-ar">ما ترجعوش</span></div></div>
+            <div class="stat"><div class="num" style="color:${alertCount?'var(--rd)':'var(--gn)'}">${alertCount}</div><div class="label">Alertes<span class="tri-ar">تنبيهات</span></div></div>
+          </div>
+        </div>`;
+      }).join('')||'<div class="card" style="color:var(--tx2)">Aucune donnee / ما كاين حتا معلومة</div>'}
+    </div>
+  `;
+}
+
+// --- SHARED: Assignment table ---
+function renderAssignTable(assigns,editable){
+  return `<div class="table-wrap"><table>
+    <thead><tr><th>Employe</th><th>Piece</th><th>Taille</th><th>Qty</th><th>Livraison</th><th>Retour</th>${editable?'<th></th>':''}</tr></thead>
+    <tbody>${assigns.map(a=>{
+      const retBadge=a.retourne?'<span class="badge b-gn">Oui</span>':'<span class="badge b-or">Non</span>';
+      return `<tr style="${!a.date_livraison&&!a.retourne?'background:rgba(225,112,85,.06)':''}">
+        <td><strong>${esc(a.employee_nom)}</strong></td><td>${esc(a.uniform_nom)}</td><td>${esc(a.taille)}</td><td>${a.quantite||1}</td>
+        <td>${a.date_livraison||'<span style="color:var(--rd)">—</span>'}</td>
+        <td>${a.retourne?a.date_retour||'Oui':retBadge}</td>
+        ${editable?`<td style="white-space:nowrap">
+          ${!a.retourne?`<button class="btn btn-s btn-g" onclick="markRetour('${a.id}')">Retour</button>`:''}
+          <button class="btn btn-s btn-g" onclick="openUniAssignForm(findAssign('${a.id}'))">Modifier</button>
+        </td>`:''}
+      </tr>`;
+    }).join('')||`<tr><td colspan="${editable?7:6}" style="text-align:center;color:var(--tx2)">Aucune attribution / ما كاين حتا توزيع</td></tr>`}</tbody>
+  </table></div>`;
+}
+
+// --- FORMS ---
+function openUniTypeForm(t){
+  const e=t||{};
+  openModal(`<h3>${e.id?'Modifier':'Nouvelle'} piece<span class="tri-ar">${e.id?'عدّل':'زيد'} قطعة</span></h3>
+    <div class="fg"><label>Nom de la piece <span class="ar">إسم القطعة</span></label><input id="fUtNom" value="${esc(e.nom||'')}" placeholder="Ex: T-shirt, Tablier..."></div>
+    <div class="fg"><label>Description <span class="ar">الوصف</span></label><input id="fUtDesc" value="${esc(e.description||'')}"></div>
+    <div class="fg"><label>Stock total <span class="ar">الكمية الكلية</span></label><input type="number" id="fUtStock" min="0" value="${e.stock_total||0}"></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveUniType('${e.id||''}')">Enregistrer / سجّل</button></div>
   `);
 }
 
-async function saveUni(id){
-  const sel=document.getElementById('fUniEmp'),opt=sel.options[sel.selectedIndex];
-  const obj={employe_id:sel.value,employe_nom:opt.dataset.nom,local:opt.dataset.local,taille_haut:document.getElementById('fUniPrenda').value,taille_bas:document.getElementById('fUniTaille').value,statut_livraison:document.getElementById('fUniStatut').value};
+async function saveUniType(id){
+  const nom=document.getElementById('fUtNom').value.trim();
+  if(!nom){toast('Nom obligatoire',true);return}
+  const obj={nom,description:document.getElementById('fUtDesc').value,stock_total:parseInt(document.getElementById('fUtStock').value)||0,local:local||''};
   closeModal();
   if(id){
-    const u=(appData.uniformes||[]).find(x=>x.id===id);if(u)Object.assign(u,obj);
-    toast('Uniforme modifie / اللباس تعدّل');renderUniformes();
-    sb.from('uniformes').update(obj).eq('id',id).then();
-    syncToSheets('uniformes',[{id,...obj}]);
+    const t=(appData.uniTypes||[]).find(x=>x.id===id);if(t)Object.assign(t,obj);
+    sb.from('uniform_types').update(obj).eq('id',id).then();
+    toast('Piece modifiee / القطعة تعدّلت');
   }else{
-    const{data}=await sb.from('uniformes').insert(obj).select().single();
-    appData.uniformes=appData.uniformes||[];appData.uniformes.push(data||obj);
-    toast('Uniforme enregistre / اللباس تسجّل');renderUniformes();
-    syncToSheets('uniformes',[data||obj]);
+    const{data}=await sb.from('uniform_types').insert(obj).select().single();
+    appData.uniTypes=appData.uniTypes||[];appData.uniTypes.push(data||{id:'tmp',...obj});
+    toast('Piece ajoutee / القطعة تزادت');
   }
+  if(role==='gerant')renderUniformesGerant();else renderUniformesRH();
 }
 
-async function toggleUni(id,current){
-  const next=current==='en attente'?'livre':'en attente';
-  const u=(appData.uniformes||[]).find(x=>x.id===id);if(u)u.statut_livraison=next;
-  renderUniformes();
-  sb.from('uniformes').update({statut_livraison:next}).eq('id',id).then();
-  if(u)syncToSheets('uniformes',[{...u}]);
+function openUniAssignForm(a){
+  const e=a||{};
+  const emps=appData.employes||[];
+  const types=appData.uniTypes||[];
+  const loc=role==='gerant'?local:'';
+  const filtTypes=loc?types.filter(t=>t.local===loc):types;
+  openModal(`<h3>${e.id?'Modifier':'Attribuer'} uniforme<span class="tri-ar">${e.id?'عدّل':'وزّع'} لباس</span></h3>
+    <div class="fg"><label>Employe <span class="ar">الموظف</span></label><select id="fUaEmp">${emps.map(emp=>`<option value="${emp.id}" data-nom="${esc(emp.nom)}" data-local="${esc(emp.local)}" ${emp.id===e.employee_id?'selected':''}>${emp.nom}${role!=='gerant'?' — '+emp.local:''}</option>`).join('')}</select></div>
+    <div class="fg"><label>Piece <span class="ar">القطعة</span></label><select id="fUaType">${filtTypes.map(t=>`<option value="${t.id}" data-nom="${esc(t.nom)}" ${t.id===e.uniform_type_id?'selected':''}>${t.nom} (dispo: ${t.stock_total-uniStockUsed(t.id)})</option>`).join('')}</select></div>
+    <div class="fg"><label>Taille <span class="ar">المقاس</span></label><select id="fUaTaille">${TAILLES.map(t=>`<option ${t===e.taille?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="fg"><label>Quantite <span class="ar">الكمية</span></label><input type="number" id="fUaQty" min="1" value="${e.quantite||1}"></div>
+    <div class="fg"><label>Date livraison <span class="ar">تاريخ التسليم</span></label><input type="date" id="fUaDate" value="${e.date_livraison||today()}"></div>
+    <div class="fg"><label>Notes <span class="ar">ملاحظات</span></label><textarea id="fUaNotes" rows="2">${esc(e.notes||'')}</textarea></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveUniAssign('${e.id||''}')">Enregistrer / سجّل</button></div>
+  `);
+}
+
+async function saveUniAssign(id){
+  const empSel=document.getElementById('fUaEmp'),empOpt=empSel.options[empSel.selectedIndex];
+  const typeSel=document.getElementById('fUaType'),typeOpt=typeSel.options[typeSel.selectedIndex];
+  const obj={employee_id:empSel.value,employee_nom:empOpt.dataset.nom,local:empOpt.dataset.local,uniform_type_id:typeSel.value,uniform_nom:typeOpt.dataset.nom,taille:document.getElementById('fUaTaille').value,quantite:parseInt(document.getElementById('fUaQty').value)||1,date_livraison:document.getElementById('fUaDate').value||null,notes:document.getElementById('fUaNotes').value};
+  closeModal();
+  if(id){
+    const a=(appData.uniAssign||[]).find(x=>x.id===id);if(a)Object.assign(a,obj);
+    sb.from('uniform_assignments').update(obj).eq('id',id).then();
+    toast('Attribution modifiee / التوزيع تعدّل');
+  }else{
+    const{data}=await sb.from('uniform_assignments').insert(obj).select().single();
+    appData.uniAssign=appData.uniAssign||[];appData.uniAssign.unshift(data||{id:'tmp',...obj});
+    toast('Uniforme attribue / اللباس توزّع');
+  }
+  if(role==='gerant')renderUniformesGerant();else renderUniformesRH();
+}
+
+async function markRetour(id){
+  const a=(appData.uniAssign||[]).find(x=>x.id===id);
+  if(a){a.retourne=true;a.date_retour=today()}
+  sb.from('uniform_assignments').update({retourne:true,date_retour:today()}).eq('id',id).then();
+  toast('Retour enregistre / الرجوع تسجّل');
+  if(role==='gerant')renderUniformesGerant();else renderUniformesRH();
 }
 
 // ============================================================

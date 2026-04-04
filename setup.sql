@@ -1,6 +1,54 @@
 -- TIMA GRUPO — Supabase Database Setup
 -- Paste this into Supabase Dashboard > SQL Editor > Run
 
+-- ============================================================
+-- UNIFORM TABLES (v2)
+-- ============================================================
+
+-- Types de prendas par local
+CREATE TABLE IF NOT EXISTS uniform_types (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  local TEXT NOT NULL,
+  nom TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  stock_total INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Assignments/livraisons aux employes
+CREATE TABLE IF NOT EXISTS uniform_assignments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  employee_id UUID REFERENCES empleados(id) ON DELETE CASCADE,
+  employee_nom TEXT NOT NULL,
+  local TEXT NOT NULL,
+  uniform_type_id UUID REFERENCES uniform_types(id) ON DELETE CASCADE,
+  uniform_nom TEXT NOT NULL,
+  taille TEXT DEFAULT '',
+  quantite INT DEFAULT 1,
+  date_livraison DATE,
+  date_retour DATE,
+  retourne BOOLEAN DEFAULT false,
+  notes TEXT DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE uniform_types ENABLE ROW LEVEL SECURITY;
+ALTER TABLE uniform_assignments ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='uniform_types' AND policyname='allow_all_uniform_types') THEN
+    CREATE POLICY allow_all_uniform_types ON uniform_types FOR ALL USING (true) WITH CHECK (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='uniform_assignments' AND policyname='allow_all_uniform_assignments') THEN
+    CREATE POLICY allow_all_uniform_assignments ON uniform_assignments FOR ALL USING (true) WITH CHECK (true);
+  END IF;
+END $$;
+
+CREATE INDEX IF NOT EXISTS idx_uniform_types_local ON uniform_types(local);
+CREATE INDEX IF NOT EXISTS idx_uniform_assign_local ON uniform_assignments(local);
+CREATE INDEX IF NOT EXISTS idx_uniform_assign_emp ON uniform_assignments(employee_id);
+
 -- Turnos config (shift hours per local)
 CREATE TABLE IF NOT EXISTS turnos_config (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
