@@ -72,6 +72,10 @@ END $$;
 ALTER TABLE presences ADD COLUMN IF NOT EXISTS turno TEXT DEFAULT '';
 ALTER TABLE presences ADD COLUMN IF NOT EXISTS cloture BOOLEAN DEFAULT false;
 
+-- Add deactivation fields to empleados
+ALTER TABLE empleados ADD COLUMN IF NOT EXISTS motif_depart TEXT DEFAULT '';
+ALTER TABLE empleados ADD COLUMN IF NOT EXISTS note_depart TEXT DEFAULT '';
+
 -- Empleados
 CREATE TABLE IF NOT EXISTS empleados (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

@@ -590,7 +590,7 @@ function renderPlantillaG(){
         <td>${e.date_entree||'—'}</td>
         <td style="white-space:nowrap">
           <button class="btn btn-s btn-g" onclick="openEmpFormG(findEmp('${e.id}'))">Modifier</button>
-          <span class="del-link" onclick="if(confirm('Desactiver ?'))deactivateEmpG('${e.id}')">Desactiver</span>
+          <span class="del-link" onclick="openDeactivateModal('${e.id}')">Desactiver</span>
         </td>
       </tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>'}</tbody>
     </table></div>
@@ -627,10 +627,36 @@ async function saveEmpG(id){
   syncAllEmployeesToSheets();
 }
 
-async function deactivateEmpG(id){
+function openDeactivateModal(id){
+  const emp=findEmp(id);if(!emp)return;
+  openModal(`<h3 style="color:var(--rd)">Desactiver ${esc(emp.nom)}<span class="tri-ar">تعطيل ${esc(emp.nom)}</span></h3>
+    <div class="fg"><label>Motif de depart (obligatoire) <span class="ar">سبب المغادرة</span></label><select id="fDeactMotif">
+      <option value="">— Choisir / ختار —</option>
+      <option value="Demission">Demission / رنى وحده</option>
+      <option value="Fin de contrat">Fin de contrat / خلص العقد</option>
+      <option value="Licenciement">Licenciement / تسريح</option>
+      <option value="Periode essai">Periode d'essai non concluante / تجربة ما نجحتش</option>
+      <option value="Abandon de poste">Abandon de poste / هرب بلا خبر</option>
+      <option value="Autre">Autre / آخر</option>
+    </select></div>
+    <div class="fg"><label>Note (min 10 caracteres) <span class="ar">ملاحظة</span></label><textarea id="fDeactNote" rows="3" placeholder="Details du depart..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button>
+      <button class="btn btn-d" onclick="confirmDeactivate('${id}')">Desactiver / تعطيل</button>
+    </div>
+  `);
+}
+
+async function confirmDeactivate(id){
+  const motif=document.getElementById('fDeactMotif').value;
+  const note=document.getElementById('fDeactNote').value.trim();
+  if(!motif){toast('Motif obligatoire / خاصك السبب',true);return}
+  if(note.length<10){toast('Note trop courte (min 10 car.) / الملاحظة قصيرة بزاف',true);return}
+  closeModal();
   appData.employes=appData.employes.filter(e=>e.id!==id);
-  renderPlantillaG();toast('✅ Employe desactive. N\'oubliez pas le retour uniforme dans Uniformes / الموظف تنحا. ما تنساش ترجّع اللباس فقسم اللباس');
-  sb.from('empleados').update({actif:false}).eq('id',id).then();
+  renderPlantillaG();
+  toast('✅ Employe desactive. N\'oubliez pas le retour uniforme dans Uniformes / الموظف تعطّل. ما تنساش ترجّع اللباس');
+  sb.from('empleados').update({actif:false,motif_depart:motif,note_depart:note}).eq('id',id).then();
   syncAllEmployeesToSheets();
 }
 
@@ -640,6 +666,7 @@ async function deactivateEmpG(id){
 function renderChecklist(){
   const cl=document.getElementById('gerantChecklist');
   if(!cl)return;
+  const tc=turnosConfig||{};
   const todayStr=today();
   const pres=appData.presences||[];
   const matinDone=pres.some(p=>p.date===todayStr&&p.turno==='matin'&&p.cloture);
@@ -659,8 +686,8 @@ function renderChecklist(){
   cl.innerHTML=`<div class="card" style="border-left:3px solid var(--or);margin:14px">
     <h3 style="font-size:.9rem">Checklist du jour / قائمة اليوم <span class="tri-es">Checklist del dia</span></h3>
     <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:.84rem">
-      <div>${matinDone?'✅':'☐'} Cloturer les presences Matin <span style="font-size:.72rem;color:var(--tx3)">(08:00–16:30)</span> <span class="tri-ar">إغلاق حضور الصباح</span>${matinDone?' <span style="color:var(--gn);font-size:.75rem">'+matinHeure+'</span>':''}</div>
-      <div>${soirDone?'✅':'☐'} Cloturer les presences Soir <span style="font-size:.72rem;color:var(--tx3)">(16:00–03:30)</span> <span class="tri-ar">إغلاق حضور الليل</span>${soirDone?' <span style="color:var(--gn);font-size:.75rem">'+soirHeure+'</span>':''}</div>
+      <div>${matinDone?'✅':'☐'} Cloturer Matin <span style="font-size:.72rem;color:var(--tx3)">(${tc.matin_entree||'08:00'}–${tc.matin_sortie||'16:00'}+30min)</span> <span class="tri-ar">سكّر الصباح</span>${matinDone?' <span style="color:var(--gn);font-size:.75rem">'+matinHeure+'</span>':''}</div>
+      <div>${soirDone?'✅':'☐'} Cloturer Soir <span style="font-size:.72rem;color:var(--tx3)">(${tc.soir_entree||'16:00'}–${tc.soir_sortie||'00:00'}+3h30)</span> <span class="tri-ar">سكّر العشية</span>${soirDone?' <span style="color:var(--gn);font-size:.75rem">'+soirHeure+'</span>':''}</div>
       ${isSunday?`<div>${planPub?'✅':'☐'} Publier le planning semaine prochaine <span class="tri-ar">نشر برنامج الأسبوع الجاي</span> <span style="font-size:.72rem;color:var(--or)">avant 00:00, limite lundi 03:00</span></div>`:''}
     </div>
   </div>`;
@@ -780,14 +807,23 @@ function setPresMotif(empId,motif,btn){
   btn.classList.add('sel');
 }
 
+function timeToMin(s){if(!s)return 0;const p=s.split(':');return parseInt(p[0])*60+parseInt(p[1]||0)}
 function canCloseTurno(turno){
-  const h=new Date().getHours(),m=new Date().getMinutes(),t=h*60+m;
-  if(turno==='matin')return t>=480&&t<=990; // 08:00-16:30
-  // soir: 16:00-03:30 → 960-1440 OR 0-210
-  return t>=960||t<=210;
+  const tc=turnosConfig||{};
+  const now=new Date().getHours()*60+new Date().getMinutes();
+  if(turno==='matin'){
+    const start=timeToMin(tc.matin_entree||'08:00'),end=timeToMin(tc.matin_sortie||'16:00')+30;
+    return now>=start&&now<=end;
+  }
+  const start=timeToMin(tc.soir_entree||'16:00'),end=timeToMin(tc.soir_sortie||'00:00')+210;
+  // Handle overnight: soir_sortie could be 00:00-03:30
+  if(end>1440)return now>=start||now<=(end-1440);
+  return now>=start&&now<=end;
 }
 function turnoTimeMsg(turno){
-  return turno==='matin'?'Matin: 08:00 – 16:30 / الصباح: 08:00 – 16:30':'Soir: 16:00 – 03:30 / العشية: 16:00 – 03:30';
+  const tc=turnosConfig||{};
+  if(turno==='matin')return`Matin: ${tc.matin_entree||'08:00'} – ${tc.matin_sortie||'16:00'}+30min / الصباح`;
+  return`Soir: ${tc.soir_entree||'16:00'} – ${tc.soir_sortie||'00:00'}+3h30 / العشية`;
 }
 
 async function savePresencesTurno(turno){
@@ -1165,9 +1201,16 @@ async function saveAbsence(){
 // ============================================================
 // GÉRANT: DEMANDES
 // ============================================================
+function demandeDays(d){if(!d.date||d.statut==='pourvu')return 0;return Math.floor((new Date()-new Date(d.date))/86400000)}
+function demandeBadge(days){
+  if(days<=3)return`<span class="badge b-gn">Jour ${days}</span>`;
+  if(days<=7)return`<span class="badge b-or">Jour ${days} ⚠️</span>`;
+  return`<span class="badge b-rd" style="animation:pblink 1s infinite">Jour ${days} 🔴 URGENT</span>`;
+}
+
 function renderDemandes(){
   const pg=document.getElementById('p-demandes');
-  const demandes=(appData.demandes||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const demandes=(appData.demandes||[]).slice().sort((a,b)=>demandeDays(b)-demandeDays(a));
 
   pg.innerHTML=`
     <div class="section-header"><h2>${tri('demande')}</h2></div>
@@ -1177,8 +1220,9 @@ function renderDemandes(){
     ${demandes.map(d=>{
       const urgBadge=d.urgence==='urgente'?'b-rd':d.urgence==='haute'?'b-or':'b-bl';
       const statBadge=d.statut==='pourvu'?'b-gn':d.statut==='en cours'?'b-or':'b-ac';
+      const days=demandeDays(d);
       return `<div class="card">
-        <h3>${esc(d.poste)} <span class="badge ${urgBadge}">${esc(d.urgence)}</span> <span class="badge ${statBadge}">${esc(d.statut)}</span></h3>
+        <h3>${esc(d.poste)} <span class="badge ${urgBadge}">${esc(d.urgence)}</span> <span class="badge ${statBadge}">${esc(d.statut)}</span> ${d.statut!=='pourvu'?demandeBadge(days):''}</h3>
         <div style="font-size:.82rem;color:var(--tx2)">${d.date} &middot; ${esc(d.motif)}</div>
       </div>`;
     }).join('')||'<div class="card" style="color:var(--tx2)">Aucune demande / ما كاين حتا طلب</div>'}
@@ -1304,10 +1348,10 @@ function renderRecrutement(){
         <button class="btn btn-p" onclick="openCandForm()">+ Candidat / + مترشح</button>
       </div>
     </div>
-    ${ouvertes.length?'<h3 style="font-size:.9rem;margin-bottom:8px;color:var(--tx2)">Demandes ouvertes / الطلبات المفتوحة</h3>':''}
-    ${ouvertes.map(d=>{
-      const ub=d.urgence==='urgente'?'b-rd':d.urgence==='haute'?'b-or':'b-bl';
-      return `<div class="card"><h3>${esc(d.local)} — ${esc(d.poste)} <span class="badge ${ub}">${esc(d.urgence)}</span></h3>
+    ${ouvertes.length?`<h3 style="font-size:.9rem;margin-bottom:8px;color:var(--tx2)">Demandes ouvertes (${ouvertes.length}${ouvertes.filter(d=>demandeDays(d)>7).length?' dont '+ouvertes.filter(d=>demandeDays(d)>7).length+' en retard':''}) / الطلبات المفتوحة</h3>`:''}
+    ${ouvertes.sort((a,b)=>demandeDays(b)-demandeDays(a)).map(d=>{
+      const ub=d.urgence==='urgente'?'b-rd':d.urgence==='haute'?'b-or':'b-bl';const days=demandeDays(d);
+      return `<div class="card"><h3>${esc(d.local)} — ${esc(d.poste)} <span class="badge ${ub}">${esc(d.urgence)}</span> ${demandeBadge(days)}</h3>
       <div style="font-size:.8rem;color:var(--tx2)">${d.date} &middot; ${esc(d.motif)}</div>
       <div style="margin-top:6px"><button class="btn btn-s btn-g" onclick="markPourvu('${d.id}')">Marquer pourvu / تلقا</button></div></div>`;
     }).join('')}
@@ -1867,55 +1911,67 @@ function hb(key){return `<button class="help-btn" onclick="event.stopPropagation
 const DEMO_STEPS=[
   {type:'center',t:'Bienvenue / مرحبا',
     d:`<p style="font-size:.9rem">Bienvenue sur <strong>Tima RRHH</strong>.</p>
-<p>Cette app gere tout ton local : equipe, horaires, presences et uniformes. <strong>Direction voit tout en temps reel.</strong> Tu es responsable de maintenir les donnees a jour.</p>
+<p>Cette app gere tout ton local : equipe, horaires, presences et uniformes. <strong>Direction voit tout en temps reel.</strong></p>
 <p>Ce tour t'enseigne tout en 5 minutes.</p>`,
     a:'مرحبا ف Tima RRHH. هاد التطبيق كيدبّر كلشي فاللوكال ديالك. الإدارة كتشوف كلشي. هاد الجولة غادي تعلّمك كلشي ف5 دقائق.',
     btn:'Commencer / نبداو'},
-  {type:'tab',tab:0,sel:'.btn-p',t:'1/7 — Equipe / الفريق',
-    d:`<p><strong>Ton equipe est la base de tout.</strong> Si quelqu'un n'est pas ici, il n'existe pas dans le systeme.</p>
-<p style="color:var(--gn)"><strong>+ Employe</strong> : Ajoute chaque personne le premier jour ou elle arrive.</p>
+  {type:'tab',tab:2,sel:'.config-box',t:'1/9 — Configuration horaires / ضبط الساعات',
+    d:`<p><strong>Premiere chose a faire :</strong> configure les heures de ton local.</p>
+<p><span style="color:var(--gn)">☀️ Turno Matin</span> : heure d'entree et de sortie de l'equipe du matin.</p>
+<p><span style="color:var(--or)">🌙 Turno Soir</span> : heure d'entree et de sortie de l'equipe du soir.</p>
+<p>Ces heures s'appliquent partout : presences, checklist, protocoles. <strong>Une seule fois.</strong></p>`,
+    a:'أول حاجة : ضبط ساعات اللوكال ديالك. الصباح: دخول وخروج. العشية: دخول وخروج. هاد الساعات كيتستعملو فكلشي. مرة وحدة.'},
+  {type:'tab',tab:0,sel:'.btn-p',t:'2/9 — Equipe / الفريق',
+    d:`<p><strong>Ton equipe est la base.</strong> Si quelqu'un n'est pas ici, il n'existe pas.</p>
+<p style="color:var(--gn)"><strong>+ Employe</strong> : Ajoute chaque personne le <strong>premier jour</strong> ou elle arrive.</p>
 <p style="color:var(--ac2)"><strong>Modifier</strong> : Corrige nom, poste ou date.</p>
-<p style="color:var(--rd)"><strong>Desactiver</strong> : Quand quelqu'un part. Ne le supprime JAMAIS.</p>
-<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne le fais pas : Direction voit des chiffres faux.</p>`,
-    a:'الفريق هو الأساس. كل موظف جديد خاصك تزيدو هنا أول نهار. ملي كيمشي شي واحد نحّيه (ما تمسحوش). إلا ما درتش هادشي الإدارة كتشوف أرقام غالطة.'},
-  {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'2/7 — Presences / الحضور',
-    d:`<p><strong>Le registre le plus important du jour.</strong> La preuve que chaque personne a travaille.</p>
-<p><span style="color:var(--gn)">☀️ Matin : 08:00 – 16:30</span> &nbsp; <span style="color:var(--or)">🌙 Soir : 16:00 – 03:30</span></p>
-<p>✅ = present &nbsp; ☐ = absent (choisis le motif)</p>
-<p>🔒 <strong>Cloturer</strong> : UNE seule fois par turno. Si tu te trompes, contacte RH.</p>
-<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne le fais pas : Direction recoit alerte, donnees du jour perdues.</p>`,
-    a:'الحضور هو أهم حاجة فاليوم. الصباح سكّرو قبل 16:30، العشية قبل 03:30. ✅ = حاضر. ☐ = غايب. الإغلاق مرة وحدة. إلا ما سكّرتيش الإدارة كتلقا إنذار.'},
-  {type:'tab',tab:2,sel:'.plan-grid,.config-box',t:'3/7 — Planning / البلانينغ',
-    d:`<p><strong>Le programme des shifts pour 7 jours.</strong> Sans planning, les presences ne se divisent pas en Matin/Soir.</p>
-<p>📅 <strong>Deadline : dimanche avant 00:00</strong> (limite absolue lundi 03:00).</p>
-<p>Clic sur chaque case : <span style="color:var(--gn)">■ M</span> Matin &nbsp; <span style="color:var(--or)">■ S</span> Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> Repos</p>
-<p><strong>Enregistrer</strong> = brouillon. <strong style="color:var(--ac2)">Publier</strong> = officiel → alimente les presences automatiquement.</p>
-<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne publies pas : alerte rouge pour toi, RH et Direction.</p>`,
-    a:'البلانينغ ديال السيمانة. نشرو الحد قبل نص الليل. M = صباح، S = عشية، OFF = راحة. إلا ما نشرتيش إنذار أحمر للجميع.'},
-  {type:'tab',tab:3,sel:'.btn-p',t:'4/7 — Absences / الغياب',
-    d:`<p>Quand quelqu'un ne vient pas, <strong>enregistre-le avec le motif</strong>.</p>
-<p>Motifs : Maladie, Personnel, <strong style="color:var(--rd)">Sans preavis</strong> (le plus grave → alerte immediate RH + Direction), Autre.</p>
-<p>Ca protege ton local legalement et permet a RH de suivre.</p>
-<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne le registres pas : l'absence reste sans motif.</p>`,
-    a:'ملي شي واحد ما جاش سجّلو مع السبب. "بلا ما خبّر" هو أخطر حاجة. كيطلع إنذار فوري.'},
-  {type:'tab',tab:5,sel:'.btn-p',t:'5/7 — Uniformes / اللباس',
-    d:`<p><strong>Controle ce que chaque employe a recu.</strong> Les uniformes coutent de l'argent.</p>
-<p>Quand quelqu'un part → <strong>Marquer retour</strong> avant de desactiver.</p>
-<p style="color:var(--or)">Un employe desactive ne disparait PAS tant qu'il n'a pas rendu l'uniforme.</p>
-<p style="color:var(--rd);font-size:.78rem">⚠️ Si tu ne fais pas le suivi : RH recoit alerte, cout non recupere.</p>`,
-    a:'تابع اللباس ديال كل واحد. ملي كيمشي شي واحد سجّل الرجوع قبل ما تنحيه. ما كيتنحاش حتى يرجّع كلشي.'},
-  {type:'tab',tab:4,sel:'.btn-cta',t:'6/7 — Demandes / الطلبات',
-    d:`<p>Quand tu as besoin de renfort, <strong>demande-le ICI — jamais par WhatsApp</strong>.</p>
-<p>Ca reste enregistre officiellement. Urgence haute = RH alerte immediate.</p>`,
-    a:'ملي كتحتاج موظفين زايدين، طلبهم هنا ماشي بالواتساب. كيبقا مسجّل رسميا.'},
+<p style="color:var(--rd)"><strong>Desactiver</strong> : Quand quelqu'un part → motif obligatoire (demission, licenciement, etc.) + note. <strong>Ne supprime JAMAIS.</strong></p>`,
+    a:'الفريق هو الأساس. زيد كل موظف أول نهار كيجي. ملي كيمشي: نحّيه مع السبب (رنى، تسريح...) + ملاحظة. ما تمسحوش أبدا.'},
+  {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'3/9 — Presences / الحضور',
+    d:`<p><strong>Le registre le plus important.</strong> La preuve que chaque personne a travaille.</p>
+<p><span style="color:var(--gn)">☀️ Matin</span> : cloturer dans la fenetre configuree. <span style="color:var(--or)">🌙 Soir</span> : idem.</p>
+<p>✅ = present. ☐ = absent (motif obligatoire). 🔒 <strong>Cloturer</strong> = UNE seule fois.</p>
+<p style="color:var(--rd);font-size:.78rem">⚠️ Pas de cloture = alerte Direction + donnees perdues.</p>`,
+    a:'الحضور أهم حاجة. علّم اللي جا ✅، اللي ما جاش ☐ مع السبب. سكّر مرة وحدة. بلا إغلاق = إنذار + ضياع المعلومات.'},
+  {type:'tab',tab:2,sel:'.plan-grid',t:'4/9 — Planning / البلانينغ',
+    d:`<p><strong>Le programme des shifts (7 jours).</strong> Sans planning → pas de division Matin/Soir.</p>
+<p>📅 <strong>Deadline : dimanche avant 00:00</strong> (limite lundi 03:00).</p>
+<p><span style="color:var(--gn)">■ M</span> Matin &nbsp; <span style="color:var(--or)">■ S</span> Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> Repos</p>
+<p><strong>Enregistrer</strong> = brouillon. <strong style="color:var(--ac2)">Publier</strong> = officiel.</p>`,
+    a:'البلانينغ: 7 أيام. نشرو الحد قبل نص الليل. M=صباح، S=عشية، OFF=راحة.'},
+  {type:'tab',tab:3,sel:'.btn-p',t:'5/9 — Absences / الغياب',
+    d:`<p>Enregistre chaque absence avec le <strong>motif</strong>.</p>
+<p><strong style="color:var(--rd)">Sans preavis</strong> = le plus grave → alerte immediate RH + Direction.</p>
+<p>Ca protege ton local legalement.</p>`,
+    a:'سجّل كل غياب مع السبب. "بلا ما خبّر" = أخطر حاجة → إنذار فوري.'},
+  {type:'tab',tab:5,sel:'.table-wrap',t:'6/9 — Uniformes / اللباس',
+    d:`<p>Les uniformes se gerent en <strong>2 etapes</strong> :</p>
+<p>1️⃣ <strong>+ Nouvelle piece</strong> → cree un type de vetement (nom, description, stock).</p>
+<p>2️⃣ <strong>+ Attribuer</strong> → donne la piece a un employe (taille, quantite, date).</p>
+<p>Quand quelqu'un part → <strong>Marquer retour</strong> AVANT de desactiver.</p>
+<p style="color:var(--or)">Un employe desactive <strong>reste visible</strong> tant qu'il n'a pas tout rendu.</p>`,
+    a:'اللباس فيه مرحلتين: 1) زيد القطعة 2) وزّعها على الموظف. ملي كيمشي شي واحد سجّل الرجوع قبل ما تنحيه. ما كيتنحاش حتى يرجّع كلشي.'},
+  {type:'tab',tab:4,sel:'.btn-cta',t:'7/9 — Demandes / الطلبات',
+    d:`<p>Besoin de renfort ? <strong>Demande ICI — jamais par WhatsApp.</strong></p>
+<p>Chaque demande affiche les jours ouverts. +7 jours = <strong style="color:var(--rd)">URGENT</strong> parpadeante.</p>
+<p>Urgence haute = RH alerte immediate.</p>`,
+    a:'كتحتاج تعزيزات؟ طلبهم هنا ماشي بالواتساب. كل طلب كيبان أشحال من يوم فاتت. +7 أيام = مستعجل.'},
+  {type:'center',t:'🚪 Desactivation / التعطيل',
+    d:`<p>Quand un employe quitte le local :</p>
+<p>1️⃣ Va dans <strong>Uniformes</strong> → <strong>Marquer retour</strong> de toutes ses pieces.</p>
+<p>2️⃣ Va dans <strong>Equipe</strong> → <strong>Desactiver</strong>.</p>
+<p>3️⃣ Le systeme te demande le <strong>motif</strong> (demission, licenciement, abandon...) et une <strong>note</strong> obligatoire.</p>
+<p>Ses donnees historiques sont conservees pour toujours.</p>`,
+    a:'ملي كيمشي موظف: 1) رجّع اللباس 2) نحّيه من الفريق مع السبب والملاحظة. التاريخ ديالو كيبقا محفوظ ديما.'},
   {type:'center',t:'⭐ Regles d\'or / القواعد الذهبية',
     d:`<div style="display:grid;gap:8px;text-align:left;font-size:.84rem">
+      <div style="padding:8px;background:var(--s2);border-radius:6px">⚙️ Premiere fois → configurer les heures du local<span class="tri-ar">أول مرة → ضبط الساعات</span></div>
       <div style="padding:8px;background:var(--s2);border-radius:6px">📅 Dimanche avant 00:00 → publier planning<span class="tri-ar">الحد قبل نص الليل → نشر البلانينغ</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ Chaque jour avant 16:30 → cloturer Matin<span class="tri-ar">كل نهار قبل 16:30 → سكّر الصباح</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 Chaque jour avant 03:30 → cloturer Soir<span class="tri-ar">كل نهار قبل 03:30 → سكّر العشية</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ Chaque jour → cloturer Matin dans la fenetre<span class="tri-ar">كل نهار → سكّر الصباح فالوقت</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 Chaque jour → cloturer Soir dans la fenetre<span class="tri-ar">كل نهار → سكّر العشية فالوقت</span></div>
       <div style="padding:8px;background:var(--s2);border-radius:6px">🆕 Nouvel employe → ajouter le jour meme<span class="tri-ar">موظف جديد → زيدو نفس النهار</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 Employe part → desactiver + retour uniforme<span class="tri-ar">موظف مشا → نحّيه + رجّع اللباس</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 Personnel = Demandes, JAMAIS WhatsApp<span class="tri-ar">طلب موظفين = الطلبات، ماشي واتساب</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 Depart → retour uniforme + desactiver avec motif<span class="tri-ar">مغادرة → رجّع اللباس + نحّيه مع السبب</span></div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 JAMAIS WhatsApp pour du personnel<span class="tri-ar">ما تستعملش الواتساب</span></div>
     </div>`,
     a:'',btn:"J'ai compris / فهمت ✅"}
 ];
