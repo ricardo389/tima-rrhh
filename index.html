@@ -659,8 +659,8 @@ function renderChecklist(){
   cl.innerHTML=`<div class="card" style="border-left:3px solid var(--or);margin:14px">
     <h3 style="font-size:.9rem">Checklist du jour / قائمة اليوم <span class="tri-es">Checklist del dia</span></h3>
     <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:.84rem">
-      <div>${matinDone?'✅':'☐'} Cloturer les presences Matin <span class="tri-ar">إغلاق حضور الصباح</span>${matinDone?' <span style="color:var(--gn);font-size:.75rem">'+matinHeure+'</span>':''}</div>
-      <div>${soirDone?'✅':'☐'} Cloturer les presences Soir <span class="tri-ar">إغلاق حضور الليل</span>${soirDone?' <span style="color:var(--gn);font-size:.75rem">'+soirHeure+'</span>':''}</div>
+      <div>${matinDone?'✅':'☐'} Cloturer les presences Matin <span style="font-size:.72rem;color:var(--tx3)">(08:00–16:30)</span> <span class="tri-ar">إغلاق حضور الصباح</span>${matinDone?' <span style="color:var(--gn);font-size:.75rem">'+matinHeure+'</span>':''}</div>
+      <div>${soirDone?'✅':'☐'} Cloturer les presences Soir <span style="font-size:.72rem;color:var(--tx3)">(16:00–03:30)</span> <span class="tri-ar">إغلاق حضور الليل</span>${soirDone?' <span style="color:var(--gn);font-size:.75rem">'+soirHeure+'</span>':''}</div>
       ${isSunday?`<div>${planPub?'✅':'☐'} Publier le planning semaine prochaine <span class="tri-ar">نشر برنامج الأسبوع الجاي</span> <span style="font-size:.72rem;color:var(--or)">avant 00:00, limite lundi 03:00</span></div>`:''}
     </div>
   </div>`;
@@ -756,7 +756,8 @@ function renderTurnoSection(turno,title,emps,closed){
       }).join('')}
     </div>
     <div style="margin-top:10px;text-align:center">
-      <button class="btn-cta" onclick="savePresencesTurno('${turno}')" style="padding:10px 30px">Cloturer ${turno==='matin'?'Matin / الصباح':'Soir / العشية'}</button>
+      <button class="btn-cta" onclick="savePresencesTurno('${turno}')" style="padding:10px 30px" ${canCloseTurno(turno)?'':'disabled'}>Cloturer ${turno==='matin'?'Matin / الصباح':'Soir / العشية'}</button>
+      <div style="font-size:.7rem;color:var(--tx3);margin-top:4px">${turnoTimeMsg(turno)}</div>
     </div>`}
   </div>`;
 }
@@ -779,9 +780,19 @@ function setPresMotif(empId,motif,btn){
   btn.classList.add('sel');
 }
 
+function canCloseTurno(turno){
+  const h=new Date().getHours(),m=new Date().getMinutes(),t=h*60+m;
+  if(turno==='matin')return t>=480&&t<=990; // 08:00-16:30
+  // soir: 16:00-03:30 → 960-1440 OR 0-210
+  return t>=960||t<=210;
+}
+function turnoTimeMsg(turno){
+  return turno==='matin'?'Matin: 08:00 – 16:30 / الصباح: 08:00 – 16:30':'Soir: 16:00 – 03:30 / العشية: 16:00 – 03:30';
+}
+
 async function savePresencesTurno(turno){
-  // Anti-duplicate check
   if(isTurnoClosed(turno)){toast('Ce turno est deja cloture / هاد الشيفت تسكّر',true);return}
+  if(!canCloseTurno(turno)){toast('Hors horaire! '+turnoTimeMsg(turno),true);return}
 
   const todayStr=today(),heure=new Date().toTimeString().slice(0,5);
   const shifts=getTodayShifts();
@@ -821,11 +832,11 @@ function renderProtocoles(){
         </div>
         <div style="display:flex;gap:10px;align-items:flex-start">
           <span style="font-size:1.2rem">✅</span>
-          <div><strong>Chaque jour matin</strong> : cloturer les presences du turno Matin apres le demarrage<br><span class="tri-ar">كل نهار فالصباح : سكّر حضور الصباح من بعد ما يبدا الخدمة</span><br><span class="tri-es">Cada dia por la manana : cerrar las presencias del turno Manana despues del arranque</span></div>
+          <div><strong>Chaque jour matin (08:00 – 16:30)</strong> : cloturer les presences du turno Matin<br><span class="tri-ar">كل نهار فالصباح (08:00 – 16:30) : سكّر حضور الصباح</span><br><span class="tri-es">Cada dia manana (08:00 – 16:30) : cerrar presencias turno Manana</span></div>
         </div>
         <div style="display:flex;gap:10px;align-items:flex-start">
           <span style="font-size:1.2rem">✅</span>
-          <div><strong>Chaque jour soir</strong> : cloturer les presences du turno Soir en fin de service<br><span class="tri-ar">كل نهار فالعشية : سكّر حضور الليل فآخر الخدمة</span><br><span class="tri-es">Cada dia por la noche : cerrar las presencias del turno Noche al final del servicio</span></div>
+          <div><strong>Chaque jour soir (16:00 – 03:30)</strong> : cloturer les presences du turno Soir<br><span class="tri-ar">كل نهار فالعشية (16:00 – 03:30) : سكّر حضور العشية</span><br><span class="tri-es">Cada dia noche (16:00 – 03:30) : cerrar presencias turno Noche</span></div>
         </div>
         <div style="display:flex;gap:10px;align-items:flex-start">
           <span style="font-size:1.2rem">📤</span>
@@ -837,8 +848,9 @@ function renderProtocoles(){
         </div>
       </div>
     </div>
-    <div style="margin-top:16px;text-align:center">
-      <button class="btn btn-g" onclick="restartTour()" style="padding:8px 20px">Revoir le tour guide / شوف الجولة من جديد</button>
+    <div style="margin-top:16px;text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-g" onclick="restartTour()" style="padding:8px 20px">Revoir le tour / الجولة من جديد</button>
+      <button class="btn btn-p" onclick="startDemoTour()" style="padding:8px 20px">Demonstration complete / جولة كاملة</button>
     </div>
   `;
 }
@@ -1396,53 +1408,77 @@ function findAssign(id){return(appData.uniAssign||[]).find(a=>a.id===id)}
 function findType(id){return(appData.uniTypes||[]).find(t=>t.id===id)}
 function uniStockUsed(typeId){return(appData.uniAssign||[]).filter(a=>a.uniform_type_id===typeId&&!a.retourne).reduce((s,a)=>s+(a.quantite||1),0)}
 
-// --- GÉRANT VIEW ---
+// --- GÉRANT VIEW (synced with active team) ---
+function getEmpUniStatus(empId,assigns){
+  const ea=assigns.filter(a=>a.employee_id===empId);
+  if(!ea.length)return{status:'none',label:'⚪ Sin asignar / ما عندوش لباس',cls:'',assigns:ea};
+  const pending=ea.filter(a=>!a.retourne);
+  if(!pending.length)return{status:'returned',label:'✅ Devuelto / رجّع كلشي',cls:'b-gn',assigns:ea};
+  return{status:'assigned',label:'🟡 Entregado / عندو لباس',cls:'b-or',assigns:ea};
+}
+
 function renderUniformesGerant(){
   const pg=document.getElementById('p-uniformes');
   const types=appData.uniTypes||[],assigns=appData.uniAssign||[];
   const emps=appData.employes||[];
 
+  // Detect inactive employees with pending uniforms
+  const inactiveWithUni=assigns.filter(a=>!a.retourne&&!emps.find(e=>e.id===a.employee_id));
+
   pg.innerHTML=`
     <div class="section-header"><h2>${tri('uniformes')}</h2></div>
 
-    <h3 style="font-size:.9rem;margin-bottom:8px;color:var(--ac2)">Pieces disponibles / القطع المتوفرة <span class="tri-es">Prendas disponibles</span></h3>
+    ${inactiveWithUni.length?`<div style="margin-bottom:12px">${inactiveWithUni.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — Baja sin devolucion / خرج بلا ما رجّع</div><div class="ad">${esc(a.uniform_nom)} · <button class="btn btn-s btn-d" onclick="markRetour('${a.id}')" style="font-size:.7rem">Marquer retour</button></div></div>`).join('')}</div>`:''}
+
+    <h3 style="font-size:.9rem;margin-bottom:8px;color:var(--ac2)">Equipe & Uniformes / الفريق واللباس</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Employe / الموظف</th><th>Statut / الحالة</th><th>Details</th><th></th></tr></thead>
+      <tbody>${emps.map(e=>{
+        const us=getEmpUniStatus(e.id,assigns);
+        return `<tr>
+          <td><strong>${esc(e.nom)}</strong><br><span style="font-size:.7rem;color:var(--tx3)">${esc(e.poste)}</span></td>
+          <td><span class="badge ${us.cls}">${us.label}</span></td>
+          <td style="font-size:.72rem;color:var(--tx2)">${us.assigns.filter(a=>!a.retourne).map(a=>esc(a.uniform_nom)+' ('+esc(a.taille)+')').join(', ')||'—'}</td>
+          <td><button class="btn btn-s btn-p" onclick="openUniAssignForm(null,'${e.id}','${esc(e.nom)}')">+ Attribuer</button></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+
+    <h3 style="font-size:.9rem;margin:18px 0 8px;color:var(--ac2)">Pieces disponibles / القطع المتوفرة</h3>
     <div style="margin-bottom:10px"><button class="btn btn-p" onclick="openUniTypeForm()">+ Nouvelle piece / + قطعة جديدة</button></div>
     <div class="table-wrap"><table>
-      <thead><tr><th>Piece / القطعة</th><th>Description</th><th>Stock total</th><th>Assigne</th><th>Dispo</th><th></th></tr></thead>
+      <thead><tr><th>Piece</th><th>Description</th><th>Stock</th><th>Assigne</th><th>Dispo</th><th></th></tr></thead>
       <tbody>${types.map(t=>{
-        const used=uniStockUsed(t.id);const dispo=t.stock_total-used;
+        const used=uniStockUsed(t.id),dispo=t.stock_total-used;
         return `<tr><td><strong>${esc(t.nom)}</strong></td><td style="color:var(--tx2);font-size:.75rem">${esc(t.description)}</td>
         <td>${t.stock_total}</td><td>${used}</td>
         <td style="color:${dispo<2?'var(--rd)':'var(--gn)'};font-weight:600">${dispo}</td>
         <td><button class="btn btn-s btn-g" onclick="openUniTypeForm(findType('${t.id}'))">Modifier</button></td></tr>`;
-      }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucune piece / ما كاين حتا قطعة</td></tr>'}</tbody>
+      }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucune piece</td></tr>'}</tbody>
     </table></div>
 
-    <h3 style="font-size:.9rem;margin:18px 0 8px;color:var(--ac2)">Attributions / التوزيع <span class="tri-es">Asignaciones</span></h3>
-    <div style="margin-bottom:10px"><button class="btn btn-p" onclick="openUniAssignForm()">+ Attribuer uniforme / + عطي لباس</button></div>
+    <h3 style="font-size:.9rem;margin:18px 0 8px;color:var(--ac2)">Historique attributions / تاريخ التوزيع</h3>
     ${renderAssignTable(assigns,true)}
   `;
 }
 
-// --- RH VIEW ---
+// --- RH VIEW (with enhanced alarms) ---
 function renderUniformesRH(){
   const pg=document.getElementById('p-uniformes');
   const types=appData.uniTypes||[],assigns=appData.uniAssign||[],emps=appData.employes||[];
 
-  // Alarmes
-  const noDate=assigns.filter(a=>!a.date_livraison&&!a.retourne);
-  const inactiveNoReturn=assigns.filter(a=>{
-    if(a.retourne)return false;
-    const emp=emps.find(e=>e.id===a.employee_id);
-    return !emp; // employee deactivated = not in active list
+  const inactiveNoReturn=assigns.filter(a=>!a.retourne&&!emps.find(e=>e.id===a.employee_id));
+  const oldPending=assigns.filter(a=>{
+    if(a.retourne||!a.date_livraison)return false;
+    return(new Date()-new Date(a.date_livraison))/86400000>30&&emps.find(e=>e.id===a.employee_id);
   });
   const lowStock=types.filter(t=>(t.stock_total-uniStockUsed(t.id))<2);
 
-  const alertHtml=(noDate.length||inactiveNoReturn.length||lowStock.length)?`
+  const alertHtml=(inactiveNoReturn.length||oldPending.length||lowStock.length)?`
     <div style="margin-bottom:14px">
-      ${noDate.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Pas de date de livraison / ما كاينش تاريخ التسليم</div></div>`).join('')}
-      ${inactiveNoReturn.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Employe inactif sans retour / موظف خرج بلا ما رجّع</div></div>`).join('')}
-      ${lowStock.map(t=>`<div class="alert-card warn"><div class="at">🟠 ${esc(t.nom)} — ${esc(t.local)}</div><div class="ad">Stock bas: ${t.stock_total-uniStockUsed(t.id)} disponible(s) / ستوك قليل</div></div>`).join('')}
+      ${inactiveNoReturn.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Employe de baja con uniforme pendiente / موظف خرج واللباس عندو</div></div>`).join('')}
+      ${oldPending.map(a=>`<div class="alert-card warn"><div class="at">🟠 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Entregado hace +30 dias sin devolucion / تسلّم قبل 30 يوم بلا رجوع</div></div>`).join('')}
+      ${lowStock.map(t=>`<div class="alert-card warn"><div class="at">🟠 ${esc(t.nom)} — ${esc(t.local)}</div><div class="ad">Stock bas: ${t.stock_total-uniStockUsed(t.id)} dispo / ستوك قليل</div></div>`).join('')}
     </div>`:'';
 
   pg.innerHTML=`
@@ -1553,8 +1589,9 @@ async function saveUniType(id){
   if(role==='gerant')renderUniformesGerant();else renderUniformesRH();
 }
 
-function openUniAssignForm(a){
+function openUniAssignForm(a,preEmpId,preEmpNom){
   const e=a||{};
+  if(preEmpId&&!e.employee_id){e.employee_id=preEmpId;e.employee_nom=preEmpNom}
   const emps=appData.employes||[];
   const types=appData.uniTypes||[];
   const loc=role==='gerant'?local:'';
@@ -1767,15 +1804,16 @@ const HELP={
 
 function showHelp(key){
   const h=HELP[key];if(!h)return;
-  document.getElementById('helpModalContainer').innerHTML=`<div class="help-modal" onclick="if(event.target===this)this.innerHTML=''">
+  document.getElementById('helpModalContainer').innerHTML=`<div class="help-modal" onclick="if(event.target===this)closeHelp()">
     <div class="help-box">
       <h4>${h.t}</h4>
       <p>${h.b}</p>
       <div class="har">${h.a}</div>
-      <div class="help-close"><button class="btn btn-s btn-g" onclick="this.closest('.help-modal').innerHTML=''">Fermer / إغلاق</button></div>
+      <div class="help-close"><button class="btn btn-s btn-g" onclick="closeHelp()">Fermer / إغلاق</button></div>
     </div>
   </div>`;
 }
+function closeHelp(){document.getElementById('helpModalContainer').innerHTML='';}
 
 function hb(key){return `<button class="help-btn" onclick="event.stopPropagation();showHelp('${key}')">?</button>`}
 
@@ -1823,6 +1861,18 @@ function endTour(){
 }
 
 function restartTour(){startTour(true)}
+
+// --- NIVEL 5: Full Demo Tour (all roles) ---
+function startDemoTour(){
+  const tabs=getTabs();
+  const demoSteps=tabs.map((t,i)=>({sel:`button[data-idx="${i}"]`,t:t.label,d:HELP[{plantillaG:'equipe',presences:'presences',planning:'planning',absences:'absences',demandes:'demandes',uniformes:'uniformes',protocoles:'protocoles',effectifs:'equipe',recrutement:'recrutement',absHist:'absences',alertes:'alertes',resume:'resume'}[t.id]||'']?.b||'Section '+t.label,a:HELP[{plantillaG:'equipe',presences:'presences',planning:'planning',absences:'absences',demandes:'demandes',uniformes:'uniformes',protocoles:'protocoles',effectifs:'equipe',recrutement:'recrutement',absHist:'absences',alertes:'alertes',resume:'resume'}[t.id]||'']?.a||''}));
+  tourIdx=0;
+  const origSteps=[...TOUR_STEPS];
+  TOUR_STEPS.length=0;TOUR_STEPS.push(...demoSteps);
+  const origEnd=endTour;
+  endTour=function(){document.getElementById('tourContainer').innerHTML='';TOUR_STEPS.length=0;TOUR_STEPS.push(...origSteps);endTour=origEnd;};
+  showTourStep();
+}
 
 // --- NIVEL 3: Onboarding Checklist ---
 function renderOnboarding(){
@@ -1878,11 +1928,19 @@ function checkProactiveBanners(){
   }
   // After 23:00 soir not closed
   else if(hour>=23&&!soirClosed&&!proactiveDismissed.soirLate){
-    banner={id:'soirLate',cls:'danger',msg:'✅ Presences Soir pas encore cloturees / حضور العشية ما تسكّرش',action:'Presences',tab:1};
+    banner={id:'soirLate',cls:'danger',msg:'✅ Presences Soir pas encore cloturees (limite 03:30) / حضور العشية ما تسكّرش',action:'Presences',tab:1};
   }
   // After 14:00 matin not closed
   else if(hour>=14&&!matinClosed&&!proactiveDismissed.matinLate){
-    banner={id:'matinLate',cls:'warn',msg:'✅ Presences Matin pas encore cloturees / حضور الصباح ما تسكّرش',action:'Presences',tab:1};
+    banner={id:'matinLate',cls:'warn',msg:'✅ Presences Matin pas encore cloturees (limite 16:30) / حضور الصباح ما تسكّرش',action:'Presences',tab:1};
+  }
+  // 3 days without any presences (check for RH too)
+  else if(!proactiveDismissed.noPres3d){
+    const pres=appData.presences||[];
+    const recent=pres.filter(p=>p.cloture);
+    if(!recent.length||(recent.length&&(new Date()-new Date(recent[0]?.date||today()))/86400000>3)){
+      banner={id:'noPres3d',cls:'danger',msg:'⚠️ 3 jours sans presences! / 3 أيام بلا حضور!',action:'Presences',tab:1};
+    }
   }
 
   const ct=document.getElementById('proactiveBannerContainer');
