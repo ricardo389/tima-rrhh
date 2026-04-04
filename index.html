@@ -440,12 +440,52 @@ function hideSyncBanner(){document.getElementById('syncBanner').style.display='n
 // Full dump of ALL active employees from Supabase → Google Sheets (overwrite)
 async function syncAllEmployeesToSheets(){
   try{
-    const{data}=await sb.from('empleados').select('*').eq('actif',true).order('local').order('poste');
+    const{data}=await sb.from('empleados').select('*').order('local').order('poste');
     if(!data||!data.length)return;
-    const rows=data.map(e=>({id:e.id,nom:e.nom,poste:e.poste,poste_specifique:e.poste_specifique||'',local:e.local,statut:e.actif?'actif':'inactif',date_entree:e.date_entree||'',telephone:e.telephone||''}));
-    // Use 'fullSync' action which overwrites the sheet
-    fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'fullSync',table:'employes',rows})}).catch(e=>console.warn('Sheets full sync error:',e.message));
-  }catch(e){console.warn('syncAllEmployees error:',e.message)}
+    const rows=data.map(e=>({id:e.id,nom:e.nom,poste:e.poste,poste_specifique:e.poste_specifique||'',local:e.local,marque:e.marque||'',date_entree:e.date_entree||'',actif:e.actif,telephone:e.telephone||'',motif_depart:e.motif_depart||'',note_depart:e.note_depart||''}));
+    fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'fullSync',table:'employes',rows})}).catch(e=>console.warn('Sheets sync:',e.message));
+  }catch(e){console.warn('syncAllEmployees:',e.message)}
+}
+
+// Full dump ALL tables from Supabase → Google Sheets (bulkSync)
+async function syncEverythingToSheets(){
+  toast('Synchronisation en cours... / المزامنة كتدار...');
+  try{
+    const[emp,pres,abs,plan,dem,rec,ut,ua]=await Promise.all([
+      sb.from('empleados').select('*').order('local'),
+      sb.from('presences').select('*').order('date',{ascending:false}).limit(2000),
+      sb.from('absences').select('*').order('date',{ascending:false}).limit(2000),
+      sb.from('plannings').select('*').order('semaine',{ascending:false}).limit(2000),
+      sb.from('demandes_personnel').select('*').order('date',{ascending:false}),
+      sb.from('recrutements').select('*'),
+      sb.from('uniform_types').select('*'),
+      sb.from('uniform_assignments').select('*'),
+    ]);
+
+    const tables={
+      employes:(emp.data||[]).map(e=>({id:e.id,nom:e.nom,poste:e.poste,poste_specifique:e.poste_specifique||'',local:e.local,marque:e.marque||'',date_entree:e.date_entree||'',actif:e.actif,telephone:e.telephone||'',motif_depart:e.motif_depart||'',note_depart:e.note_depart||''})),
+      presences:(pres.data||[]).map(p=>({id:p.id,employe_id:p.employe_id,employe_nom:p.employe_nom,local:p.local,date:p.date,statut:p.statut,heure:p.heure||'',turno:p.turno||'',cloture:p.cloture||false})),
+      absences:(abs.data||[]).map(a=>({id:a.id,employe_id:a.employe_id,employe_nom:a.employe_nom,local:a.local,date:a.date,motif:a.motif,prevenu:a.prevenu||'',reporte_par:a.reporte_par||'',notes:a.notes||''})),
+      plannings:(plan.data||[]).map(p=>({id:p.id,employe_id:p.employe_id,employe_nom:p.employe_nom,local:p.local,semaine:p.semaine,lundi:p.lundi||'',mardi:p.mardi||'',mercredi:p.mercredi||'',jeudi:p.jeudi||'',vendredi:p.vendredi||'',samedi:p.samedi||'',dimanche:p.dimanche||'',publie:p.publie||false})),
+      demandes:(dem.data||[]).map(d=>({id:d.id,local:d.local,poste:d.poste,urgence:d.urgence||'',motif:d.motif||'',date:d.date,statut:d.statut||'',demande_par:d.demande_par||''})),
+      recrutements:(rec.data||[]).map(r=>({id:r.id,nom:r.nom,tel:r.tel||'',local:r.local,poste:r.poste,etape:r.etape||'',demande_id:r.demande_id||'',notes:r.notes||''})),
+      uniform_types:(ut.data||[]).map(t=>({id:t.id,local:t.local,nom:t.nom,description:t.description||'',stock_total:t.stock_total||0})),
+      uniform_assignments:(ua.data||[]).map(a=>({id:a.id,employee_id:a.employee_id,employee_nom:a.employee_nom,local:a.local,uniform_type_id:a.uniform_type_id||'',uniform_nom:a.uniform_nom||'',taille:a.taille||'',quantite:a.quantite||1,date_livraison:a.date_livraison||'',date_retour:a.date_retour||'',retourne:a.retourne||false,notes:a.notes||''})),
+    };
+
+    const r=await fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'bulkSync',tables})});
+    const json=await r.json();
+    if(json.ok){
+      const counts=json.results||{};
+      const summary=Object.entries(counts).map(([k,v])=>v+' '+k).join(', ');
+      toast('✅ Sync complete: '+summary);
+    }else{
+      toast('Erreur sync: '+(json.error||'inconnu'),true);
+    }
+  }catch(e){
+    toast('Erreur sync: '+e.message,true);
+    console.error('syncEverything:',e);
+  }
 }
 
 // ============================================================
@@ -1263,7 +1303,7 @@ function renderEffectifs(){
       <div class="stat"><div class="num">${emps.length}</div><div class="label">Total employes<span class="tri-ar">مجموع الموظفين</span></div></div>
       ${LOCALES.filter(l=>emps.some(e=>e.local===l)).map(l=>`<div class="stat"><div class="num">${emps.filter(e=>e.local===l).length}</div><div class="label">${esc(l)}</div></div>`).join('')}
     </div>
-    <div class="section-header"><h2>${tri('effectifs')}</h2><button class="btn btn-p" onclick="openEmpForm()">+ Employe / + موظف</button></div>
+    <div class="section-header"><h2>${tri('effectifs')}</h2><div style="display:flex;gap:6px"><button class="btn btn-g" onclick="syncEverythingToSheets()" style="font-size:.72rem">Sync Sheets / مزامنة</button><button class="btn btn-p" onclick="openEmpForm()">+ Employe / + موظف</button></div></div>
     <div class="filter-bar">
       <select id="filtEmpLocal" onchange="filterEffectifs()"><option value="">Tous les locaux / كل اللوكالات</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select>
       <input id="filtEmpNom" placeholder="Chercher... قلّب..." oninput="filterEffectifs()">
@@ -1730,7 +1770,7 @@ function renderAlertes(){
   const d=appData.alertes||{sansPreavis:[],postesOuverts:[],sansRapport:[],today:today()};
 
   pg.innerHTML=`
-    <div class="section-header"><h2>${tri('alertes')}</h2><span style="color:var(--tx2);font-size:.82rem">${d.today}</span></div>
+    <div class="section-header"><h2>${tri('alertes')}</h2><div style="display:flex;gap:8px;align-items:center"><span style="color:var(--tx2);font-size:.82rem">${d.today}</span><button class="btn btn-g btn-s" onclick="syncEverythingToSheets()">Sync Sheets / مزامنة</button></div></div>
     <h3 style="font-size:.88rem;margin-bottom:8px">Absences sans preavis (7j) / غياب بلا ما خبّر (7 أيام)</h3>
     ${d.sansPreavis.length?d.sansPreavis.map(a=>`<div class="alert-card"><div class="at">${esc(a.employe_nom)} — ${esc(a.local)}</div><div class="ad">${a.date} &middot; ${esc(a.motif)} &middot; بلّغ: ${esc(a.reporte_par)}</div></div>`).join(''):'<div class="card" style="color:var(--gn);font-size:.85rem">Aucune alerte / ما كاين حتا تنبيه &#10003;</div>'}
     <h3 style="font-size:.88rem;margin:16px 0 8px">Postes ouverts +7 jours / بوسطات مفتوحين +7 أيام</h3>
