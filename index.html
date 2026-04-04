@@ -188,6 +188,43 @@ tr:hover td{background:rgba(108,92,231,.04)}
   .shift-grid .c{padding:5px 2px}
   .login-cards{grid-template-columns:1fr}
 }
+
+/* HELP TOOLTIPS */
+.help-btn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--s3);color:var(--tx2);font-size:.65rem;font-weight:700;border:none;cursor:pointer;margin-left:6px;vertical-align:middle;transition:.15s;flex-shrink:0}
+.help-btn:hover{background:var(--ac);color:#fff}
+.help-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:250;display:flex;align-items:center;justify-content:center;padding:16px}
+.help-box{background:var(--s1);border:1px solid var(--ac);border-radius:12px;padding:20px;max-width:380px;width:100%;max-height:80vh;overflow-y:auto}
+.help-box h4{color:var(--ac2);font-size:.95rem;margin-bottom:8px}
+.help-box p{font-size:.82rem;color:var(--tx);line-height:1.5;margin-bottom:6px}
+.help-box .har{font-size:.75rem;color:var(--tx3);direction:rtl;margin-top:4px;line-height:1.4}
+.help-box .hes{font-size:.65rem;color:var(--tx3);opacity:.7;margin-top:2px}
+.help-close{display:block;margin-top:12px;text-align:center}
+
+/* GUIDED TOUR */
+.tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300}
+.tour-highlight{position:fixed;z-index:301;border:2px solid var(--ac);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.75);transition:.3s}
+.tour-popup{position:fixed;z-index:302;background:var(--s1);border:1px solid var(--ac);border-radius:12px;padding:18px;max-width:320px;width:90%}
+.tour-popup h4{color:var(--ac2);font-size:.9rem;margin-bottom:6px}
+.tour-popup p{font-size:.8rem;color:var(--tx);line-height:1.4}
+.tour-popup .tar{font-size:.72rem;color:var(--tx3);direction:rtl;margin-top:4px}
+.tour-popup .tour-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.tour-step{font-size:.7rem;color:var(--tx2);margin-bottom:4px}
+
+/* ONBOARDING */
+.onboard-box{background:var(--s2);border:1px solid var(--ac);border-radius:var(--r);padding:14px;margin:14px}
+.onboard-box h4{font-size:.88rem;color:var(--ac2);margin-bottom:8px}
+.onboard-item{font-size:.82rem;margin-bottom:5px}
+.onboard-item.done{color:var(--gn)}
+.onboard-item.pending{color:var(--tx2)}
+
+/* PROACTIVE BANNERS */
+.proactive-banner{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);max-width:420px;width:90%;padding:12px 16px;border-radius:10px;font-size:.82rem;font-weight:500;z-index:250;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.proactive-banner.warn{background:rgba(253,203,110,.95);color:#333}
+.proactive-banner.danger{background:rgba(225,112,85,.95);color:#fff}
+.proactive-banner.blink{animation:pblink 1s ease-in-out infinite}
+@keyframes pblink{0%,100%{opacity:1}50%{opacity:.6}}
+.proactive-banner .pb-close{background:none;border:none;font-size:1.1rem;cursor:pointer;margin-left:auto;opacity:.7}
+.proactive-banner .pb-action{padding:5px 14px;border-radius:6px;border:1px solid currentColor;background:none;color:inherit;font-size:.76rem;font-weight:600;cursor:pointer;white-space:nowrap}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -263,6 +300,9 @@ tr:hover td{background:rgba(108,92,231,.04)}
 </div>
 <div class="toast" id="toast"></div>
 <div id="syncBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:rgba(253,203,110,.9);color:#333;text-align:center;padding:6px;font-size:.78rem;font-weight:600;z-index:400">Synchronisation en attente... / المزامنة كتسنّا... <button onclick="retrySyncQueue()" style="margin-left:8px;padding:2px 10px;border:1px solid #333;background:none;border-radius:4px;cursor:pointer;font-size:.72rem">Reessayer</button></div>
+<div id="proactiveBannerContainer"></div>
+<div id="helpModalContainer"></div>
+<div id="tourContainer"></div>
 
 <script>
 // ============================================================
@@ -494,6 +534,7 @@ function initApp(){
     document.querySelectorAll('#pagesContainer .page').forEach(p=>p.classList.remove('active'));
     document.getElementById('p-'+tabs[e.target.dataset.idx].id).classList.add('active');
     tabs[e.target.dataset.idx].render();
+    if(role==='gerant')setTimeout(injectHelpButtons,600);
   };
   document.getElementById('pagesContainer').innerHTML=(role==='gerant'?'<div id="gerantChecklist"></div>':'')+tabs.map((t,i)=>`<div class="page ${i===0?'active':''}" id="p-${t.id}"></div>`).join('');
   if(role==='gerant')renderChecklist();
@@ -795,6 +836,9 @@ function renderProtocoles(){
           <div><strong>Verifier que tous les employes ont pointe a leur heure</strong><br><span class="tri-ar">تأكّد أن كل الموظفين سجّلو فالوقت ديالهم</span><br><span class="tri-es">Verificar que todos los empleados ficharon a su hora</span></div>
         </div>
       </div>
+    </div>
+    <div style="margin-top:16px;text-align:center">
+      <button class="btn btn-g" onclick="restartTour()" style="padding:8px 20px">Revoir le tour guide / شوف الجولة من جديد</button>
     </div>
   `;
 }
@@ -1701,6 +1745,195 @@ async function initPublicPlanning(loc){
 }
 
 // ============================================================
+// ============================================================
+// BLOQUE E — GUIDE SYSTEM (4 levels)
+// ============================================================
+
+// --- NIVEL 1: Contextual Help ---
+const HELP={
+  equipe:{t:'Equipe / فريق اللوكال',b:'Gerez la liste des employes de votre local. Ajoutez, modifiez ou desactivez des employes. Chaque employe a un poste general et un poste specifique.',a:'هنا كتدبّر ليست الموظفين ديال اللوكال ديالك. زيد، عدّل، ولا نحي موظف. كل واحد عندو بوسط عام وبوسط دقيق.'},
+  presences:{t:'Presences / الحضور',b:'Enregistrez la presence de votre equipe par turno (Matin/Soir). Cochez les presents, marquez les absents avec un motif. Chaque turno ne peut etre cloture qu\'une seule fois.',a:'سجّل حضور الفريق ديالك حسب الشيفت (صباح/عشية). علّم اللي حاضر، وحدد سبب الغياب. كل شيفت كيتسكّر مرة وحدة بوحدها.'},
+  planning:{t:'Planning / البلانينغ',b:'Planifiez les shifts de votre equipe pour la semaine (Matin/Soir/OFF). Publiez avant dimanche minuit. Le planning publie alimente automatiquement les presences.',a:'خطط الشيفتات ديال الفريق ديالك للسيمانة (صباح/عشية/راحة). نشرو قبل ليلة الحد. البلانينغ المنشور كيغذّي الحضور أوتوماتيك.'},
+  absences:{t:'Absences / الغياب',b:'Consultez l\'historique des absences et signalez manuellement une absence avec motif et si l\'employe a prevenu.',a:'شوف تاريخ الغياب وبلّغ يدوي على غياب مع السبب وواش الموظف خبّر ولا لا.'},
+  demandes:{t:'Demandes / الطلبات',b:'Demandez du personnel supplementaire pour votre local. Indiquez le poste, l\'urgence et le motif.',a:'طلب موظفين زايدين للوكال ديالك. حدد البوسط، الاستعجال والسبب.'},
+  uniformes:{t:'Uniformes / اللباس',b:'Gerez les pieces d\'uniforme et leur attribution aux employes. Suivez le stock et les retours.',a:'دبّر قطع اللباس والتوزيع ديالهم على الموظفين. تابع الستوك والرجوع.'},
+  protocoles:{t:'Protocoles / البروتوكولات',b:'Les regles a suivre chaque jour et chaque semaine en tant que gerant.',a:'القواعد اللي خاصك تتبع كل نهار وكل سيمانة بحال المسؤول.'},
+  addEmp:{t:'Ajouter un employe / زيد موظف',b:'Remplissez le nom, poste general, poste specifique et date d\'entree.',a:'عمّر الإسم، البوسط العام، البوسط الدقيق وتاريخ الدخول.'},
+  cloturer:{t:'Cloturer / سكّر',b:'Ferme definitivement le pointage de ce turno. Une fois cloture, plus de modifications possibles.',a:'كيسكّر نهائيا الحضور ديال هاد الشيفت. من بعد ما تسكّر ما يمكنش تبدّل.'},
+  publier:{t:'Publier / نشر',b:'Rend le planning visible pour toute l\'equipe et alimente les presences de la semaine.',a:'كيخلّي البلانينغ باين للفريق كامل وكيغذّي الحضور ديال السيمانة.'},
+  modifier:{t:'Modifier / عدّل',b:'Ouvrir le formulaire pour modifier les informations de cet element.',a:'فتح الفورمولير باش تعدّل المعلومات ديال هاد العنصر.'},
+  desactiver:{t:'Desactiver / نحي',b:'L\'employe ne sera plus visible dans les listes actives mais reste dans l\'historique.',a:'الموظف ما غاديش يبان فالليستات النشطة ولكن كيبقا فالتاريخ.'}
+};
+
+function showHelp(key){
+  const h=HELP[key];if(!h)return;
+  document.getElementById('helpModalContainer').innerHTML=`<div class="help-modal" onclick="if(event.target===this)this.innerHTML=''">
+    <div class="help-box">
+      <h4>${h.t}</h4>
+      <p>${h.b}</p>
+      <div class="har">${h.a}</div>
+      <div class="help-close"><button class="btn btn-s btn-g" onclick="this.closest('.help-modal').innerHTML=''">Fermer / إغلاق</button></div>
+    </div>
+  </div>`;
+}
+
+function hb(key){return `<button class="help-btn" onclick="event.stopPropagation();showHelp('${key}')">?</button>`}
+
+// --- NIVEL 2: Guided Tour ---
+const TOUR_STEPS=[
+  {sel:'button[data-idx="0"]',t:'Equipe / الفريق',d:'Ici vous gerez votre equipe : ajouter, modifier, desactiver des employes.',a:'هنا كتدبّر الفريق ديالك : زيد، عدّل، نحي موظفين.'},
+  {sel:'button[data-idx="1"]',t:'Presences / الحضور',d:'Pointez vos employes chaque jour par turno Matin et Soir.',a:'سجّل حضور الموظفين كل نهار حسب الشيفت صباح وعشية.'},
+  {sel:'button[data-idx="2"]',t:'Planning / البلانينغ',d:'Planifiez Matin/Soir/OFF pour chaque employe. Publiez avant dimanche.',a:'خطّط صباح/عشية/راحة لكل موظف. نشر قبل نهار الحد.'},
+  {sel:'button[data-idx="3"]',t:'Absences / الغياب',d:'Signalez et consultez les absences avec motifs.',a:'بلّغ وشوف الغياب مع الأسباب.'},
+  {sel:'button[data-idx="4"]',t:'Demandes / الطلبات',d:'Demandez du renfort pour votre local.',a:'طلب التعزيزات للوكال ديالك.'},
+  {sel:'button[data-idx="5"]',t:'Uniformes / اللباس',d:'Gerez les uniformes et le stock.',a:'دبّر اللباس والستوك.'},
+  {sel:'button[data-idx="6"]',t:'Protocoles / البروتوكولات',d:'Les regles a suivre au quotidien.',a:'القواعد اللي خاصك تتبع كل نهار.'}
+];
+let tourIdx=0;
+
+function startTour(){
+  if(localStorage.getItem('tima_tour_done')&&!arguments[0])return;
+  tourIdx=0;showTourStep();
+}
+
+function showTourStep(){
+  if(tourIdx>=TOUR_STEPS.length){endTour();return}
+  const step=TOUR_STEPS[tourIdx];
+  const el=document.querySelector(step.sel);
+  if(!el){tourIdx++;showTourStep();return}
+  const r=el.getBoundingClientRect();
+  const tc=document.getElementById('tourContainer');
+  tc.innerHTML=`<div class="tour-overlay"></div>
+    <div class="tour-highlight" style="top:${r.top-4}px;left:${r.left-4}px;width:${r.width+8}px;height:${r.height+8}px"></div>
+    <div class="tour-popup" style="top:${r.bottom+12}px;left:${Math.min(r.left,window.innerWidth-330)}px">
+      <div class="tour-step">Etape ${tourIdx+1}/${TOUR_STEPS.length}</div>
+      <h4>${step.t}</h4>
+      <p>${step.d}</p>
+      <div class="tar">${step.a}</div>
+      <div class="tour-btns">
+        <button class="btn btn-s btn-g" onclick="endTour()">Passer / تجاوز</button>
+        <button class="btn btn-s btn-p" onclick="tourIdx++;showTourStep()">Suivant / التالي &rarr;</button>
+      </div>
+    </div>`;
+}
+
+function endTour(){
+  document.getElementById('tourContainer').innerHTML='';
+  localStorage.setItem('tima_tour_done','1');
+}
+
+function restartTour(){startTour(true)}
+
+// --- NIVEL 3: Onboarding Checklist ---
+function renderOnboarding(){
+  if(role!=='gerant')return;
+  const firstUse=localStorage.getItem('tima_first_use');
+  if(!firstUse)localStorage.setItem('tima_first_use',Date.now().toString());
+  const daysSince=(Date.now()-parseInt(localStorage.getItem('tima_first_use')||Date.now()))/(86400000);
+  if(daysSince>7){return}// Past 7 days
+
+  const tc=turnosConfig||{};
+  const hasConfig=!!tc.id;
+  const hasTeam=(appData.employes||[]).length>0;
+  const hasPlan=(appData.plannings||[]).some(p=>p.publie);
+  const hasPres=(appData.presences||[]).some(p=>p.cloture);
+  const allDone=hasConfig&&hasTeam&&hasPlan&&hasPres;
+
+  if(allDone){localStorage.setItem('tima_onboard_done','1');return}
+  if(localStorage.getItem('tima_onboard_done'))return;
+
+  const el=document.getElementById('gerantChecklist');
+  if(!el)return;
+  const existing=el.innerHTML;
+  el.innerHTML=`<div class="onboard-box">
+    <h4>Premiere semaine / الأسبوع الأول <span class="tri-es">Primera semana</span></h4>
+    <div class="onboard-item ${hasConfig?'done':'pending'}">${hasConfig?'✅':'☐'} Configurer les heures de ton local (Matin/Soir) <span class="tri-ar">ضبط ساعات اللوكال</span></div>
+    <div class="onboard-item ${hasTeam?'done':'pending'}">${hasTeam?'✅':'☐'} Verifier que ton equipe est complete <span class="tri-ar">تأكد أن الفريق كامل</span></div>
+    <div class="onboard-item ${hasPlan?'done':'pending'}">${hasPlan?'✅':'☐'} Publier ton premier planning <span class="tri-ar">نشر أول بلانينغ</span></div>
+    <div class="onboard-item ${hasPres?'done':'pending'}">${hasPres?'✅':'☐'} Faire ta premiere cloture de presences <span class="tri-ar">أول إغلاق ديال الحضور</span></div>
+  </div>`+existing;
+}
+
+// --- NIVEL 4: Proactive Smart Banners ---
+let proactiveDismissed={};
+
+function checkProactiveBanners(){
+  if(role!=='gerant')return;
+  const hour=new Date().getHours();
+  const dow=new Date().getDay(); // 0=dim
+  const matinClosed=isTurnoClosed('matin');
+  const soirClosed=isTurnoClosed('soir');
+  const wk=getWeekStr();
+  const planPub=(appData.plannings||[]).some(p=>p.publie);
+
+  let banner=null;
+
+  // Monday 01:00+ no planning → red blinking
+  if(dow===1&&hour>=1&&!planPub&&!proactiveDismissed.planLate){
+    banner={id:'planLate',cls:'danger blink',msg:'⚠️ Planning non publie! / البلانينغ ما تنشرش!',action:'Planning',tab:2};
+  }
+  // Sunday 20:00+ no planning
+  else if(dow===0&&hour>=20&&!planPub&&!proactiveDismissed.planSun){
+    banner={id:'planSun',cls:'danger',msg:'📅 Planning a publier avant minuit! / نشر البلانينغ قبل نص الليل!',action:'Planning',tab:2};
+  }
+  // After 23:00 soir not closed
+  else if(hour>=23&&!soirClosed&&!proactiveDismissed.soirLate){
+    banner={id:'soirLate',cls:'danger',msg:'✅ Presences Soir pas encore cloturees / حضور العشية ما تسكّرش',action:'Presences',tab:1};
+  }
+  // After 14:00 matin not closed
+  else if(hour>=14&&!matinClosed&&!proactiveDismissed.matinLate){
+    banner={id:'matinLate',cls:'warn',msg:'✅ Presences Matin pas encore cloturees / حضور الصباح ما تسكّرش',action:'Presences',tab:1};
+  }
+
+  const ct=document.getElementById('proactiveBannerContainer');
+  if(!banner){ct.innerHTML='';return}
+  ct.innerHTML=`<div class="proactive-banner ${banner.cls}">
+    <span>${banner.msg}</span>
+    <button class="pb-action" onclick="document.querySelector('button[data-idx=&quot;${banner.tab}&quot;]').click();dismissBanner('${banner.id}')">Aller / روح</button>
+    <button class="pb-close" onclick="dismissBanner('${banner.id}')">&times;</button>
+  </div>`;
+}
+
+function dismissBanner(id){
+  proactiveDismissed[id]=true;
+  document.getElementById('proactiveBannerContainer').innerHTML='';
+}
+
+// --- Inject help buttons into section headers ---
+function injectHelpButtons(){
+  if(role!=='gerant')return;
+  // We inject after render by modifying section headers
+  setTimeout(()=>{
+    const headers=document.querySelectorAll('.section-header h2');
+    const pageMap={plantillaG:'equipe','p-presences':'presences','p-planning':'planning','p-absences':'absences','p-demandes':'demandes','p-uniformes':'uniformes','p-protocoles':'protocoles'};
+    headers.forEach(h=>{
+      if(h.dataset.helpDone)return;
+      const page=h.closest('.page');
+      if(!page)return;
+      const key=pageMap[page.id]||'';
+      if(key&&!h.querySelector('.help-btn')){
+        h.insertAdjacentHTML('beforeend',hb(key));
+        h.dataset.helpDone='1';
+      }
+    });
+  },500);
+}
+
+// --- Wire into initApp ---
+const _origInitApp=initApp;
+initApp=function(){
+  _origInitApp();
+  if(role==='gerant'){
+    renderOnboarding();
+    injectHelpButtons();
+    // Start tour on first login
+    if(!localStorage.getItem('tima_tour_done'))setTimeout(()=>startTour(),1500);
+    // Proactive banners check every 60s
+    checkProactiveBanners();
+    setInterval(checkProactiveBanners,60000);
+  }
+};
+
 // AUTO-DETECT PUBLIC PLANNING URL
 // ============================================================
 (function(){
