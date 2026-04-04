@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>RRHH — Tima Grupo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1117;--s1:#1a1d27;--s2:#242835;--s3:#2e3244;
+  --tx:#e4e6f0;--tx2:#9499b3;--tx3:#6b7094;
+  --ac:#6c5ce7;--ac2:#a29bfe;
+  --gn:#00b894;--or:#fdcb6e;--rd:#e17055;--bl:#74b9ff;
+  --r:10px;
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;overflow-x:hidden}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit;font-size:.88rem}
+a{color:var(--ac2);text-decoration:none}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+
+.loader{display:inline-block;width:18px;height:18px;border:2px solid var(--s3);border-top-color:var(--ac);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.page-loader{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--tx2);font-size:.9rem}
+
+/* LOGIN */
+.login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:24px;gap:20px}
+.login-logo{text-align:center;margin-bottom:12px}
+.login-logo h1{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-logo .sub{color:var(--tx2);font-size:.78rem;margin-top:4px}
+.login-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;width:100%;max-width:720px}
+.login-card{background:var(--s1);border:2px solid var(--s3);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:.25s}
+.login-card:hover{border-color:var(--ac);transform:translateY(-2px)}
+.login-card.active{border-color:var(--ac);background:var(--s2)}
+.login-card .icon{font-size:2.2rem;margin-bottom:10px}
+.login-card h2{font-size:1.05rem;margin-bottom:4px}
+.login-card .desc{font-size:.78rem;color:var(--tx2)}
+.login-card .desc-ar{font-size:.72rem;color:var(--tx3);margin-top:3px;direction:rtl;font-family:'Segoe UI',Tahoma,sans-serif}
+.login-card .desc-es{font-size:.62rem;color:var(--tx3);margin-top:1px;opacity:.7}
+.login-form{width:100%;max-width:340px;display:none;flex-direction:column;gap:12px}
+.login-form.show{display:flex}
+.login-form select,.login-form input{width:100%;padding:12px 14px;background:var(--s2);border:1px solid var(--s3);border-radius:var(--r);color:var(--tx);font-size:.9rem}
+.login-form input:focus,.login-form select:focus{outline:none;border-color:var(--ac)}
+.login-btn{width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:.95rem;font-weight:700;transition:.2s}
+.login-btn:hover{background:var(--ac2)}
+.login-error{color:var(--rd);font-size:.82rem;text-align:center;min-height:20px}
+
+/* TOPBAR */
+.topbar{background:var(--s1);border-bottom:1px solid var(--s3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar .left{display:flex;align-items:center;gap:10px}
+.topbar .logo{font-size:.95rem;font-weight:700;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .role-badge{padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase}
+.topbar .role-badge.gerant{background:rgba(0,184,148,.15);color:var(--gn)}
+.topbar .role-badge.rh{background:rgba(108,92,231,.15);color:var(--ac2)}
+.topbar .role-badge.direction{background:rgba(253,203,110,.15);color:var(--or)}
+.topbar .local-name{font-size:.78rem;color:var(--tx2)}
+.btn-logout{background:none;border:1px solid var(--s3);color:var(--tx2);padding:6px 14px;border-radius:var(--r);font-size:.78rem;transition:.2s}
+.btn-logout:hover{border-color:var(--rd);color:var(--rd)}
+
+/* NAV */
+.nav-tabs{display:flex;gap:3px;background:var(--s1);padding:6px 10px;overflow-x:auto;border-bottom:1px solid var(--s3);position:sticky;top:49px;z-index:99}
+.nav-tabs button{background:none;border:none;color:var(--tx2);padding:7px 14px;border-radius:var(--r);font-size:.8rem;white-space:nowrap;transition:.2s}
+.nav-tabs button.active{background:var(--ac);color:#fff}
+.nav-tabs button:hover:not(.active){background:var(--s2)}
+
+/* CONTENT */
+.app-wrap{display:none}.app-wrap.show{display:block}
+.page{display:none;padding:14px;max-width:1100px;margin:0 auto}.page.active{display:block}
+
+/* COMPONENTS */
+.card{background:var(--s1);border:1px solid var(--s3);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.card h3{font-size:.92rem;color:var(--ac2);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.section-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.section-header h2{font-size:1.15rem;font-weight:600}
+.tri-sub{display:block;margin-top:2px}
+.tri-ar{font-size:.7em;color:var(--tx3);direction:rtl;display:block}
+.tri-es{font-size:.58em;color:var(--tx3);opacity:.7;display:block}
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:14px}
+.stat{background:var(--s2);border-radius:var(--r);padding:12px;text-align:center}
+.stat .num{font-size:1.5rem;font-weight:700;color:var(--ac2)}
+.stat .label{font-size:.72rem;color:var(--tx2);margin-top:3px}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600}
+.b-gn{background:rgba(0,184,148,.15);color:var(--gn)}
+.b-or{background:rgba(253,203,110,.15);color:var(--or)}
+.b-rd{background:rgba(225,112,85,.15);color:var(--rd)}
+.b-bl{background:rgba(116,185,255,.15);color:var(--bl)}
+.b-ac{background:rgba(108,92,231,.15);color:var(--ac2)}
+
+.btn{border:none;padding:8px 16px;border-radius:var(--r);font-size:.82rem;font-weight:600;transition:.2s}
+.btn-p{background:var(--ac);color:#fff}.btn-p:hover{background:var(--ac2)}
+.btn-s{padding:5px 12px;font-size:.76rem}
+.btn-g{background:none;border:1px solid var(--s3);color:var(--tx2)}.btn-g:hover{border-color:var(--ac);color:var(--ac2)}
+.btn-d{background:var(--rd);color:#fff}.btn-d:hover{opacity:.8}
+.btn-cta{background:linear-gradient(135deg,var(--or),#e17055);color:#fff;font-size:.9rem;padding:12px 24px;border-radius:12px;border:none;font-weight:700;box-shadow:0 4px 16px rgba(253,203,110,.3)}.btn-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(253,203,110,.4)}
+.del-link{font-size:.76rem;color:var(--rd);cursor:pointer;margin-left:6px}
+
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;color:var(--tx2);font-weight:500;padding:9px 7px;border-bottom:1px solid var(--s3);white-space:nowrap}
+td{padding:9px 7px;border-bottom:1px solid rgba(46,50,68,.5);vertical-align:middle}
+tr:hover td{background:rgba(108,92,231,.04)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filter-bar select,.filter-bar input{padding:7px 10px;background:var(--s2);border:1px solid var(--s3);border-radius:8px;color:var(--tx);font-size:.8rem}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:center;justify-content:center;padding:14px}
+.modal-bg.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--s3);border-radius:12px;width:100%;max-width:440px;max-height:88vh;overflow-y:auto;padding:22px}
+.modal h3{margin-bottom:14px;font-size:1rem}
+.fg{margin-bottom:12px}
+.fg label{display:block;font-size:.78rem;color:var(--tx2);margin-bottom:3px}
+.fg .ar{font-size:.68rem;color:var(--tx3);direction:rtl;display:inline}
+.fg .es{font-size:.58rem;color:var(--tx3);opacity:.7}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--s3);border-radius:8px;color:var(--tx);outline:none}
+.fg input:focus,.fg select:focus{border-color:var(--ac)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+
+/* PRESENCE LIST */
+.pres-list{display:flex;flex-direction:column;gap:6px}
+.pres-item{display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:8px;padding:10px 12px;transition:.15s}
+.pres-item.absent{border-left:3px solid var(--rd);opacity:.85}
+.pres-item .emp-info{flex:1}
+.pres-item .emp-name{font-weight:600;font-size:.88rem}
+.pres-item .emp-poste{font-size:.72rem;color:var(--tx2)}
+.pres-check{width:28px;height:28px;border-radius:6px;border:2px solid var(--s3);background:none;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.15s;flex-shrink:0}
+.pres-check.checked{background:var(--gn);border-color:var(--gn);color:#fff}
+.pres-motif{margin-top:6px;display:flex;gap:4px;flex-wrap:wrap}
+.pres-motif button{padding:3px 10px;border:1px solid var(--s3);background:none;border-radius:5px;font-size:.7rem;color:var(--tx2);transition:.12s}
+.pres-motif button.sel{background:rgba(225,112,85,.2);border-color:var(--rd);color:var(--rd)}
+
+/* PIPELINE */
+.pipeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.pipe-col{background:var(--s2);border-radius:var(--r);padding:10px;min-height:100px}
+.pipe-col h4{font-size:.76rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.pipe-col h4 .cnt{background:var(--s3);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:.68rem}
+.pipe-card{background:var(--s1);border:1px solid var(--s3);border-radius:8px;padding:9px;margin-bottom:6px;font-size:.8rem}
+.pipe-card .nm{font-weight:600}
+.pipe-card .mt{color:var(--tx2);font-size:.72rem;margin-top:3px}
+.pipe-card .pa{margin-top:6px;display:flex;gap:3px;flex-wrap:wrap}
+
+/* PLANNING GRID */
+.plan-grid{display:grid;grid-template-columns:110px minmax(100px,1fr) repeat(7,1fr);gap:1px;background:var(--s3);border-radius:var(--r);overflow:hidden;font-size:.74rem}
+.plan-grid .pg{background:var(--s1);padding:6px 5px;min-height:36px;display:flex;align-items:center;justify-content:center;text-align:center}
+.plan-grid .pg.hd{background:var(--s2);color:var(--tx2);font-weight:600;font-size:.68rem;text-transform:uppercase}
+.plan-grid .pg.poste{justify-content:flex-start;color:var(--tx2);font-size:.68rem}
+.plan-grid .pg.nom{justify-content:flex-start;font-weight:500;font-size:.76rem}
+.plan-grid .pg.cell{cursor:pointer;transition:.12s;font-weight:700;font-size:.72rem;user-select:none}
+.plan-grid .pg.cell:hover{filter:brightness(1.3)}
+.plan-grid .pg.cell.c-m{background:rgba(0,184,148,.18);color:var(--gn)}
+.plan-grid .pg.cell.c-s{background:rgba(253,203,110,.15);color:var(--or)}
+.plan-grid .pg.cell.c-off{background:rgba(225,112,85,.12);color:var(--rd)}
+.plan-grid .pg.cell.c-custom{background:rgba(116,185,255,.1);color:var(--bl);font-size:.62rem;cursor:default}
+.plan-grid input.lab-input{width:100%;padding:2px;background:var(--s2);border:1px solid var(--s3);border-radius:3px;color:var(--bl);font-size:.62rem;text-align:center}
+.plan-warn{display:inline-block;color:var(--rd);font-size:.7rem;font-weight:600;margin-left:4px}
+.plan-published{background:rgba(0,184,148,.1);border:1px solid var(--gn);border-radius:var(--r);padding:8px 14px;text-align:center;color:var(--gn);font-size:.82rem;margin-top:10px}
+.plan-actions{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.config-box{background:var(--s2);border:1px solid var(--s3);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.config-box h4{font-size:.85rem;color:var(--ac2);margin-bottom:8px}
+.config-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:6px;font-size:.8rem}
+.config-row label{color:var(--tx2);min-width:50px}
+.config-row input[type=time]{padding:5px 8px;background:var(--s1);border:1px solid var(--s3);border-radius:6px;color:var(--tx);font-size:.82rem}
+@media(max-width:600px){
+  .plan-grid{grid-template-columns:70px minmax(70px,1fr) repeat(7,1fr);font-size:.62rem}
+  .plan-grid .pg{padding:4px 2px;min-height:30px}
+  .plan-grid .pg.nom{font-size:.64rem}
+}
+
+/* ALERT CARDS */
+.alert-card{border-left:3px solid var(--rd);background:var(--s1);border-radius:0 var(--r) var(--r) 0;padding:12px 14px;margin-bottom:8px}
+.alert-card.warn{border-left-color:var(--or)}
+.alert-card.info{border-left-color:var(--bl)}
+.alert-card .at{font-size:.82rem;font-weight:600}
+.alert-card .ad{font-size:.75rem;color:var(--tx2);margin-top:3px}
+
+/* TOAST */
+.toast{position:fixed;bottom:18px;right:18px;background:var(--gn);color:#fff;padding:10px 20px;border-radius:var(--r);font-size:.83rem;font-weight:500;opacity:0;transform:translateY(20px);transition:.3s;z-index:300;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.err{background:var(--rd)}
+
+@media(max-width:600px){
+  .topbar{padding:8px 12px}.page{padding:10px}.modal{padding:16px}
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+  .shift-grid{grid-template-columns:90px repeat(7,1fr);font-size:.68rem}
+  .shift-grid .c{padding:5px 2px}
+  .login-cards{grid-template-columns:1fr}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-logo">
+    <h1>Tima Grupo</h1>
+    <div class="sub">Gestion des Ressources Humaines</div>
+  </div>
+  <div class="login-cards">
+    <div class="login-card" onclick="selectRole('gerant')">
+      <div class="icon">&#x1f3ea;</div>
+      <h2>Gerant</h2>
+      <div class="desc">Presences, absences, equipe</div>
+      <div class="desc-ar">الحضور، الغياب، الفريق</div>
+      <div class="desc-es">Presencias, ausencias, equipo</div>
+    </div>
+    <div class="login-card" onclick="selectRole('rh')">
+      <div class="icon">&#x1f4cb;</div>
+      <h2>Ressources Humaines</h2>
+      <div class="desc">Gestion complete du personnel</div>
+      <div class="desc-ar">تدبير شامل ديال الموظفين</div>
+      <div class="desc-es">Gestion completa del personal</div>
+    </div>
+    <div class="login-card" onclick="selectRole('direction')">
+      <div class="icon">&#x1f4ca;</div>
+      <h2>Direction</h2>
+      <div class="desc">Tableau de bord et alertes</div>
+      <div class="desc-ar">لوحة التحكم والتنبيهات</div>
+      <div class="desc-es">Dashboard y alertas</div>
+    </div>
+  </div>
+  <div class="login-form" id="loginForm">
+    <select id="loginLocal" style="display:none"><option value="">-- Choisir le local / ختار اللوكال --</option></select>
+    <input id="loginPin" type="password" inputmode="numeric" maxlength="4" placeholder="Code PIN" style="display:none;text-align:center;font-size:1.3rem;letter-spacing:8px">
+    <div class="login-error" id="loginError"></div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Entrer / دخول</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app-wrap" id="appWrap">
+  <div class="topbar">
+    <div class="left">
+      <span class="logo">Tima RRHH</span>
+      <span class="role-badge" id="roleBadge"></span>
+      <span class="local-name" id="localLabel"></span>
+    </div>
+    <button class="btn-logout" onclick="logout()">Deconnexion / خروج</button>
+  </div>
+  <nav class="nav-tabs" id="navTabs"></nav>
+  <div id="pagesContainer"></div>
+</div>
+
+<!-- PUBLIC PLANNING VIEW (no login) -->
+<div id="publicView" style="display:none;padding:16px;max-width:1100px;margin:0 auto">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+    <div>
+      <h1 style="font-size:1.2rem;font-weight:700;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Tima Grupo — Planning</h1>
+      <div id="pubLocalName" style="font-size:.85rem;color:var(--tx2)"></div>
+    </div>
+    <div id="pubWeekLabel" style="font-size:.82rem;color:var(--tx2)"></div>
+  </div>
+  <div id="pubPlanContent"></div>
+</div>
+
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalBox"></div>
+</div>
+<div class="toast" id="toast"></div>
+<div id="syncBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:rgba(253,203,110,.9);color:#333;text-align:center;padding:6px;font-size:.78rem;font-weight:600;z-index:400">Synchronisation en attente... / المزامنة كتسنّا... <button onclick="retrySyncQueue()" style="margin-left:8px;padding:2px 10px;border:1px solid #333;background:none;border-radius:4px;cursor:pointer;font-size:.72rem">Reessayer</button></div>
+
+<script>
+// ============================================================
+// SUPABASE CLIENT
+// ============================================================
+const SB_URL='https://zkyvvrdatmvdttnfxucy.supabase.co';
+const SB_KEY='sb_publishable_70Zix-yB8KMyLOlEyO84hg_hVJIQtqB';
+const sb=window.supabase.createClient(SB_URL,SB_KEY);
+const LOCALES=['Vicio Malabata','Vicio Marjane',"Cluky's Marif",'Vicio Al Hoceima','Vicio Tetuan',"Cluky's Nador",'Vicio Rabat'];
+const POSTES=['Plonge','Polyvalent Cuisine','Polyvalent Salle','Operateur Laboratoire','Chef de Cuisine','Gerant Matin','Gerant Soir'];
+const PRENDAS=['T-shirt','Pantalon','Tablier','Casquette','Chaussures','Veste'];
+const TAILLES=['XS','S','M','L','XL','XXL'];
+const PIPE=['recu','entretien','selectionne','embauche'];
+const PIPE_LABELS={recu:'Recu',entretien:'Entretien',selectionne:'Selectionne',embauche:'Embauche'};
+const JOURS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const SHIFTS=['','Matin','Soir','Repos'];
+const SHIFT_CLASS={Matin:'sh-m',Soir:'sh-s',Repos:'sh-r'};
+const PINS={rh:'1234',direction:'5678'};
+const MOTIFS_ABS=['maladie','personnel','sans preavis','autre'];
+const MOTIFS_AR={maladie:'مريض',personnel:'شخصي','sans preavis':'بلا ما خبّر',autre:'سبب آخر'};
+
+// Trilingual: [FR, Arabic Darija, ES]
+const L={
+  plantilla:    ['Effectifs du local','فريق اللوكال','Plantilla del local'],
+  presences:    ['Presences du jour','حضور اليوم','Presencias del dia'],
+  absences:     ['Signaler une absence','بلّغ على غياب','Registrar ausencia'],
+  demande:      ['Demande de personnel','طلب موظفين','Solicitud de personal'],
+  planning:     ['Planning hebdomadaire','البلانينغ ديال السيمانة','Planificacion semanal'],
+  effectifs:    ['Effectifs','الموظفين','Plantilla'],
+  recrutement:  ['Recrutement','التوظيف','Contratacion'],
+  uniformes:    ['Uniformes','اللباس ديال الخدمة','Uniformes'],
+  absHist:      ['Absences & Presences','الغياب والحضور','Ausencias y presencias'],
+  alertes:      ['Alertes','التنبيهات','Alertas'],
+  resume:       ['Resume par local','ملخص كل لوكال','Resumen por local'],
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let role='',local='';
+let appData={employes:[],presences:[],absences:[],plannings:[],demandes:[],recrutements:[],uniformes:[]};
+
+// ============================================================
+// SUPABASE DATA LOADER (single bulk load on login)
+// ============================================================
+async function loadAllData(){
+  try{
+    const todayStr=today();
+    if(role==='gerant'&&local){
+      const [emp,pres,abs,dem]=await Promise.all([
+        sb.from('empleados').select('*').eq('local',local).eq('actif',true),
+        sb.from('presences').select('*').eq('local',local).eq('date',todayStr),
+        sb.from('absences').select('*').eq('local',local).order('date',{ascending:false}),
+        sb.from('demandes_personnel').select('*').eq('local',local).order('date',{ascending:false}),
+      ]);
+      appData={employes:emp.data||[],presences:pres.data||[],absences:abs.data||[],demandes:dem.data||[],plannings:[],today:todayStr,semaine:getWeekStr()};
+      // Load planning for current week
+      const pl=await sb.from('plannings').select('*').eq('local',local).eq('semaine',getWeekStr());
+      appData.plannings=pl.data||[];
+      return true;
+    }
+    if(role==='rh'){
+      const [emp,abs,pres,dem,rec,uni]=await Promise.all([
+        sb.from('empleados').select('*').eq('actif',true).order('local'),
+        sb.from('absences').select('*').order('date',{ascending:false}).limit(500),
+        sb.from('presences').select('*').order('date',{ascending:false}).limit(500),
+        sb.from('demandes_personnel').select('*').order('date',{ascending:false}),
+        sb.from('recrutements').select('*').order('created_at',{ascending:false}),
+        sb.from('uniformes').select('*'),
+      ]);
+      appData={employes:emp.data||[],absences:abs.data||[],presences:pres.data||[],demandes:dem.data||[],recrutements:rec.data||[],uniformes:uni.data||[],today:todayStr};
+      return true;
+    }
+    if(role==='direction'){
+      const [emp,abs,pres,dem]=await Promise.all([
+        sb.from('empleados').select('*').eq('actif',true),
+        sb.from('absences').select('*').order('date',{ascending:false}).limit(200),
+        sb.from('presences').select('*').eq('date',todayStr),
+        sb.from('demandes_personnel').select('*'),
+      ]);
+      const emps=emp.data||[],absList=abs.data||[],presList=pres.data||[],demList=dem.data||[];
+      const sevenAgo=new Date();sevenAgo.setDate(sevenAgo.getDate()-7);
+      const sevenStr=sevenAgo.toISOString().slice(0,10);
+      const sansPreavis=absList.filter(a=>a.prevenu==='non'&&a.date>=sevenStr);
+      const postesOuverts=demList.filter(d=>d.statut!=='pourvu'&&(new Date()-new Date(d.date))/86400000>7);
+      const reportedToday=new Set(presList.map(p=>p.local));
+      const sansRapport=LOCALES.filter(l=>!reportedToday.has(l));
+      const resumen=LOCALES.map(loc=>({local:loc,effectif:emps.filter(e=>e.local===loc).length,absencesAujourdhui:absList.filter(a=>a.local===loc&&a.date===todayStr).length,demandesOuvertes:demList.filter(d=>d.local===loc&&d.statut!=='pourvu').length}));
+      appData={alertes:{sansPreavis,postesOuverts,sansRapport,today:todayStr},resumen};
+      return true;
+    }
+    return false;
+  }catch(e){console.error('loadAllData:',e);return false}
+}
+
+// ============================================================
+// GOOGLE SHEETS SYNC (fire-and-forget, accumulate only)
+// ============================================================
+const SHEETS_API='https://script.google.com/macros/s/AKfycbzCSIh8x7-PawUDfEMj2jIE9l80yHKyrrbbrl1YmMq56-Cauy9WegXIJCoq0YP8FzkF/exec';
+let sheetsSyncQueue=[];
+let sheetsSyncRunning=false;
+
+function syncToSheets(table, rows){
+  if(!rows||!rows.length)return;
+  sheetsSyncQueue.push({table,rows:Array.isArray(rows)?rows:[rows]});
+  if(!sheetsSyncRunning)processSheetsSyncQueue();
+}
+
+async function processSheetsSyncQueue(){
+  if(!sheetsSyncQueue.length){sheetsSyncRunning=false;hideSyncBanner();return}
+  sheetsSyncRunning=true;
+  const item=sheetsSyncQueue[0];
+  try{
+    const r=await fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'sync',table:item.table,rows:item.rows})});
+    const json=await r.json();
+    if(json.ok){sheetsSyncQueue.shift();hideSyncBanner()}
+    else{console.warn('Sheets sync fail:',json.error);showSyncBanner()}
+  }catch(e){console.warn('Sheets sync error:',e.message);showSyncBanner()}
+  if(sheetsSyncQueue.length){
+    setTimeout(()=>processSheetsSyncQueue(),sheetsSyncQueue[0]===item?8000:500);
+  }else{sheetsSyncRunning=false}
+}
+
+function retrySyncQueue(){processSheetsSyncQueue()}
+function showSyncBanner(){document.getElementById('syncBanner').style.display=''}
+function hideSyncBanner(){document.getElementById('syncBanner').style.display='none'}
+
+// ============================================================
+// UTILS
+// ============================================================
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+function toast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(err?' err':'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+function tri(key){
+  const v=L[key]||[key,'',''];
+  return `<span>${esc(v[0])}</span><span class="tri-ar">${v[1]}</span><span class="tri-es">${v[2]}</span>`;
+}
+function today(){return new Date().toISOString().slice(0,10)}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+
+// ============================================================
+// LOGIN
+// ============================================================
+let selectedRole='';
+function selectRole(r){
+  selectedRole=r;
+  document.querySelectorAll('.login-card').forEach(c=>c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const form=document.getElementById('loginForm'),sel=document.getElementById('loginLocal'),pin=document.getElementById('loginPin');
+  document.getElementById('loginError').textContent='';
+  form.classList.add('show');
+  if(r==='gerant'){
+    sel.style.display='';
+    sel.innerHTML='<option value="">-- Choisir le local / ختار اللوكال --</option>'+LOCALES.map(l=>`<option value="${esc(l)}">${esc(l)}</option>`).join('');
+    pin.style.display='none';pin.value='';
+  }else{sel.style.display='none';pin.style.display='';pin.value='';pin.focus()}
+}
+async function doLogin(){
+  const err=document.getElementById('loginError');err.textContent='';
+  if(!selectedRole){err.textContent='Choisissez un role / ختار الدور';return}
+  if(selectedRole==='gerant'){
+    const loc=document.getElementById('loginLocal').value;
+    if(!loc){err.textContent='Choisissez le local / ختار اللوكال';return}
+    role='gerant';local=loc;
+  }else{
+    const pin=document.getElementById('loginPin').value;
+    if(pin!==PINS[selectedRole]){err.textContent='Code PIN incorrect / كود خاطئ';return}
+    role=selectedRole;local='';
+  }
+  // Show loading state
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true;btn.innerHTML='Chargement... تحميل... <span class="loader"></span>';
+
+  const ok=await loadAllData();
+  btn.disabled=false;btn.textContent='Entrer / دخول';
+  if(!ok){
+    // Offline mode: init with empty data
+    appData=role==='gerant'?{employes:[],presences:[],absences:[],plannings:[],demandes:[],today:today(),semaine:getWeekStr()}:role==='rh'?{employes:[],absences:[],presences:[],demandes:[],recrutements:[],uniformes:[],today:today()}:{alertes:{sansPreavis:[],postesOuverts:[],sansRapport:LOCALES,today:today()},resumen:[]};
+    toast('Mode hors-ligne / بلا إنترنت',true);
+  }
+  document.getElementById('loginScreen').style.display='none';
+  initApp();
+}
+function logout(){
+  role='';local='';appData={};syncQueue=[];
+  document.getElementById('appWrap').classList.remove('show');
+  document.getElementById('loginScreen').style.display='';
+  document.querySelectorAll('.login-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('loginForm').classList.remove('show');
+  hideSyncBanner();selectedRole='';
+}
+
+// ============================================================
+// APP INIT (instant from appData)
+// ============================================================
+function initApp(){
+  document.getElementById('appWrap').classList.add('show');
+  const badge=document.getElementById('roleBadge');
+  badge.className='role-badge '+role;
+  badge.textContent=role==='gerant'?'Gerant':role==='rh'?'RH':'Direction';
+  document.getElementById('localLabel').textContent=local||'Tous les locaux';
+  const tabs=getTabs(),nav=document.getElementById('navTabs');
+  nav.innerHTML=tabs.map((t,i)=>`<button data-idx="${i}" class="${i===0?'active':''}">${t.label}</button>`).join('');
+  nav.onclick=e=>{
+    if(e.target.tagName!=='BUTTON')return;
+    nav.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    document.querySelectorAll('#pagesContainer .page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('p-'+tabs[e.target.dataset.idx].id).classList.add('active');
+    tabs[e.target.dataset.idx].render();
+  };
+  document.getElementById('pagesContainer').innerHTML=tabs.map((t,i)=>`<div class="page ${i===0?'active':''}" id="p-${t.id}"></div>`).join('');
+  // Render first tab instantly from cache
+  tabs[0].render();
+}
+function getTabs(){
+  if(role==='gerant')return[
+    {id:'plantillaG',label:'Equipe',render:renderPlantillaG},
+    {id:'presences',label:'Presences',render:renderPresences},
+    {id:'planning',label:'Planning',render:renderPlanning},
+    {id:'absences',label:'Absences',render:renderAbsences},
+    {id:'demandes',label:'Demandes',render:renderDemandes},
+  ];
+  if(role==='rh')return[
+    {id:'effectifs',label:'Effectifs',render:renderEffectifs},
+    {id:'recrutement',label:'Recrutement',render:renderRecrutement},
+    {id:'uniformes',label:'Uniformes',render:renderUniformes},
+    {id:'absHist',label:'Abs. & Pres.',render:renderAbsHist},
+  ];
+  return[
+    {id:'alertes',label:'Alertes',render:renderAlertes},
+    {id:'resume',label:'Resume',render:renderResume},
+  ];
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModal(html){document.getElementById('modalBox').innerHTML=html;document.getElementById('modalBg').classList.add('open')}
+function closeModal(){document.getElementById('modalBg').classList.remove('open')}
+
+// ============================================================
+// GÉRANT: PLANTILLA DEL LOCAL (reads from appData.employes)
+// ============================================================
+function renderPlantillaG(){
+  const pg=document.getElementById('p-plantillaG');
+  const emps=appData.employes||[];
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('plantilla')}</h2><button class="btn btn-p" onclick="openEmpFormG()">+ Employe / + موظف</button></div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">${emps.length}</div><div class="label">Effectif actif<span class="tri-ar">الموظفين النشطين</span></div></div>
+      ${POSTES.filter(p=>emps.some(e=>e.poste===p)).map(p=>`<div class="stat"><div class="num">${emps.filter(e=>e.poste===p).length}</div><div class="label">${esc(p)}</div></div>`).join('')}
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Nom / الإسم</th><th>Poste / البوسط</th><th>Entree / الدخول</th><th></th></tr></thead>
+      <tbody>${emps.map(e=>`<tr>
+        <td><strong>${esc(e.nom)}</strong></td><td>${esc(e.poste)}</td><td>${e.date_entree||'—'}</td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-s btn-g" onclick='openEmpFormG(${JSON.stringify(e)})'>Modifier</button>
+          <span class="del-link" onclick="if(confirm('Desactiver ${esc(e.nom)} ? / بغيت تنحي ${esc(e.nom)}؟'))deactivateEmpG('${e.id}')">Desactiver</span>
+        </td>
+      </tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>'}</tbody>
+    </table></div>
+  `;
+}
+
+function openEmpFormG(emp){
+  const e=emp||{};
+  openModal(`<h3>${e.id?'Modifier':'Nouvel'} employe<span class="tri-ar">${e.id?'عدّل':'زيد'} موظف</span><span class="tri-es">${e.id?'Modificar':'Nuevo'} empleado</span></h3>
+    <div class="fg"><label>Nom complet <span class="ar">الإسم الكامل</span></label><input id="fEmpNomG" value="${esc(e.nom||'')}"></div>
+    <div class="fg"><label>Poste <span class="ar">البوسط</span></label><select id="fEmpPosteG">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Date d'entree <span class="ar">تاريخ الدخول</span></label><input type="date" id="fEmpDateG" value="${e.date_entree||today()}"></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveEmpG('${e.id||''}')">Enregistrer / سجّل</button></div>
+  `);
+}
+
+async function saveEmpG(id){
+  const nom=document.getElementById('fEmpNomG').value.trim();
+  if(!nom){toast('Nom obligatoire / خاصك الإسم',true);return}
+  const poste=document.getElementById('fEmpPosteG').value,date_entree=document.getElementById('fEmpDateG').value;
+  const marque=local.includes('Cluky')?"Cluky's":"Vicio";
+  closeModal();
+  if(id){
+    const emp=appData.employes.find(e=>e.id===id);
+    if(emp){emp.nom=nom;emp.poste=poste;emp.date_entree=date_entree}
+    renderPlantillaG();toast('Employe modifie / تعدّل');
+    sb.from('empleados').update({nom,poste,date_entree}).eq('id',id).then();
+    syncToSheets('employes',[{id,nom,local,poste,marque,date_entree,actif:true,telephone:''}]);
+  }else{
+    const{data}=await sb.from('empleados').insert({nom,local,poste,date_entree,actif:true,marque}).select().single();
+    if(data)appData.employes.push(data);
+    toast('Employe ajoute / تزاد');renderPlantillaG();
+    syncToSheets('employes',[{id:data?.id||'',nom,local,poste,marque,date_entree,actif:true,telephone:''}]);
+  }
+}
+
+async function deactivateEmpG(id){
+  const emp=appData.employes.find(e=>e.id===id);
+  appData.employes=appData.employes.filter(e=>e.id!==id);
+  renderPlantillaG();toast('Employe desactive / الموظف تنحا');
+  sb.from('empleados').update({actif:false}).eq('id',id).then();
+  syncToSheets('employes',[{id,nom:emp?.nom||'',local,poste:emp?.poste||'',marque:'',date_entree:'',actif:false,telephone:''}]);
+}
+
+// ============================================================
+// GÉRANT: PRESENCES (checkbox + quick absence motif)
+// ============================================================
+let presData={};
+function renderPresences(){
+  const pg=document.getElementById('p-presences');
+  const emps=appData.employes||[];
+  const existing={};
+  (appData.presences||[]).forEach(p=>{existing[p.employe_id]=p.statut});
+
+  presData={};
+  emps.forEach(e=>{presData[e.id]={statut:existing[e.id]||'present',motif:''}});
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('presences')}</h2><span style="color:var(--tx2);font-size:.82rem">${today()}</span></div>
+    <p style="font-size:.78rem;color:var(--tx2);margin-bottom:10px">Cochez les presents. Decochez = absent (choisissez le motif).<span class="tri-ar">علّم اللي حاضر. نحي العلامة = غايب (ختار السبب).</span></p>
+    <div class="pres-list" id="presList">
+      ${emps.map(e=>{
+        const isP=presData[e.id].statut==='present';
+        return `<div class="pres-item ${isP?'':'absent'}" id="pi-${e.id}">
+          <button class="pres-check ${isP?'checked':''}" onclick="togglePres('${e.id}',this)" id="pc-${e.id}">${isP?'&#10003;':''}</button>
+          <div class="emp-info">
+            <div class="emp-name">${esc(e.nom)}</div>
+            <div class="emp-poste">${esc(e.poste)}</div>
+            <div class="pres-motif" id="pm-${e.id}" style="${isP?'display:none':''}">
+              ${MOTIFS_ABS.map(m=>`<button onclick="setPresMotif('${e.id}','${m}',this)">${MOTIFS_AR[m]} / ${m}</button>`).join('')}
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${emps.length?`<div style="margin-top:16px;text-align:center"><button class="btn-cta" onclick="savePresences()" style="padding:14px 50px">Enregistrer les presences<br><span style="font-size:.8em;opacity:.8">سجّل الحضور</span></button></div>`:'<div class="card" style="color:var(--tx2)">Aucun employe / ما كاين حتا موظف</div>'}
+  `;
+}
+
+function togglePres(empId,btn){
+  const isNowPresent=!btn.classList.contains('checked');
+  presData[empId].statut=isNowPresent?'present':'absent';
+  if(isNowPresent)presData[empId].motif='';
+  btn.classList.toggle('checked');
+  btn.innerHTML=isNowPresent?'&#10003;':'';
+  const item=document.getElementById('pi-'+empId);
+  item.classList.toggle('absent',!isNowPresent);
+  const motifDiv=document.getElementById('pm-'+empId);
+  motifDiv.style.display=isNowPresent?'none':'';
+  if(isNowPresent)motifDiv.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
+}
+
+function setPresMotif(empId,motif,btn){
+  presData[empId].motif=motif;
+  const parent=btn.parentElement;
+  parent.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+async function savePresences(){
+  const emps=appData.employes||[];
+  const todayStr=today(),heure=new Date().toTimeString().slice(0,5);
+
+  // Delete old presences for today+local, then insert new
+  await sb.from('presences').delete().eq('local',local).eq('date',todayStr);
+  const rows=emps.map(e=>({employe_id:e.id,employe_nom:e.nom,local,date:todayStr,statut:presData[e.id].statut,heure}));
+  const{data}=await sb.from('presences').insert(rows).select();
+  appData.presences=data||rows;
+  syncToSheets('presences',rows);
+
+  // Auto-register absences with motif
+  const absToInsert=emps.filter(e=>presData[e.id].statut==='absent'&&presData[e.id].motif).map(e=>({
+    employe_id:e.id,employe_nom:e.nom,local,date:todayStr,motif:presData[e.id].motif,
+    prevenu:presData[e.id].motif==='sans preavis'?'non':'oui',reporte_par:'Gerant',notes:''
+  }));
+  if(absToInsert.length){
+    const{data:absData}=await sb.from('absences').insert(absToInsert).select();
+    appData.absences=[...(appData.absences||[]),...(absData||absToInsert)];
+    syncToSheets('absences',absData||absToInsert);
+  }
+  toast('Presences enregistrees / الحضور تسجّل');
+}
+
+// ============================================================
+// GÉRANT: PLANNING SEMANAL (M/S/OFF grid + config turnos)
+// ============================================================
+const JOURS_FULL=[
+  {fr:'Lun',ar:'الإثنين',es:'Lun',col:'lundi'},
+  {fr:'Mar',ar:'الثلاثاء',es:'Mar',col:'mardi'},
+  {fr:'Mer',ar:'الأربعاء',es:'Mie',col:'mercredi'},
+  {fr:'Jeu',ar:'الخميس',es:'Jue',col:'jeudi'},
+  {fr:'Ven',ar:'الجمعة',es:'Vie',col:'vendredi'},
+  {fr:'Sam',ar:'السبت',es:'Sab',col:'samedi'},
+  {fr:'Dim',ar:'الأحد',es:'Dom',col:'dimanche'}
+];
+const PLAN_CYCLE=['','M','S','OFF'];
+let planData={},planPublished=false,planCurrentWeek='';
+let turnosConfig={matin_entree:'08:00',matin_sortie:'16:00',soir_entree:'16:00',soir_sortie:'00:00'};
+
+async function loadTurnosConfig(){
+  const{data}=await sb.from('turnos_config').select('*').eq('local',local).maybeSingle();
+  if(data)turnosConfig=data;
+}
+
+async function renderPlanning(){
+  const pg=document.getElementById('p-planning');
+  const wk=getWeekStr();
+  const emps=appData.employes||[];
+
+  // Load turnos config if not loaded
+  if(!turnosConfig.id)await loadTurnosConfig();
+
+  // If switching to a different week, load from API
+  if(wk!==planCurrentWeek&&wk!==(appData.semaine||'')){
+    pg.innerHTML='<div class="page-loader">Chargement... تحميل...<span class="loader"></span></div>';
+    const{data}=await sb.from('plannings').select('*').eq('local',local).eq('semaine',wk);
+    appData.plannings=data||[];
+  }
+  planCurrentWeek=wk;
+
+  const plans=appData.plannings||[];
+  const JOUR_COLS=JOURS_FULL.map(j=>j.col);
+  planData={};planPublished=false;
+  plans.forEach(p=>{
+    if(p.publie)planPublished=true;
+    const eid=p.employe_id;
+    JOUR_COLS.forEach((col,di)=>{if(p[col])planData[eid+'_'+di]=p[col]});
+  });
+
+  // Sort emps by poste
+  const posteOrder={};POSTES.forEach((p,i)=>posteOrder[p]=i);
+  emps.sort((a,b)=>(posteOrder[a.poste]||99)-(posteOrder[b.poste]||99));
+  const weekDates=getWeekDates(wk);
+  const tc=turnosConfig;
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('planning')}</h2></div>
+
+    <!-- TURNOS CONFIG -->
+    <div class="config-box">
+      <h4>Horaires des shifts / ساعات الشيفت <span class="tri-es">Horarios de turnos</span></h4>
+      <div class="config-row">
+        <span class="badge b-gn">MATIN</span>
+        <label>Entree:</label><input type="time" id="cfgME" value="${tc.matin_entree}" onchange="saveTurnosConfig()">
+        <label>Sortie:</label><input type="time" id="cfgMS" value="${tc.matin_sortie}" onchange="saveTurnosConfig()">
+      </div>
+      <div class="config-row">
+        <span class="badge b-or">SOIR</span>
+        <label>Entree:</label><input type="time" id="cfgSE" value="${tc.soir_entree}" onchange="saveTurnosConfig()">
+        <label>Sortie:</label><input type="time" id="cfgSS" value="${tc.soir_sortie}" onchange="saveTurnosConfig()">
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="week" id="planWeek" value="${wk}" onchange="renderPlanning()">
+      <span style="font-size:.75rem;color:var(--tx2);align-self:center">${weekDates.length?weekDates[0]+' → '+weekDates[6]:''}</span>
+    </div>
+
+    ${emps.length?`<div class="table-wrap"><div class="plan-grid">
+      <div class="pg hd">Poste</div><div class="pg hd">Nom</div>
+      ${JOURS_FULL.map((j,di)=>`<div class="pg hd">${j.fr}<br>${weekDates[di]||''}</div>`).join('')}
+      ${emps.map(e=>{
+        const isLab=e.poste==='Operateur Laboratoire';
+        const hasOff=Array.from({length:7},(_,di)=>planData[e.id+'_'+di]).some(v=>v==='OFF');
+        return `<div class="pg poste">${esc(e.poste)}</div>
+          <div class="pg nom">${esc(e.nom)}${!isLab&&!hasOff?'<span class="plan-warn">! pas de OFF</span>':''}</div>
+          ${JOURS_FULL.map((_,di)=>{
+            const key=e.id+'_'+di;
+            const val=planData[key]||'';
+            if(isLab){
+              return `<div class="pg cell c-custom"><input class="lab-input" value="${esc(val)}" placeholder="HH-HH" oninput="planData['${key}']=this.value"></div>`;
+            }
+            const cls=val==='M'?'c-m':val==='S'?'c-s':val==='OFF'?'c-off':'';
+            const label=val==='M'?'M':val==='S'?'S':val==='OFF'?'OFF':'—';
+            return `<div class="pg cell ${cls}" onclick="cyclePlanCell('${key}',this)">${label}</div>`;
+          }).join('')}`;
+      }).join('')}
+    </div></div>
+
+    <div style="margin-top:8px;display:flex;gap:14px;justify-content:center;font-size:.72rem;color:var(--tx2)">
+      <span><span style="color:var(--gn)">&#9632;</span> M = Matin (${tc.matin_entree}–${tc.matin_sortie})</span>
+      <span><span style="color:var(--or)">&#9632;</span> S = Soir (${tc.soir_entree}–${tc.soir_sortie})</span>
+      <span><span style="color:var(--rd)">&#9632;</span> OFF = Repos</span>
+    </div>
+
+    <div class="plan-actions">
+      <button class="btn btn-p" onclick="savePlanningGrid(false)" style="padding:10px 30px">Enregistrer / سجّل</button>
+      <button class="btn-cta" onclick="savePlanningGrid(true)" style="padding:10px 30px">Publier / نشر</button>
+      <button class="btn btn-g" onclick="downloadPlanningPDF()" style="padding:10px 20px">Telecharger PDF / حمّل PDF</button>
+    </div>
+    ${planPublished?'<div class="plan-published">Planning publie / البلانينغ تنشر &#10003;</div>':''}
+    `:'<div class="card" style="color:var(--tx2)">Aucun employe / ما كاين حتا موظف</div>'}
+  `;
+}
+
+function getWeekStr(){
+  const el=document.getElementById('planWeek');
+  if(el&&el.value)return el.value;
+  const now=new Date(),y=now.getFullYear(),jan1=new Date(y,0,1);
+  const wn=Math.ceil(((now-jan1)/86400000+jan1.getDay()+1)/7);
+  return `${y}-W${String(wn).padStart(2,'0')}`;
+}
+
+function getWeekDates(wkStr){
+  const match=wkStr.match(/(\d{4})-W(\d{2})/);
+  if(!match)return[];
+  const year=parseInt(match[1]),week=parseInt(match[2]);
+  const jan4=new Date(year,0,4);
+  const start=new Date(jan4);
+  start.setDate(jan4.getDate()-jan4.getDay()+1+(week-1)*7);
+  const dates=[];
+  for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);dates.push(d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}))}
+  return dates;
+}
+
+function cyclePlanCell(key,el){
+  const cur=planData[key]||'';
+  const ci=PLAN_CYCLE.indexOf(cur);
+  const next=PLAN_CYCLE[(ci+1)%PLAN_CYCLE.length];
+  if(next){planData[key]=next}else{delete planData[key]}
+  el.className='pg cell '+(next==='M'?'c-m':next==='S'?'c-s':next==='OFF'?'c-off':'');
+  el.textContent=next||'—';
+  // Re-check OFF warnings
+  const empId=key.split('_')[0];
+  const emp=(appData.employes||[]).find(e=>e.id===empId);
+  if(emp&&emp.poste!=='Operateur Laboratoire'){
+    const hasOff=Array.from({length:7},(_,di)=>planData[empId+'_'+di]).some(v=>v==='OFF');
+    // Find the nom cell for this employee and update warning
+    const allNoms=document.querySelectorAll('.plan-grid .pg.nom');
+    allNoms.forEach(n=>{
+      if(n.textContent.includes(emp.nom)){
+        const warn=n.querySelector('.plan-warn');
+        if(!hasOff&&!warn)n.insertAdjacentHTML('beforeend','<span class="plan-warn">! pas de OFF</span>');
+        else if(hasOff&&warn)warn.remove();
+      }
+    });
+  }
+}
+
+async function saveTurnosConfig(){
+  const obj={local,matin_entree:document.getElementById('cfgME').value,matin_sortie:document.getElementById('cfgMS').value,soir_entree:document.getElementById('cfgSE').value,soir_sortie:document.getElementById('cfgSS').value};
+  turnosConfig={...turnosConfig,...obj};
+  if(turnosConfig.id){
+    await sb.from('turnos_config').update(obj).eq('id',turnosConfig.id);
+  }else{
+    const{data}=await sb.from('turnos_config').upsert(obj,{onConflict:'local'}).select().single();
+    if(data)turnosConfig=data;
+  }
+  toast('Horaires enregistres / الساعات تسجّلو');
+}
+
+async function savePlanningGrid(publish){
+  const emps=appData.employes||[];
+  const sem=getWeekStr();
+  const JOUR_COLS=JOURS_FULL.map(j=>j.col);
+  const rows=emps.map(e=>{
+    const row={employe_id:e.id,employe_nom:e.nom,local,semaine:sem,publie:!!publish};
+    JOUR_COLS.forEach((col,di)=>{row[col]=planData[e.id+'_'+di]||''});
+    return row;
+  });
+  await sb.from('plannings').delete().eq('local',local).eq('semaine',sem);
+  const{data}=await sb.from('plannings').insert(rows).select();
+  appData.plannings=data||rows;
+  if(publish)planPublished=true;
+  syncToSheets('plannings',data||rows);
+  toast(publish?'Planning publie / البلانينغ تنشر':'Planning enregistre / البلانينغ تسجّل');
+  renderPlanning();
+}
+
+function downloadPlanningPDF(){
+  const{jsPDF}=window.jspdf||{};
+  if(!jsPDF){toast('PDF library not loaded',true);return}
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const emps=appData.employes||[];
+  const wk=getWeekStr();
+  const weekDates=getWeekDates(wk);
+  const tc=turnosConfig;
+  const posteOrder={};POSTES.forEach((p,i)=>posteOrder[p]=i);
+  const sorted=[...emps].sort((a,b)=>(posteOrder[a.poste]||99)-(posteOrder[b.poste]||99));
+
+  // Header
+  doc.setFontSize(16);doc.setFont(undefined,'bold');doc.text('TIMA GRUPO',14,16);
+  doc.setFontSize(11);doc.text(local,14,23);
+  doc.setFontSize(9);doc.setFont(undefined,'normal');
+  doc.text('Planning Hebdomadaire — Semaine '+wk,14,29);
+  doc.text(weekDates.length?weekDates[0]+' au '+weekDates[6]:'',14,34);
+  doc.text('M = Matin ('+tc.matin_entree+'-'+tc.matin_sortie+')  |  S = Soir ('+tc.soir_entree+'-'+tc.soir_sortie+')  |  OFF = Repos',14,40);
+  doc.text('Genere: '+new Date().toLocaleDateString('fr-FR'),230,16);
+
+  const head=[['Poste','Nom et Prenom',...JOURS_FULL.map((j,di)=>j.fr+'\n'+(weekDates[di]||''))]];
+  const body=sorted.map(e=>{
+    const row=[e.poste,e.nom];
+    for(let di=0;di<7;di++){
+      const v=planData[e.id+'_'+di]||'';
+      if(v==='M')row.push('M\n'+tc.matin_entree+'-'+tc.matin_sortie);
+      else if(v==='S')row.push('S\n'+tc.soir_entree+'-'+tc.soir_sortie);
+      else if(v==='OFF')row.push('OFF');
+      else row.push(v||'');
+    }
+    return row;
+  });
+
+  doc.autoTable({
+    startY:44,head,body,theme:'grid',
+    styles:{fontSize:7,cellPadding:2,halign:'center',valign:'middle'},
+    headStyles:{fillColor:[108,92,231],textColor:255,fontStyle:'bold',fontSize:6.5,halign:'center'},
+    columnStyles:{0:{cellWidth:30,halign:'left'},1:{cellWidth:38,halign:'left'}},
+    margin:{left:10,right:10},
+    didParseCell(d){
+      if(d.section!=='body'||d.column.index<2)return;
+      const v=String(d.cell.raw||'');
+      if(v.startsWith('M')){d.cell.styles.fillColor=[230,255,245];d.cell.styles.textColor=[0,150,100];d.cell.styles.fontStyle='bold'}
+      else if(v.startsWith('S')){d.cell.styles.fillColor=[255,248,230];d.cell.styles.textColor=[200,160,0];d.cell.styles.fontStyle='bold'}
+      else if(v==='OFF'){d.cell.styles.fillColor=[255,235,230];d.cell.styles.textColor=[200,80,60];d.cell.styles.fontStyle='bold'}
+    }
+  });
+
+  const pc=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pc;i++){doc.setPage(i);doc.setFontSize(7);doc.setTextColor(150);doc.text('Tima Grupo — '+local+' — '+wk,10,doc.internal.pageSize.height-5);doc.text('Page '+i+'/'+pc,doc.internal.pageSize.width-25,doc.internal.pageSize.height-5)}
+  doc.save('Planning_'+local.replace(/[^a-zA-Z0-9]/g,'_')+'_'+wk+'.pdf');
+  toast('PDF telecharge / PDF تحمّل');
+}
+
+// ============================================================
+// GÉRANT: ABSENCES
+// ============================================================
+function renderAbsences(){
+  const pg=document.getElementById('p-absences');
+  const emps=appData.employes||[];
+  const abs=(appData.absences||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('absences')}</h2><button class="btn btn-p" onclick="openAbsenceForm()">+ Absence / + غياب</button></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date / التاريخ</th><th>Employe / الموظف</th><th>Motif / السبب</th><th>Prevenu / خبّر</th><th>Par / بلّغ</th></tr></thead>
+      <tbody>${abs.map(a=>{
+        const noShow=a.motif==='sans preavis';
+        return `<tr style="${noShow?'background:rgba(225,112,85,.08)':''}">
+          <td>${a.date}</td><td><strong>${esc(a.employe_nom)}</strong></td>
+          <td><span class="badge ${noShow?'b-rd':a.motif==='maladie'?'b-bl':'b-or'}">${esc(a.motif)}${MOTIFS_AR[a.motif]?' / '+MOTIFS_AR[a.motif]:''}</span></td>
+          <td>${a.prevenu==='oui'?'<span class="badge b-gn">Oui / نعم</span>':'<span class="badge b-rd">Non / لا</span>'}</td>
+          <td>${esc(a.reporte_par)}</td>
+        </tr>`;
+      }).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--tx2)">Aucune absence / ما كاين حتا غياب</td></tr>'}</tbody>
+    </table></div>
+  `;
+}
+
+function openAbsenceForm(){
+  const emps=appData.employes||[];
+  openModal(`<h3>Signaler une absence<span class="tri-ar">بلّغ على غياب</span><span class="tri-es">Registrar ausencia</span></h3>
+    <div class="fg"><label>Employe <span class="ar">الموظف</span></label><select id="fAbsEmp">${emps.map(e=>`<option value="${e.id}" data-nom="${esc(e.nom)}">${esc(e.nom)} — ${esc(e.poste)}</option>`).join('')}</select></div>
+    <div class="fg"><label>Date <span class="ar">التاريخ</span></label><input type="date" id="fAbsDate" value="${today()}"></div>
+    <div class="fg"><label>Motif <span class="ar">السبب</span></label><select id="fAbsMotif">
+      <option value="maladie">Maladie / مريض</option>
+      <option value="personnel">Personnel / شخصي</option>
+      <option value="sans preavis">Sans preavis / بلا ما خبّر</option>
+      <option value="autre">Autre / سبب آخر</option>
+    </select></div>
+    <div class="fg"><label>A prevenu ? <span class="ar">واش خبّر؟</span></label><select id="fAbsAviso"><option value="oui">Oui / نعم</option><option value="non">Non / لا</option></select></div>
+    <div class="fg"><label>Reporte par <span class="ar">شكون بلّغ</span></label><select id="fAbsReport"><option>Gerant</option><option>Chef</option><option>Manager</option></select></div>
+    <div class="fg"><label>Notes <span class="ar">ملاحظات</span></label><textarea id="fAbsNotes" rows="2"></textarea></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveAbsence()">Enregistrer / سجّل</button></div>
+  `);
+}
+
+async function saveAbsence(){
+  const sel=document.getElementById('fAbsEmp');
+  const row={employe_id:sel.value,employe_nom:sel.options[sel.selectedIndex].dataset.nom,local,
+    date:document.getElementById('fAbsDate').value,motif:document.getElementById('fAbsMotif').value,
+    prevenu:document.getElementById('fAbsAviso').value,reporte_par:document.getElementById('fAbsReport').value,
+    notes:document.getElementById('fAbsNotes').value};
+  closeModal();toast('Absence enregistree / الغياب تسجّل');
+  const{data}=await sb.from('absences').insert(row).select().single();
+  appData.absences=appData.absences||[];appData.absences.unshift(data||row);
+  syncToSheets('absences',[data||row]);
+  renderAbsences();
+}
+
+// ============================================================
+// GÉRANT: DEMANDES
+// ============================================================
+function renderDemandes(){
+  const pg=document.getElementById('p-demandes');
+  const demandes=(appData.demandes||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('demande')}</h2></div>
+    <div style="text-align:center;margin-bottom:18px">
+      <button class="btn-cta" onclick="openDemandeForm()">Demander du personnel<br><span style="font-size:.8em;opacity:.8">طلب موظفين جداد</span></button>
+    </div>
+    ${demandes.map(d=>{
+      const urgBadge=d.urgence==='urgente'?'b-rd':d.urgence==='haute'?'b-or':'b-bl';
+      const statBadge=d.statut==='pourvu'?'b-gn':d.statut==='en cours'?'b-or':'b-ac';
+      return `<div class="card">
+        <h3>${esc(d.poste)} <span class="badge ${urgBadge}">${esc(d.urgence)}</span> <span class="badge ${statBadge}">${esc(d.statut)}</span></h3>
+        <div style="font-size:.82rem;color:var(--tx2)">${d.date} &middot; ${esc(d.motif)}</div>
+      </div>`;
+    }).join('')||'<div class="card" style="color:var(--tx2)">Aucune demande / ما كاين حتا طلب</div>'}
+  `;
+}
+
+function openDemandeForm(){
+  openModal(`<h3>Demande de personnel<span class="tri-ar">طلب موظفين</span><span class="tri-es">Solicitud de personal</span></h3>
+    <div class="fg"><label>Poste demande <span class="ar">البوسط المطلوب</span></label><select id="fDemPoste">${POSTES.map(p=>`<option>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Urgence <span class="ar">الاستعجال</span></label><select id="fDemUrg">
+      <option value="normale">Normale / عادي</option><option value="haute">Haute / مهم</option><option value="urgente">Urgente / مستعجل بزاف</option>
+    </select></div>
+    <div class="fg"><label>Motif / Raison <span class="ar">علاش كتحتاج هاد البوسط</span></label><textarea id="fDemMotif" rows="3" placeholder="Pourquoi ? / علاش؟"></textarea></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveDemande()">Envoyer / صيفط</button></div>
+  `);
+}
+
+async function saveDemande(){
+  const motif=document.getElementById('fDemMotif').value.trim();
+  if(!motif){toast('Indiquez le motif / كتب السبب',true);return}
+  const row={local,poste:document.getElementById('fDemPoste').value,urgence:document.getElementById('fDemUrg').value,motif,date:today(),statut:'ouverte',demande_par:'Gerant'};
+  closeModal();toast('Demande envoyee / الطلب تصيفط');
+  const{data}=await sb.from('demandes_personnel').insert(row).select().single();
+  appData.demandes=appData.demandes||[];appData.demandes.unshift(data||row);
+  syncToSheets('demandes',[data||row]);
+  renderDemandes();
+}
+
+// ============================================================
+// RH: EFFECTIFS
+// ============================================================
+function renderEffectifs(){
+  const pg=document.getElementById('p-effectifs');
+  let emps=appData.employes||[];
+
+  pg.innerHTML=`
+    <div class="stat-row">
+      <div class="stat"><div class="num">${emps.length}</div><div class="label">Total employes<span class="tri-ar">مجموع الموظفين</span></div></div>
+      ${LOCALES.filter(l=>emps.some(e=>e.local===l)).map(l=>`<div class="stat"><div class="num">${emps.filter(e=>e.local===l).length}</div><div class="label">${esc(l)}</div></div>`).join('')}
+    </div>
+    <div class="section-header"><h2>${tri('effectifs')}</h2><button class="btn btn-p" onclick="openEmpForm()">+ Employe / + موظف</button></div>
+    <div class="filter-bar">
+      <select id="filtEmpLocal" onchange="filterEffectifs()"><option value="">Tous les locaux / كل اللوكالات</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select>
+      <input id="filtEmpNom" placeholder="Chercher... قلّب..." oninput="filterEffectifs()">
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Nom / الإسم</th><th>Local / اللوكال</th><th>Poste / البوسط</th><th>Entree / الدخول</th><th></th></tr></thead>
+      <tbody id="empBody">${empRows(emps)}</tbody>
+    </table></div>
+  `;
+}
+
+function empRows(emps){
+  return emps.map(e=>`<tr>
+    <td><strong>${esc(e.nom)}</strong></td><td>${esc(e.local)}</td><td>${esc(e.poste)}</td><td>${e.date_entree||'—'}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-s btn-g" onclick='openEmpForm(${JSON.stringify(e)})'>Modifier</button>
+      <span class="del-link" onclick="if(confirm('Supprimer ${esc(e.nom)} ?'))delEmp('${e.id}')">Suppr.</span>
+    </td>
+  </tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>';
+}
+
+function filterEffectifs(){
+  const fl=document.getElementById('filtEmpLocal').value,fn=document.getElementById('filtEmpNom').value.toLowerCase();
+  let emps=appData.employes||[];
+  if(fl)emps=emps.filter(e=>e.local===fl);
+  if(fn)emps=emps.filter(e=>(e.nom||'').toLowerCase().includes(fn));
+  document.getElementById('empBody').innerHTML=empRows(emps);
+}
+
+function openEmpForm(emp){
+  const e=emp||{};
+  openModal(`<h3>${e.id?'Modifier':'Nouvel'} employe<span class="tri-ar">${e.id?'عدّل':'زيد'} موظف</span></h3>
+    <div class="fg"><label>Nom complet <span class="ar">الإسم الكامل</span></label><input id="fEmpNom" value="${esc(e.nom||'')}"></div>
+    <div class="fg"><label>Local <span class="ar">اللوكال</span></label><select id="fEmpLocal">${LOCALES.map(l=>`<option ${l===e.local?'selected':''}>${l}</option>`).join('')}</select></div>
+    <div class="fg"><label>Poste <span class="ar">البوسط</span></label><select id="fEmpPoste">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Date d'entree <span class="ar">تاريخ الدخول</span></label><input type="date" id="fEmpDate" value="${e.date_entree||today()}"></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveEmp('${e.id||''}')">Enregistrer / سجّل</button></div>
+  `);
+}
+
+async function saveEmp(id){
+  const nom=document.getElementById('fEmpNom').value.trim();
+  if(!nom){toast('Nom obligatoire / خاصك الإسم',true);return}
+  const loc=document.getElementById('fEmpLocal').value,poste=document.getElementById('fEmpPoste').value,date_entree=document.getElementById('fEmpDate').value;
+  closeModal();
+  if(id){
+    const emp=(appData.employes||[]).find(e=>e.id===id);
+    if(emp)Object.assign(emp,{nom,local:loc,poste,date_entree});
+    toast('Employe modifie / تعدّل');renderEffectifs();
+    sb.from('empleados').update({nom,local:loc,poste,date_entree}).eq('id',id).then();
+    syncToSheets('employes',[{id,nom,local:loc,poste,marque:loc.includes('Cluky')?"Cluky's":"Vicio",date_entree,actif:true,telephone:''}]);
+  }else{
+    const marque=loc.includes('Cluky')?"Cluky's":"Vicio";
+    const{data}=await sb.from('empleados').insert({nom,local:loc,poste,date_entree,actif:true,marque}).select().single();
+    if(data)appData.employes.push(data);
+    toast('Employe ajoute / تزاد');renderEffectifs();
+    syncToSheets('employes',[{id:data?.id||'',nom,local:loc,poste,marque,date_entree,actif:true,telephone:''}]);
+  }
+}
+
+async function delEmp(id){
+  const emp=(appData.employes||[]).find(e=>e.id===id);
+  appData.employes=(appData.employes||[]).filter(e=>e.id!==id);
+  toast('Employe supprime / الموظف تمسح');renderEffectifs();
+  sb.from('empleados').update({actif:false}).eq('id',id).then();
+  syncToSheets('employes',[{id,nom:emp?.nom||'',local:emp?.local||'',poste:emp?.poste||'',marque:'',date_entree:'',actif:false,telephone:''}]);
+}
+
+// ============================================================
+// RH: RECRUTEMENT
+// ============================================================
+function renderRecrutement(){
+  const pg=document.getElementById('p-recrutement');
+  const demandes=appData.demandes||[],candidats=appData.recrutements||[];
+  const ouvertes=demandes.filter(d=>d.statut!=='pourvu');
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('recrutement')}</h2>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-g" onclick="openDemandeFormRH()">+ Demande / + طلب</button>
+        <button class="btn btn-p" onclick="openCandForm()">+ Candidat / + مترشح</button>
+      </div>
+    </div>
+    ${ouvertes.length?'<h3 style="font-size:.9rem;margin-bottom:8px;color:var(--tx2)">Demandes ouvertes / الطلبات المفتوحة</h3>':''}
+    ${ouvertes.map(d=>{
+      const ub=d.urgence==='urgente'?'b-rd':d.urgence==='haute'?'b-or':'b-bl';
+      return `<div class="card"><h3>${esc(d.local)} — ${esc(d.poste)} <span class="badge ${ub}">${esc(d.urgence)}</span></h3>
+      <div style="font-size:.8rem;color:var(--tx2)">${d.date} &middot; ${esc(d.motif)}</div>
+      <div style="margin-top:6px"><button class="btn btn-s btn-g" onclick="markPourvu('${d.id}')">Marquer pourvu / تلقا</button></div></div>`;
+    }).join('')}
+    <h3 style="font-size:.9rem;margin:16px 0 10px;color:var(--tx2)">Pipeline de candidats / مسار المترشحين</h3>
+    <div class="pipeline">${PIPE.map(stage=>{
+      const items=candidats.filter(c=>c.etape===stage);
+      const si=PIPE.indexOf(stage);
+      return `<div class="pipe-col"><h4>${PIPE_LABELS[stage]} <span class="cnt">${items.length}</span></h4>
+        ${items.map(c=>{
+          const next=PIPE.slice(si+1);
+          return `<div class="pipe-card"><div class="nm">${esc(c.nom)}</div>
+            <div class="mt">${c.tel?c.tel+' · ':''}${esc(c.local)} — ${esc(c.poste)}</div>
+            ${c.notes?`<div class="mt">${esc(c.notes)}</div>`:''}
+            <div class="pa">
+              ${next.map(s=>`<button class="btn btn-s btn-g" onclick="moveCand('${c.id}','${s}')">&rarr; ${PIPE_LABELS[s]}</button>`).join('')}
+              <button class="btn btn-s btn-g" onclick='openCandForm(${JSON.stringify(c)})'>Modifier</button>
+            </div></div>`;
+        }).join('')}
+      </div>`;
+    }).join('')}</div>
+  `;
+}
+
+function openDemandeFormRH(){
+  openModal(`<h3>Nouvelle demande<span class="tri-ar">طلب جديد</span></h3>
+    <div class="fg"><label>Local <span class="ar">اللوكال</span></label><select id="fDemLocalRH">${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select></div>
+    <div class="fg"><label>Poste <span class="ar">البوسط</span></label><select id="fDemPosteRH">${POSTES.map(p=>`<option>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Urgence <span class="ar">الاستعجال</span></label><select id="fDemUrgRH"><option value="normale">Normale</option><option value="haute">Haute</option><option value="urgente">Urgente</option></select></div>
+    <div class="fg"><label>Motif <span class="ar">السبب</span></label><textarea id="fDemMotifRH" rows="2"></textarea></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveDemandeRH()">Enregistrer / سجّل</button></div>
+  `);
+}
+
+async function saveDemandeRH(){
+  const row={local:document.getElementById('fDemLocalRH').value,poste:document.getElementById('fDemPosteRH').value,urgence:document.getElementById('fDemUrgRH').value,motif:document.getElementById('fDemMotifRH').value,date:today(),statut:'ouverte'};
+  closeModal();toast('Demande ajoutee / الطلب تزاد');
+  const{data}=await sb.from('demandes_personnel').insert(row).select().single();
+  appData.demandes=appData.demandes||[];appData.demandes.unshift(data||row);
+  syncToSheets('demandes',[data||row]);
+  renderRecrutement();
+}
+
+async function markPourvu(id){
+  const d=(appData.demandes||[]).find(x=>x.id===id);if(d)d.statut='pourvu';
+  toast('Demande pourvue / الطلب تلقا');renderRecrutement();
+  sb.from('demandes_personnel').update({statut:'pourvu'}).eq('id',id).then();
+  if(d)syncToSheets('demandes',[{...d,statut:'pourvu'}]);
+}
+
+function openCandForm(c){
+  const e=c||{};const demandes=appData.demandes||[];
+  openModal(`<h3>${e.id?'Modifier':'Nouveau'} candidat<span class="tri-ar">${e.id?'عدّل':'زيد'} مترشح</span></h3>
+    <div class="fg"><label>Nom <span class="ar">الإسم</span></label><input id="fCandNom" value="${esc(e.nom||'')}"></div>
+    <div class="fg"><label>Telephone <span class="ar">التيليفون</span></label><input id="fCandTel" value="${esc(e.tel||'')}"></div>
+    <div class="fg"><label>Demande liee <span class="ar">الطلب المرتبط</span></label><select id="fCandDem"><option value="">— Aucune / بلا —</option>${demandes.filter(d=>d.statut!=='pourvu').map(d=>`<option value="${d.id}" ${d.id===e.demandeId?'selected':''}>${d.local} — ${d.poste}</option>`).join('')}</select></div>
+    <div class="fg"><label>Local <span class="ar">اللوكال</span></label><select id="fCandLocal">${LOCALES.map(l=>`<option ${l===e.local?'selected':''}>${l}</option>`).join('')}</select></div>
+    <div class="fg"><label>Poste <span class="ar">البوسط</span></label><select id="fCandPoste">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
+    <div class="fg"><label>Etape <span class="ar">المرحلة</span></label><select id="fCandEtape">${PIPE.map(s=>`<option value="${s}" ${s===e.etape?'selected':''}>${PIPE_LABELS[s]}</option>`).join('')}</select></div>
+    <div class="fg"><label>Notes <span class="ar">ملاحظات</span></label><textarea id="fCandNotes" rows="2">${esc(e.notes||'')}</textarea></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveCand('${e.id||''}')">Enregistrer / سجّل</button></div>
+  `);
+}
+
+async function saveCand(id){
+  const nom=document.getElementById('fCandNom').value.trim();
+  if(!nom){toast('Nom obligatoire / خاصك الإسم',true);return}
+  const obj={nom,tel:document.getElementById('fCandTel').value,demande_id:document.getElementById('fCandDem').value||null,local:document.getElementById('fCandLocal').value,poste:document.getElementById('fCandPoste').value,etape:document.getElementById('fCandEtape').value,notes:document.getElementById('fCandNotes').value};
+  closeModal();
+  if(id){
+    const c=(appData.recrutements||[]).find(x=>x.id===id);if(c)Object.assign(c,obj);
+    toast('Candidat modifie / المترشح تعدّل');renderRecrutement();
+    sb.from('recrutements').update(obj).eq('id',id).then();
+    syncToSheets('recrutements',[{id,...obj}]);
+  }else{
+    const{data}=await sb.from('recrutements').insert(obj).select().single();
+    appData.recrutements=appData.recrutements||[];appData.recrutements.push(data||obj);
+    toast('Candidat enregistre / المترشح تسجّل');renderRecrutement();
+    syncToSheets('recrutements',[data||obj]);
+  }
+}
+
+async function moveCand(id,etape){
+  const c=(appData.recrutements||[]).find(x=>x.id===id);if(c)c.etape=etape;
+  toast('Candidat deplace / المترشح تنقل');renderRecrutement();
+  sb.from('recrutements').update({etape}).eq('id',id).then();
+  if(c)syncToSheets('recrutements',[{...c}]);
+}
+
+// ============================================================
+// RH: UNIFORMES
+// ============================================================
+function renderUniformes(){
+  const pg=document.getElementById('p-uniformes');
+  const unis=appData.uniformes||[];
+  const total=unis.length,livre=unis.filter(u=>u.statut_livraison==='livre').length,att=unis.filter(u=>u.statut_livraison==='en attente').length;
+
+  pg.innerHTML=`
+    <div class="stat-row">
+      <div class="stat"><div class="num">${total}</div><div class="label">Total<span class="tri-ar">المجموع</span></div></div>
+      <div class="stat"><div class="num" style="color:var(--gn)">${livre}</div><div class="label">Livres<span class="tri-ar">تسلّموا</span></div></div>
+      <div class="stat"><div class="num" style="color:var(--or)">${att}</div><div class="label">En attente<span class="tri-ar">كيتسنّاو</span></div></div>
+    </div>
+    <div class="section-header"><h2>${tri('uniformes')}</h2><button class="btn btn-p" onclick="openUniForm()">+ Uniforme / + لباس</button></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Employe / الموظف</th><th>Local</th><th>Article / القطعة</th><th>Taille / المقاس</th><th>Statut / الحالة</th><th></th></tr></thead>
+      <tbody>${unis.map(u=>`<tr>
+        <td>${esc(u.employe_nom)}</td><td>${esc(u.local)}</td><td>${esc(u.taille_haut)}</td><td>${u.taille_bas}</td>
+        <td><span class="badge ${u.statut_livraison==='livre'?'b-gn':'b-or'}" style="cursor:pointer" onclick="toggleUni('${u.id}','${u.statut_livraison}')">${u.statut_livraison==='livre'?'Livre / تسلّم':'En attente / كيتسنّا'}</span></td>
+        <td><button class="btn btn-s btn-g" onclick='openUniForm(${JSON.stringify(u)})'>Modifier</button></td>
+      </tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucun uniforme / ما كاين حتا لباس</td></tr>'}</tbody>
+    </table></div>
+  `;
+}
+
+function openUniForm(u){
+  const e=u||{};const emps=appData.employes||[];
+  openModal(`<h3>${e.id?'Modifier':'Attribuer'} uniforme<span class="tri-ar">${e.id?'عدّل':'عطي'} لباس</span></h3>
+    <div class="fg"><label>Employe <span class="ar">الموظف</span></label><select id="fUniEmp">${emps.map(emp=>`<option value="${emp.id}" data-nom="${esc(emp.nom)}" data-local="${esc(emp.local)}" ${emp.id===e.employe_id?'selected':''}>${emp.nom} — ${emp.local}</option>`).join('')}</select></div>
+    <div class="fg"><label>Taille haut <span class="ar">مقاس الفوق</span></label><select id="fUniPrenda">${TAILLES.map(t=>`<option ${t===e.taille_haut?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="fg"><label>Taille bas <span class="ar">مقاس التحت</span></label><select id="fUniTaille">${TAILLES.map(t=>`<option ${t===e.taille_bas?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="fg"><label>Statut <span class="ar">الحالة</span></label><select id="fUniStatut"><option ${e.statut_livraison==='en attente'?'selected':''}>en attente</option><option ${e.statut_livraison==='livre'?'selected':''}>livre</option></select></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveUni('${e.id||''}')">Enregistrer / سجّل</button></div>
+  `);
+}
+
+async function saveUni(id){
+  const sel=document.getElementById('fUniEmp'),opt=sel.options[sel.selectedIndex];
+  const obj={employe_id:sel.value,employe_nom:opt.dataset.nom,local:opt.dataset.local,taille_haut:document.getElementById('fUniPrenda').value,taille_bas:document.getElementById('fUniTaille').value,statut_livraison:document.getElementById('fUniStatut').value};
+  closeModal();
+  if(id){
+    const u=(appData.uniformes||[]).find(x=>x.id===id);if(u)Object.assign(u,obj);
+    toast('Uniforme modifie / اللباس تعدّل');renderUniformes();
+    sb.from('uniformes').update(obj).eq('id',id).then();
+    syncToSheets('uniformes',[{id,...obj}]);
+  }else{
+    const{data}=await sb.from('uniformes').insert(obj).select().single();
+    appData.uniformes=appData.uniformes||[];appData.uniformes.push(data||obj);
+    toast('Uniforme enregistre / اللباس تسجّل');renderUniformes();
+    syncToSheets('uniformes',[data||obj]);
+  }
+}
+
+async function toggleUni(id,current){
+  const next=current==='en attente'?'livre':'en attente';
+  const u=(appData.uniformes||[]).find(x=>x.id===id);if(u)u.statut_livraison=next;
+  renderUniformes();
+  sb.from('uniformes').update({statut_livraison:next}).eq('id',id).then();
+  if(u)syncToSheets('uniformes',[{...u}]);
+}
+
+// ============================================================
+// RH: ABSENCES & PRESENCES
+// ============================================================
+function renderAbsHist(){
+  const pg=document.getElementById('p-absHist');
+  const abs=(appData.absences||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const pres=(appData.presences||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const sinP=abs.filter(a=>a.motif==='sans preavis').length;
+
+  pg.innerHTML=`
+    <div class="stat-row">
+      <div class="stat"><div class="num">${abs.length}</div><div class="label">Total absences<span class="tri-ar">مجموع الغياب</span></div></div>
+      <div class="stat"><div class="num" style="color:var(--rd)">${sinP}</div><div class="label">Sans preavis<span class="tri-ar">بلا ما خبّر</span></div></div>
+      <div class="stat"><div class="num">${pres.length}</div><div class="label">Registres<span class="tri-ar">التسجيلات</span></div></div>
+    </div>
+    <div class="section-header"><h2>Absences / الغياب</h2></div>
+    <div class="filter-bar"><select id="filtAbsLocal" onchange="filterAbsHist()"><option value="">Tous les locaux / كل اللوكالات</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date</th><th>Employe</th><th>Local</th><th>Motif</th><th>Prevenu</th><th>Par</th></tr></thead>
+      <tbody id="absHistBody">${absRows(abs)}</tbody>
+    </table></div>
+    <div class="section-header" style="margin-top:20px"><h2>Presences recentes / الحضور الأخير</h2></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date</th><th>Employe</th><th>Local</th><th>Statut</th><th>Heure</th></tr></thead>
+      <tbody>${pres.slice(0,100).map(p=>`<tr>
+        <td>${p.date}</td><td>${esc(p.employe_nom)}</td><td>${esc(p.local)}</td>
+        <td><span class="badge ${p.statut==='present'?'b-gn':'b-rd'}">${p.statut==='present'?'Present / حاضر':'Absent / غايب'}</span></td>
+        <td>${p.heure}</td>
+      </tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--tx2)">Aucune presence</td></tr>'}</tbody>
+    </table></div>
+  `;
+}
+
+function absRows(abs){
+  return abs.map(a=>{
+    const noShow=a.motif==='sans preavis';
+    return `<tr style="${noShow?'background:rgba(225,112,85,.08)':''}">
+      <td>${a.date}</td><td><strong>${esc(a.employe_nom)}</strong></td><td>${esc(a.local)}</td>
+      <td><span class="badge ${noShow?'b-rd':a.motif==='maladie'?'b-bl':'b-or'}">${esc(a.motif)}</span></td>
+      <td>${a.prevenu==='oui'?'<span class="badge b-gn">Oui / نعم</span>':'<span class="badge b-rd">Non / لا</span>'}</td>
+      <td>${esc(a.reporte_par)}</td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucune absence / ما كاين حتا غياب</td></tr>';
+}
+
+function filterAbsHist(){
+  const fl=document.getElementById('filtAbsLocal').value;
+  let abs=(appData.absences||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));if(fl)abs=abs.filter(a=>a.local===fl);
+  document.getElementById('absHistBody').innerHTML=absRows(abs);
+}
+
+// ============================================================
+// DIRECTION: ALERTES
+// ============================================================
+function renderAlertes(){
+  const pg=document.getElementById('p-alertes');
+  const d=appData.alertes||{sansPreavis:[],postesOuverts:[],sansRapport:[],today:today()};
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('alertes')}</h2><span style="color:var(--tx2);font-size:.82rem">${d.today}</span></div>
+    <h3 style="font-size:.88rem;margin-bottom:8px">Absences sans preavis (7j) / غياب بلا ما خبّر (7 أيام)</h3>
+    ${d.sansPreavis.length?d.sansPreavis.map(a=>`<div class="alert-card"><div class="at">${esc(a.employe_nom)} — ${esc(a.local)}</div><div class="ad">${a.date} &middot; ${esc(a.motif)} &middot; بلّغ: ${esc(a.reporte_par)}</div></div>`).join(''):'<div class="card" style="color:var(--gn);font-size:.85rem">Aucune alerte / ما كاين حتا تنبيه &#10003;</div>'}
+    <h3 style="font-size:.88rem;margin:16px 0 8px">Postes ouverts +7 jours / بوسطات مفتوحين +7 أيام</h3>
+    ${d.postesOuverts.length?d.postesOuverts.map(p=>`<div class="alert-card warn"><div class="at">${esc(p.local)} — ${esc(p.poste)}</div><div class="ad">Demande du ${p.date} &middot; ${esc(p.urgence)}</div></div>`).join(''):'<div class="card" style="color:var(--gn);font-size:.85rem">Aucun retard / ما كاين حتا تأخير &#10003;</div>'}
+    <h3 style="font-size:.88rem;margin:16px 0 8px">Locaux sans rapport aujourd'hui / لوكالات ما بلّغوش اليوم</h3>
+    ${d.sansRapport.length?d.sansRapport.map(l=>`<div class="alert-card info"><div class="at">${esc(l)}</div><div class="ad">Aucune presence enregistree / ما تسجّل حتا حضور</div></div>`).join(''):'<div class="card" style="color:var(--gn);font-size:.85rem">Tous ont reporte / كلشي بلّغ &#10003;</div>'}
+  `;
+}
+
+// ============================================================
+// DIRECTION: RESUME
+// ============================================================
+function renderResume(){
+  const pg=document.getElementById('p-resume');
+  const data=appData.resumen||[];
+
+  pg.innerHTML=`
+    <div class="section-header"><h2>${tri('resume')}</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
+      ${data.map(r=>`<div class="card">
+        <h3>${esc(r.local)}</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
+          <div class="stat"><div class="num">${r.effectif}</div><div class="label">Effectif<span class="tri-ar">الموظفين</span></div></div>
+          <div class="stat"><div class="num" style="color:${r.absencesAujourdhui>0?'var(--rd)':'var(--gn)'}">${r.absencesAujourdhui}</div><div class="label">Abs. auj.<span class="tri-ar">الغياب اليوم</span></div></div>
+          <div class="stat"><div class="num" style="color:${r.demandesOuvertes>0?'var(--or)':'var(--gn)'}">${r.demandesOuvertes}</div><div class="label">Demandes<span class="tri-ar">الطلبات</span></div></div>
+        </div>
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+// ============================================================
+// PUBLIC PLANNING VIEW (read-only, no login, ?planning=LOCAL)
+// ============================================================
+async function initPublicPlanning(loc){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('publicView').style.display='';
+  document.getElementById('pubLocalName').textContent=loc;
+
+  // Load config + planning + employees
+  const wk=getWeekStr();
+  const weekDates=getWeekDates(wk);
+  document.getElementById('pubWeekLabel').textContent='Semaine '+wk+(weekDates.length?' ('+weekDates[0]+' - '+weekDates[6]+')':'');
+
+  const[empRes,planRes,cfgRes]=await Promise.all([
+    sb.from('empleados').select('*').eq('local',loc).eq('actif',true),
+    sb.from('plannings').select('*').eq('local',loc).eq('semaine',wk).eq('publie',true),
+    sb.from('turnos_config').select('*').eq('local',loc).maybeSingle()
+  ]);
+  const emps=empRes.data||[];
+  const plans=planRes.data||[];
+  const tc=cfgRes.data||{matin_entree:'08:00',matin_sortie:'16:00',soir_entree:'16:00',soir_sortie:'00:00'};
+
+  if(!plans.length){
+    document.getElementById('pubPlanContent').innerHTML='<div class="card" style="color:var(--tx2);text-align:center;padding:30px">Aucun planning publie pour cette semaine<br><span class="tri-ar">ما كاين حتا بلانينغ منشور هاد السيمانة</span></div>';
+    return;
+  }
+
+  // Parse plan data
+  const pd={};
+  const JOUR_COLS=JOURS_FULL.map(j=>j.col);
+  plans.forEach(p=>{
+    JOUR_COLS.forEach((col,di)=>{if(p[col])pd[p.employe_id+'_'+di]=p[col]});
+  });
+
+  const posteOrder={};POSTES.forEach((p,i)=>posteOrder[p]=i);
+  emps.sort((a,b)=>(posteOrder[a.poste]||99)-(posteOrder[b.poste]||99));
+
+  document.getElementById('pubPlanContent').innerHTML=`
+    <div style="margin-bottom:10px;display:flex;gap:14px;justify-content:center;font-size:.75rem;color:var(--tx2)">
+      <span><span style="color:var(--gn)">&#9632;</span> M = Matin (${tc.matin_entree}–${tc.matin_sortie})</span>
+      <span><span style="color:var(--or)">&#9632;</span> S = Soir (${tc.soir_entree}–${tc.soir_sortie})</span>
+      <span><span style="color:var(--rd)">&#9632;</span> OFF = Repos</span>
+    </div>
+    <div class="table-wrap"><div class="plan-grid" style="pointer-events:none">
+      <div class="pg hd">Poste</div><div class="pg hd">Nom</div>
+      ${JOURS_FULL.map((j,di)=>`<div class="pg hd">${j.fr}<br>${weekDates[di]||''}</div>`).join('')}
+      ${emps.map(e=>{
+        return `<div class="pg poste">${esc(e.poste)}</div><div class="pg nom">${esc(e.nom)}</div>
+          ${JOURS_FULL.map((_,di)=>{
+            const v=pd[e.id+'_'+di]||'';
+            const cls=v==='M'?'c-m':v==='S'?'c-s':v==='OFF'?'c-off':v?'c-custom':'';
+            return `<div class="pg cell ${cls}">${v||'—'}</div>`;
+          }).join('')}`;
+      }).join('')}
+    </div></div>
+  `;
+}
+
+// ============================================================
+// AUTO-DETECT PUBLIC PLANNING URL
+// ============================================================
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  const pubLocal=params.get('planning');
+  if(pubLocal)initPublicPlanning(decodeURIComponent(pubLocal));
+})();
+</script>
+</body>
+</html>
