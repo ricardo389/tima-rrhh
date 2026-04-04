@@ -495,8 +495,8 @@ function initApp(){
     document.getElementById('p-'+tabs[e.target.dataset.idx].id).classList.add('active');
     tabs[e.target.dataset.idx].render();
   };
-  document.getElementById('pagesContainer').innerHTML=tabs.map((t,i)=>`<div class="page ${i===0?'active':''}" id="p-${t.id}"></div>`).join('');
-  // Render first tab instantly from cache
+  document.getElementById('pagesContainer').innerHTML=(role==='gerant'?'<div id="gerantChecklist"></div>':'')+tabs.map((t,i)=>`<div class="page ${i===0?'active':''}" id="p-${t.id}"></div>`).join('');
+  if(role==='gerant')renderChecklist();
   tabs[0].render();
 }
 function getTabs(){
@@ -507,6 +507,7 @@ function getTabs(){
     {id:'absences',label:'Absences',render:renderAbsences},
     {id:'demandes',label:'Demandes',render:renderDemandes},
     {id:'uniformes',label:'Uniformes',render:renderUniformesGerant},
+    {id:'protocoles',label:'Protocoles',render:renderProtocoles},
   ];
   if(role==='rh')return[
     {id:'effectifs',label:'Effectifs',render:renderEffectifs},
@@ -593,29 +594,119 @@ async function deactivateEmpG(id){
 }
 
 // ============================================================
-// GÉRANT: PRESENCES (checkbox + quick absence motif)
+// GÉRANT: DAILY CHECKLIST
+// ============================================================
+function renderChecklist(){
+  const cl=document.getElementById('gerantChecklist');
+  if(!cl)return;
+  const todayStr=today();
+  const pres=appData.presences||[];
+  const matinDone=pres.some(p=>p.date===todayStr&&p.turno==='matin'&&p.cloture);
+  const soirDone=pres.some(p=>p.date===todayStr&&p.turno==='soir'&&p.cloture);
+  const matinHeure=pres.find(p=>p.date===todayStr&&p.turno==='matin'&&p.cloture)?.heure||'';
+  const soirHeure=pres.find(p=>p.date===todayStr&&p.turno==='soir'&&p.cloture)?.heure||'';
+
+  // Check if sunday + planning published for next week
+  const dow=new Date().getDay(); // 0=dim
+  const nextWk=getNextWeekStr();
+  const planPub=(appData.plannings||[]).some(p=>p.semaine===nextWk&&p.publie);
+  const isSunday=dow===0;
+
+  const allDone=matinDone&&soirDone&&(!isSunday||planPub);
+  if(allDone){cl.innerHTML='';return}
+
+  cl.innerHTML=`<div class="card" style="border-left:3px solid var(--or);margin:14px">
+    <h3 style="font-size:.9rem">Checklist du jour / قائمة اليوم <span class="tri-es">Checklist del dia</span></h3>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:.84rem">
+      <div>${matinDone?'✅':'☐'} Cloturer les presences Matin <span class="tri-ar">إغلاق حضور الصباح</span>${matinDone?' <span style="color:var(--gn);font-size:.75rem">'+matinHeure+'</span>':''}</div>
+      <div>${soirDone?'✅':'☐'} Cloturer les presences Soir <span class="tri-ar">إغلاق حضور الليل</span>${soirDone?' <span style="color:var(--gn);font-size:.75rem">'+soirHeure+'</span>':''}</div>
+      ${isSunday?`<div>${planPub?'✅':'☐'} Publier le planning semaine prochaine <span class="tri-ar">نشر برنامج الأسبوع الجاي</span> <span style="font-size:.72rem;color:var(--or)">avant 00:00, limite lundi 03:00</span></div>`:''}
+    </div>
+  </div>`;
+}
+
+function getNextWeekStr(){
+  const d=new Date();d.setDate(d.getDate()+7);
+  const y=d.getFullYear(),jan1=new Date(y,0,1);
+  const wn=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+  return `${y}-W${String(wn).padStart(2,'0')}`;
+}
+
+// ============================================================
+// GÉRANT: PRESENCES (split by turno Matin/Soir + anti-duplicate)
 // ============================================================
 let presData={};
+
+function getTodayShifts(){
+  // Get today's day index from planning
+  const dow=new Date().getDay(); // 0=dim,1=lun...
+  const dayIdx=dow===0?6:dow-1; // 0=lun...6=dim
+  const JOUR_COLS=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
+  const col=JOUR_COLS[dayIdx];
+  const plans=appData.plannings||[];
+  const shifts={matin:[],soir:[],off:[],sans:[]};
+  const emps=appData.employes||[];
+  const assigned=new Set();
+
+  plans.forEach(p=>{
+    const val=(p[col]||'').toUpperCase();
+    const emp=emps.find(e=>e.id===p.employe_id);
+    if(!emp)return;
+    assigned.add(emp.id);
+    if(val==='M')shifts.matin.push(emp);
+    else if(val==='S')shifts.soir.push(emp);
+    else if(val==='OFF')shifts.off.push(emp);
+  });
+  emps.forEach(e=>{if(!assigned.has(e.id))shifts.sans.push(e)});
+  return shifts;
+}
+
+function isTurnoClosed(turno){
+  return(appData.presences||[]).some(p=>p.date===today()&&p.turno===turno&&p.cloture);
+}
+
+function getClotureHeure(turno){
+  const p=(appData.presences||[]).find(p=>p.date===today()&&p.turno===turno&&p.cloture);
+  return p?.heure||'';
+}
+
 function renderPresences(){
   const pg=document.getElementById('p-presences');
-  const emps=appData.employes||[];
-  const existing={};
-  (appData.presences||[]).forEach(p=>{existing[p.employe_id]=p.statut});
+  const shifts=getTodayShifts();
+  const matinClosed=isTurnoClosed('matin');
+  const soirClosed=isTurnoClosed('soir');
 
   presData={};
-  emps.forEach(e=>{presData[e.id]={statut:existing[e.id]||'present',motif:''}});
+  const existing={};
+  (appData.presences||[]).forEach(p=>{existing[p.employe_id+'_'+p.turno]=p.statut});
+
+  [...shifts.matin,...shifts.soir,...shifts.sans].forEach(e=>{
+    const turno=shifts.matin.includes(e)?'matin':shifts.soir.includes(e)?'soir':'matin';
+    presData[e.id]={statut:existing[e.id+'_'+turno]||'present',motif:'',turno};
+  });
 
   pg.innerHTML=`
     <div class="section-header"><h2>${tri('presences')}</h2><span style="color:var(--tx2);font-size:.82rem">${today()}</span></div>
-    <p style="font-size:.78rem;color:var(--tx2);margin-bottom:10px">Cochez les presents. Decochez = absent (choisissez le motif).<span class="tri-ar">علّم اللي حاضر. نحي العلامة = غايب (ختار السبب).</span></p>
-    <div class="pres-list" id="presList">
+    ${renderTurnoSection('matin','Turno Matin / الصباح',shifts.matin,matinClosed)}
+    ${renderTurnoSection('soir','Turno Soir / العشية',shifts.soir,soirClosed)}
+    ${shifts.sans.length?renderTurnoSection('matin','Sans affectation / بلا تعيين',shifts.sans,matinClosed):''}
+    ${!shifts.matin.length&&!shifts.soir.length&&!shifts.sans.length?'<div class="card" style="color:var(--tx2)">Aucun planning publie pour cette semaine. Publiez le planning d\'abord.<span class="tri-ar">ما كاين حتا بلانينغ منشور. نشر البلانينغ أولا.</span></div>':''}
+  `;
+}
+
+function renderTurnoSection(turno,title,emps,closed){
+  if(!emps.length)return '';
+  const heure=getClotureHeure(turno);
+  return `<div class="card" style="margin-bottom:12px">
+    <h3 style="font-size:.9rem">${title} ${closed?'<span class="badge b-gn">✅ Cloture a '+heure+'</span>':''}</h3>
+    ${closed?'':`<div class="pres-list">
       ${emps.map(e=>{
-        const isP=presData[e.id].statut==='present';
+        const isP=presData[e.id]?.statut==='present';
         return `<div class="pres-item ${isP?'':'absent'}" id="pi-${e.id}">
           <button class="pres-check ${isP?'checked':''}" onclick="togglePres('${e.id}',this)" id="pc-${e.id}">${isP?'&#10003;':''}</button>
           <div class="emp-info">
             <div class="emp-name">${esc(e.nom)}</div>
-            <div class="emp-poste">${esc(e.poste)}</div>
+            <div class="emp-poste">${esc(e.poste)}${e.poste_specifique?' · '+esc(e.poste_specifique):''}</div>
             <div class="pres-motif" id="pm-${e.id}" style="${isP?'display:none':''}">
               ${MOTIFS_ABS.map(m=>`<button onclick="setPresMotif('${e.id}','${m}',this)">${MOTIFS_AR[m]} / ${m}</button>`).join('')}
             </div>
@@ -623,8 +714,10 @@ function renderPresences(){
         </div>`;
       }).join('')}
     </div>
-    ${emps.length?`<div style="margin-top:16px;text-align:center"><button class="btn-cta" onclick="savePresences()" style="padding:14px 50px">Enregistrer les presences<br><span style="font-size:.8em;opacity:.8">سجّل الحضور</span></button></div>`:'<div class="card" style="color:var(--tx2)">Aucun employe / ما كاين حتا موظف</div>'}
-  `;
+    <div style="margin-top:10px;text-align:center">
+      <button class="btn-cta" onclick="savePresencesTurno('${turno}')" style="padding:10px 30px">Cloturer ${turno==='matin'?'Matin / الصباح':'Soir / العشية'}</button>
+    </div>`}
+  </div>`;
 }
 
 function togglePres(empId,btn){
@@ -633,42 +726,77 @@ function togglePres(empId,btn){
   if(isNowPresent)presData[empId].motif='';
   btn.classList.toggle('checked');
   btn.innerHTML=isNowPresent?'&#10003;':'';
-  const item=document.getElementById('pi-'+empId);
-  item.classList.toggle('absent',!isNowPresent);
-  const motifDiv=document.getElementById('pm-'+empId);
-  motifDiv.style.display=isNowPresent?'none':'';
-  if(isNowPresent)motifDiv.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('pi-'+empId).classList.toggle('absent',!isNowPresent);
+  const md=document.getElementById('pm-'+empId);
+  md.style.display=isNowPresent?'none':'';
+  if(isNowPresent)md.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
 }
 
 function setPresMotif(empId,motif,btn){
   presData[empId].motif=motif;
-  const parent=btn.parentElement;
-  parent.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
 }
 
-async function savePresences(){
-  const emps=appData.employes||[];
-  const todayStr=today(),heure=new Date().toTimeString().slice(0,5);
+async function savePresencesTurno(turno){
+  // Anti-duplicate check
+  if(isTurnoClosed(turno)){toast('Ce turno est deja cloture / هاد الشيفت تسكّر',true);return}
 
-  // Delete old presences for today+local, then insert new
-  await sb.from('presences').delete().eq('local',local).eq('date',todayStr);
-  const rows=emps.map(e=>({employe_id:e.id,employe_nom:e.nom,local,date:todayStr,statut:presData[e.id].statut,heure}));
+  const todayStr=today(),heure=new Date().toTimeString().slice(0,5);
+  const shifts=getTodayShifts();
+  const emps=turno==='matin'?[...shifts.matin,...shifts.sans]:shifts.soir;
+
+  const rows=emps.map(e=>({employe_id:e.id,employe_nom:e.nom,local,date:todayStr,statut:presData[e.id]?.statut||'present',heure,turno,cloture:true}));
   const{data}=await sb.from('presences').insert(rows).select();
-  appData.presences=data||rows;
+  appData.presences=[...(appData.presences||[]),...(data||rows)];
   syncToSheets('presences',rows);
 
-  // Auto-register absences with motif
-  const absToInsert=emps.filter(e=>presData[e.id].statut==='absent'&&presData[e.id].motif).map(e=>({
+  // Auto-register absences
+  const absToInsert=emps.filter(e=>presData[e.id]?.statut==='absent'&&presData[e.id]?.motif).map(e=>({
     employe_id:e.id,employe_nom:e.nom,local,date:todayStr,motif:presData[e.id].motif,
     prevenu:presData[e.id].motif==='sans preavis'?'non':'oui',reporte_par:'Gerant',notes:''
   }));
   if(absToInsert.length){
-    const{data:absData}=await sb.from('absences').insert(absToInsert).select();
-    appData.absences=[...(appData.absences||[]),...(absData||absToInsert)];
-    syncToSheets('absences',absData||absToInsert);
+    const{data:ad}=await sb.from('absences').insert(absToInsert).select();
+    appData.absences=[...(appData.absences||[]),...(ad||absToInsert)];
+    syncToSheets('absences',ad||absToInsert);
   }
-  toast('Presences enregistrees / الحضور تسجّل');
+  toast('Turno '+turno+' cloture / شيفت '+turno+' تسكّر');
+  renderPresences();
+  renderChecklist();
+}
+
+// ============================================================
+// GÉRANT: PROTOCOLES
+// ============================================================
+function renderProtocoles(){
+  document.getElementById('p-protocoles').innerHTML=`
+    <div class="section-header"><h2>Protocoles du Gerant<span class="tri-ar">بروتوكولات المسؤول</span><span class="tri-es">Protocolos del Gerente</span></h2></div>
+    <div class="card">
+      <div style="display:flex;flex-direction:column;gap:14px;font-size:.88rem">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.2rem">📅</span>
+          <div><strong>Le dimanche (avant 00:00, limite 03:00 lundi)</strong> : publier le planning de la semaine suivante<br><span class="tri-ar">نهار الحد (قبل 00:00، الحد الأقصى 03:00 الإثنين) : نشر البلانينغ ديال السيمانة الجاية</span><br><span class="tri-es">El domingo (antes de 00:00, limite 03:00 lunes) : publicar el planning de la semana siguiente</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.2rem">✅</span>
+          <div><strong>Chaque jour matin</strong> : cloturer les presences du turno Matin apres le demarrage<br><span class="tri-ar">كل نهار فالصباح : سكّر حضور الصباح من بعد ما يبدا الخدمة</span><br><span class="tri-es">Cada dia por la manana : cerrar las presencias del turno Manana despues del arranque</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.2rem">✅</span>
+          <div><strong>Chaque jour soir</strong> : cloturer les presences du turno Soir en fin de service<br><span class="tri-ar">كل نهار فالعشية : سكّر حضور الليل فآخر الخدمة</span><br><span class="tri-es">Cada dia por la noche : cerrar las presencias del turno Noche al final del servicio</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.2rem">📤</span>
+          <div><strong>Apres publication du planning</strong> : envoyer au groupe WhatsApp du local<br><span class="tri-ar">من بعد ما تنشر البلانينغ : صيفطو فڭروب واتساب ديال اللوكال</span><br><span class="tri-es">Despues de publicar el planning : enviar al grupo WhatsApp del local</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.2rem">👁️</span>
+          <div><strong>Verifier que tous les employes ont pointe a leur heure</strong><br><span class="tri-ar">تأكّد أن كل الموظفين سجّلو فالوقت ديالهم</span><br><span class="tri-es">Verificar que todos los empleados ficharon a su hora</span></div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 // ============================================================
@@ -686,6 +814,19 @@ const JOURS_FULL=[
 const PLAN_CYCLE=['','M','S','OFF'];
 let planData={},planPublished=false,planCurrentWeek='';
 let turnosConfig={matin_entree:'08:00',matin_sortie:'16:00',soir_entree:'16:00',soir_sortie:'00:00'};
+
+function isPlanningLate(wk){
+  // A planning is late if it's the current week, it's Monday after 03:00, and not published
+  const now=new Date();
+  const dow=now.getDay(); // 0=dim,1=lun
+  const hour=now.getHours();
+  const currentWk=getWeekStr();
+  if(wk!==currentWk)return false;
+  // Late if: Monday and hour>=3, or Tue-Sat
+  if(dow===1&&hour>=3)return true;
+  if(dow>=2&&dow<=6)return true;
+  return false;
+}
 
 async function loadTurnosConfig(){
   const{data}=await sb.from('turnos_config').select('*').eq('local',local).maybeSingle();
@@ -779,7 +920,7 @@ async function renderPlanning(){
       <button class="btn-cta" onclick="savePlanningGrid(true)" style="padding:10px 30px">Publier / نشر</button>
       <button class="btn btn-g" onclick="downloadPlanningPDF()" style="padding:10px 20px">Telecharger PDF / حمّل PDF</button>
     </div>
-    ${planPublished?'<div class="plan-published">Planning publie / البلانينغ تنشر &#10003;</div>':''}
+    ${planPublished?'<div class="plan-published">Planning publie / البلانينغ تنشر &#10003;</div>':isPlanningLate(wk)?'<div class="alert-card" style="margin-top:10px"><div class="at">⚠️ Planning non publie / البلانينغ ما تنشرش</div><div class="ad">Deadline: dimanche avant 00:00 (limite lundi 03:00) / الحد قبل 00:00</div></div>':''}
     `:'<div class="card" style="color:var(--tx2)">Aucun employe / ما كاين حتا موظف</div>'}
   `;
 }

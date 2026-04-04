@@ -68,6 +68,10 @@ BEGIN
   END IF;
 END $$;
 
+-- Add turno/cloture to presences (run if table already exists)
+ALTER TABLE presences ADD COLUMN IF NOT EXISTS turno TEXT DEFAULT '';
+ALTER TABLE presences ADD COLUMN IF NOT EXISTS cloture BOOLEAN DEFAULT false;
+
 -- Empleados
 CREATE TABLE IF NOT EXISTS empleados (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

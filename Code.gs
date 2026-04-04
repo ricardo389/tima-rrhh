@@ -11,7 +11,7 @@ const SHEET_ID = '1-68Gps0LZAbgZvNmlB5i9lHVEeldVrp6bhkVfs3px7U';
 
 const SHEETS = {
   'employes':    { name: 'Employés',           cols: ['id','nom','poste','poste_specifique','local','statut','date_entree','telephone','timestamp'] },
-  'presences':   { name: 'Présences',          cols: ['id','employe_id','employe_nom','local','date','statut','heure','timestamp'] },
+  'presences':   { name: 'Présences',          cols: ['id','employe_id','employe_nom','local','date','statut','heure','turno','cloture','timestamp'] },
   'absences':    { name: 'Absences',           cols: ['id','employe_id','employe_nom','local','date','motif','prevenu','reporte_par','notes','timestamp'] },
   'plannings':   { name: 'Plannings',          cols: ['id','employe_id','employe_nom','local','semaine','lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche','publie','timestamp'] },
   'recrutements':{ name: 'Recrutements',       cols: ['id','nom','tel','local','poste','etape','demande_id','notes','timestamp'] },
