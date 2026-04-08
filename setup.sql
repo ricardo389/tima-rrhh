@@ -72,6 +72,36 @@ END $$;
 ALTER TABLE presences ADD COLUMN IF NOT EXISTS turno TEXT DEFAULT '';
 ALTER TABLE presences ADD COLUMN IF NOT EXISTS cloture BOOLEAN DEFAULT false;
 
+-- Rappels (RH→Gerant messages)
+CREATE TABLE IF NOT EXISTS rappels (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  local TEXT NOT NULL,
+  message TEXT NOT NULL,
+  envoy_par TEXT DEFAULT 'RH',
+  lu BOOLEAN DEFAULT false,
+  date TEXT,
+  heure TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE rappels ENABLE ROW LEVEL SECURITY;
+DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='rappels' AND policyname='allow_all_rappels') THEN CREATE POLICY allow_all_rappels ON rappels FOR ALL USING (true) WITH CHECK (true); END IF; END $$;
+
+-- Employee documents (contracts, photos)
+CREATE TABLE IF NOT EXISTS emp_documents (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  employe_id UUID REFERENCES empleados(id) ON DELETE CASCADE,
+  nom TEXT NOT NULL,
+  type TEXT DEFAULT 'pdf',
+  url TEXT NOT NULL,
+  date TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE emp_documents ENABLE ROW LEVEL SECURITY;
+DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='emp_documents' AND policyname='allow_all_emp_documents') THEN CREATE POLICY allow_all_emp_documents ON emp_documents FOR ALL USING (true) WITH CHECK (true); END IF; END $$;
+
+-- Add date_depart to empleados
+ALTER TABLE empleados ADD COLUMN IF NOT EXISTS date_depart TEXT DEFAULT '';
+
 -- Add deactivation fields to empleados
 ALTER TABLE empleados ADD COLUMN IF NOT EXISTS motif_depart TEXT DEFAULT '';
 ALTER TABLE empleados ADD COLUMN IF NOT EXISTS note_depart TEXT DEFAULT '';

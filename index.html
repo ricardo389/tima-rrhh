@@ -153,8 +153,7 @@ tr:hover td{background:rgba(108,92,231,.04)}
 .plan-grid .pg.cell.c-m{background:rgba(0,184,148,.18);color:var(--gn)}
 .plan-grid .pg.cell.c-s{background:rgba(253,203,110,.15);color:var(--or)}
 .plan-grid .pg.cell.c-off{background:rgba(225,112,85,.12);color:var(--rd)}
-.plan-grid .pg.cell.c-custom{background:rgba(116,185,255,.1);color:var(--bl);font-size:.62rem;cursor:default}
-.plan-grid input.lab-input{width:100%;padding:2px;background:var(--s2);border:1px solid var(--s3);border-radius:3px;color:var(--bl);font-size:.62rem;text-align:center}
+.plan-grid .pg.cell.c-l{background:rgba(155,89,182,.15);color:#9b59b6;font-weight:700}
 .plan-warn{display:inline-block;color:var(--rd);font-size:.7rem;font-weight:600;margin-left:4px}
 .plan-published{background:rgba(0,184,148,.1);border:1px solid var(--gn);border-radius:var(--r);padding:8px 14px;text-align:center;color:var(--gn);font-size:.82rem;margin-top:10px}
 .plan-actions{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
@@ -189,6 +188,53 @@ tr:hover td{background:rgba(108,92,231,.04)}
   .login-cards{grid-template-columns:1fr}
 }
 
+/* PRESENCES URGENCY */
+.pres-urgency{padding:10px 14px;border-radius:var(--r);margin-bottom:10px;font-size:.82rem;font-weight:500;display:flex;align-items:center;gap:8px}
+.pres-urgency.urg-warn{background:rgba(253,203,110,.12);border:1px solid rgba(253,203,110,.3);color:var(--or);animation:urgPulse 2s infinite}
+.pres-urgency.urg-danger{background:rgba(225,112,85,.12);border:1px solid rgba(225,112,85,.4);color:var(--rd);animation:urgPulse 1.2s infinite}
+.pres-urgency.urg-late{background:rgba(225,112,85,.2);border:2px solid var(--rd);color:#fff;animation:urgPulse .8s infinite}
+@keyframes urgPulse{0%,100%{opacity:1}50%{opacity:.7}}
+.turno-header{padding:10px 14px;border-radius:var(--r) var(--r) 0 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.turno-header.th-matin{background:linear-gradient(135deg,rgba(0,184,148,.15),rgba(0,184,148,.05));border-bottom:2px solid rgba(0,184,148,.3)}
+.turno-header.th-soir{background:linear-gradient(135deg,rgba(108,92,231,.15),rgba(108,92,231,.05));border-bottom:2px solid rgba(108,92,231,.3)}
+.turno-header .th-title{font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:6px}
+.turno-header .th-stats{display:flex;gap:10px;font-size:.75rem}
+.turno-header .th-stats span{display:flex;align-items:center;gap:3px}
+.turno-header .th-countdown{font-size:.72rem;padding:3px 8px;border-radius:12px;font-weight:600}
+.tab-badge{position:relative}
+.tab-badge::after{content:'!';position:absolute;top:-4px;right:-6px;width:14px;height:14px;background:var(--rd);color:#fff;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;animation:urgPulse 1s infinite}
+.pres-global-warn{background:rgba(225,112,85,.1);border:1px solid rgba(225,112,85,.2);border-radius:var(--r);padding:8px 12px;margin:8px 14px;font-size:.78rem;color:var(--rd);display:flex;align-items:center;gap:8px}
+
+/* POSTE COLORS */
+.pc-cuisine{color:#2ecc71}.pc-cuisine-bg{background:rgba(46,204,113,.1)}
+.pc-salle{color:#3498db}.pc-salle-bg{background:rgba(52,152,219,.1)}
+.pc-labo{color:#9b59b6}.pc-labo-bg{background:rgba(155,89,182,.1)}
+.pc-plonge{color:#e67e22}.pc-plonge-bg{background:rgba(230,126,34,.1)}
+.pc-gerant{color:#f1c40f}.pc-gerant-bg{background:rgba(241,196,15,.1)}
+.pc-chef{color:#e74c3c}.pc-chef-bg{background:rgba(231,76,60,.1)}
+
+/* AVATARS */
+.avatar{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:.5px}
+.avatar-sm{width:26px;height:26px;font-size:.6rem;border-radius:6px}
+
+/* NAV ICONS */
+.nav-tabs button{gap:4px;display:inline-flex;align-items:center}
+.tab-icon{font-size:.9rem}
+
+/* SECTION HEADERS improved */
+.section-header h2{display:flex;align-items:center;gap:8px}
+.sh-icon{font-size:1.1rem}
+
+/* STATUS DOTS */
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.sd-gn{background:var(--gn)}.sd-rd{background:var(--rd)}.sd-or{background:var(--or)}.sd-bl{background:var(--bl)}
+
+/* IMPROVED BUTTONS */
+.btn-p{background:linear-gradient(135deg,var(--ac),#7c6cf0);box-shadow:0 2px 8px rgba(108,92,231,.3)}
+.btn-d{background:linear-gradient(135deg,#c0392b,var(--rd));box-shadow:0 2px 8px rgba(225,112,85,.3)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(108,92,231,.4)}
+.btn-d:hover{transform:translateY(-1px)}
+
 /* HELP TOOLTIPS */
 .help-btn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--s3);color:var(--tx2);font-size:.65rem;font-weight:700;border:none;cursor:pointer;margin-left:6px;vertical-align:middle;transition:.15s;flex-shrink:0}
 .help-btn:hover{background:var(--ac);color:#fff}
@@ -201,14 +247,22 @@ tr:hover td{background:rgba(108,92,231,.04)}
 .help-close{display:block;margin-top:12px;text-align:center}
 
 /* GUIDED TOUR */
-.tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300}
-.tour-highlight{position:fixed;z-index:301;border:2px solid var(--ac);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.75);transition:.3s}
-.tour-popup{position:fixed;z-index:302;background:var(--s1);border:1px solid var(--ac);border-radius:12px;padding:18px;max-width:320px;width:90%}
+.tour-overlay{position:fixed;inset:0;z-index:9990;pointer-events:none}
+.tour-highlight{position:fixed;z-index:9991;border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.45);transition:.4s ease;outline:3px solid var(--ac);outline-offset:4px;animation:tour-pulse 1.5s ease-in-out infinite}
+@keyframes tour-pulse{0%,100%{outline-color:var(--ac);outline-offset:4px}50%{outline-color:var(--ac2);outline-offset:7px}}
+.tour-arrow{position:fixed;z-index:9993;width:16px;height:16px;background:var(--ac);clip-path:polygon(50% 0%,100% 100%,0% 100%);filter:drop-shadow(0 2px 4px rgba(108,92,231,.6));animation:tour-bounce .7s ease-in-out infinite}
+.tour-arrow.arr-down{clip-path:polygon(0% 0%,100% 0%,50% 100%)}
+@keyframes tour-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.tour-popup{position:fixed;z-index:9992;background:var(--s1);border:1px solid var(--ac);border-radius:12px;padding:14px;box-shadow:0 8px 32px rgba(0,0,0,.5);pointer-events:auto;max-height:55vh;max-width:380px;display:flex;flex-direction:column}
+.tour-popup .tour-content{overflow-y:auto;flex:1;min-height:0}
 .tour-popup h4{color:var(--ac2);font-size:.9rem;margin-bottom:6px}
-.tour-popup p{font-size:.8rem;color:var(--tx);line-height:1.4}
-.tour-popup .tar{font-size:.72rem;color:var(--tx3);direction:rtl;margin-top:4px}
-.tour-popup .tour-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.tour-popup p{font-size:.78rem;color:var(--tx);line-height:1.4}
+.tour-popup .tar{font-size:.7rem;color:var(--tx3);direction:rtl;margin-top:4px}
+.tour-popup .tour-btns{display:none}
+.tour-nav{position:fixed;bottom:20px;right:20px;z-index:99999;display:flex;gap:8px;pointer-events:auto}
 .tour-step{font-size:.7rem;color:var(--tx2);margin-bottom:4px}
+.tour-loc{font-size:.66rem;color:var(--ac);background:var(--s2);padding:2px 8px;border-radius:4px;margin-bottom:4px;display:inline-block}
+@media(max-width:768px){.tour-popup.tp-mob{position:fixed!important;bottom:0!important;left:0!important;top:auto!important;width:100%!important;max-width:100%!important;max-height:45vh;border-radius:16px 16px 0 0}}
 
 /* ONBOARDING */
 .onboard-box{background:var(--s2);border:1px solid var(--ac);border-radius:var(--r);padding:14px;margin:14px}
@@ -299,7 +353,7 @@ tr:hover td{background:rgba(108,92,231,.04)}
   <div class="modal" id="modalBox"></div>
 </div>
 <div class="toast" id="toast"></div>
-<div id="syncBanner" style="display:none;position:fixed;top:0;left:0;right:0;background:rgba(253,203,110,.9);color:#333;text-align:center;padding:6px;font-size:.78rem;font-weight:600;z-index:400">Synchronisation en attente... / المزامنة كتسنّا... <button onclick="retrySyncQueue()" style="margin-left:8px;padding:2px 10px;border:1px solid #333;background:none;border-radius:4px;cursor:pointer;font-size:.72rem">Reessayer</button></div>
+<div id="syncBanner" style="display:none"></div>
 <div id="proactiveBannerContainer"></div>
 <div id="helpModalContainer"></div>
 <div id="tourContainer"></div>
@@ -357,29 +411,37 @@ async function loadAllData(){
     const uniAssignP=sb.from('uniform_assignments').select('*').order('created_at',{ascending:false});
 
     if(role==='gerant'&&local){
-      const [emp,pres,abs,dem,ut,ua]=await Promise.all([
+      const [emp,pres,abs,dem,ut,ua,tcfg,raps]=await Promise.all([
         sb.from('empleados').select('*').eq('local',local).eq('actif',true),
         sb.from('presences').select('*').eq('local',local).eq('date',todayStr),
         sb.from('absences').select('*').eq('local',local).order('date',{ascending:false}),
         sb.from('demandes_personnel').select('*').eq('local',local).order('date',{ascending:false}),
         sb.from('uniform_types').select('*').eq('local',local).order('nom'),
         sb.from('uniform_assignments').select('*').eq('local',local).order('created_at',{ascending:false}),
+        sb.from('turnos_config').select('*').eq('local',local).maybeSingle(),
+        sb.from('rappels').select('*').eq('local',local).eq('lu',false).order('created_at',{ascending:false}).limit(10),
       ]);
-      appData={employes:emp.data||[],presences:pres.data||[],absences:abs.data||[],demandes:dem.data||[],plannings:[],uniTypes:ut.data||[],uniAssign:ua.data||[],today:todayStr,semaine:getWeekStr()};
+      if(tcfg.data)turnosConfig=tcfg.data;
+      appData={employes:emp.data||[],presences:pres.data||[],absences:abs.data||[],demandes:dem.data||[],plannings:[],uniTypes:ut.data||[],uniAssign:ua.data||[],rappels:raps.data||[],today:todayStr,semaine:getWeekStr()};
       const pl=await sb.from('plannings').select('*').eq('local',local).eq('semaine',getWeekStr());
       appData.plannings=pl.data||[];
       return true;
     }
     if(role==='rh'){
-      const [emp,abs,pres,dem,rec,ut,ua]=await Promise.all([
+      const wk=getWeekStr();
+      const [emp,empAll,abs,pres,dem,rec,ut,ua,plan,rappels,edocs]=await Promise.all([
         sb.from('empleados').select('*').eq('actif',true).order('local'),
+        sb.from('empleados').select('*').order('local'), // includes inactive for uniform tracking
         sb.from('absences').select('*').order('date',{ascending:false}).limit(500),
         sb.from('presences').select('*').order('date',{ascending:false}).limit(500),
         sb.from('demandes_personnel').select('*').order('date',{ascending:false}),
         sb.from('recrutements').select('*').order('created_at',{ascending:false}),
         uniTypesP, uniAssignP,
+        sb.from('plannings').select('*').eq('semaine',wk),
+        sb.from('rappels').select('*').order('created_at',{ascending:false}).limit(50),
+        sb.from('emp_documents').select('*'),
       ]);
-      appData={employes:emp.data||[],absences:abs.data||[],presences:pres.data||[],demandes:dem.data||[],recrutements:rec.data||[],uniTypes:ut.data||[],uniAssign:ua.data||[],today:todayStr};
+      appData={employes:emp.data||[],employesAll:empAll.data||[],absences:abs.data||[],presences:pres.data||[],demandes:dem.data||[],recrutements:rec.data||[],uniTypes:ut.data||[],uniAssign:ua.data||[],plannings:plan.data||[],rappels:rappels.data||[],empDocs:edocs.data||[],today:todayStr,semaine:wk};
       return true;
     }
     if(role==='direction'){
@@ -405,88 +467,13 @@ async function loadAllData(){
   }catch(e){console.error('loadAllData:',e);return false}
 }
 
-// ============================================================
-// GOOGLE SHEETS SYNC (fire-and-forget, accumulate only)
-// ============================================================
-const SHEETS_API='https://script.google.com/macros/s/AKfycbzCSIh8x7-PawUDfEMj2jIE9l80yHKyrrbbrl1YmMq56-Cauy9WegXIJCoq0YP8FzkF/exec';
-let sheetsSyncQueue=[];
-let sheetsSyncRunning=false;
-
-function syncToSheets(table, rows){
-  if(!rows||!rows.length)return;
-  sheetsSyncQueue.push({table,rows:Array.isArray(rows)?rows:[rows]});
-  if(!sheetsSyncRunning)processSheetsSyncQueue();
-}
-
-async function processSheetsSyncQueue(){
-  if(!sheetsSyncQueue.length){sheetsSyncRunning=false;hideSyncBanner();return}
-  sheetsSyncRunning=true;
-  const item=sheetsSyncQueue[0];
-  try{
-    const r=await fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'sync',table:item.table,rows:item.rows})});
-    const json=await r.json();
-    if(json.ok){sheetsSyncQueue.shift();hideSyncBanner()}
-    else{console.warn('Sheets sync fail:',json.error);showSyncBanner()}
-  }catch(e){console.warn('Sheets sync error:',e.message);showSyncBanner()}
-  if(sheetsSyncQueue.length){
-    setTimeout(()=>processSheetsSyncQueue(),sheetsSyncQueue[0]===item?8000:500);
-  }else{sheetsSyncRunning=false}
-}
-
-function retrySyncQueue(){processSheetsSyncQueue()}
-function showSyncBanner(){document.getElementById('syncBanner').style.display=''}
-function hideSyncBanner(){document.getElementById('syncBanner').style.display='none'}
-
-// Full dump of ALL active employees from Supabase → Google Sheets (overwrite)
-async function syncAllEmployeesToSheets(){
-  try{
-    const{data}=await sb.from('empleados').select('*').order('local').order('poste');
-    if(!data||!data.length)return;
-    const rows=data.map(e=>({id:e.id,nom:e.nom,poste:e.poste,poste_specifique:e.poste_specifique||'',local:e.local,marque:e.marque||'',date_entree:e.date_entree||'',actif:e.actif,telephone:e.telephone||'',motif_depart:e.motif_depart||'',note_depart:e.note_depart||''}));
-    fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'fullSync',table:'employes',rows})}).catch(e=>console.warn('Sheets sync:',e.message));
-  }catch(e){console.warn('syncAllEmployees:',e.message)}
-}
-
-// Full dump ALL tables from Supabase → Google Sheets (bulkSync)
-async function syncEverythingToSheets(){
-  toast('Synchronisation en cours... / المزامنة كتدار...');
-  try{
-    const[emp,pres,abs,plan,dem,rec,ut,ua]=await Promise.all([
-      sb.from('empleados').select('*').order('local'),
-      sb.from('presences').select('*').order('date',{ascending:false}).limit(2000),
-      sb.from('absences').select('*').order('date',{ascending:false}).limit(2000),
-      sb.from('plannings').select('*').order('semaine',{ascending:false}).limit(2000),
-      sb.from('demandes_personnel').select('*').order('date',{ascending:false}),
-      sb.from('recrutements').select('*'),
-      sb.from('uniform_types').select('*'),
-      sb.from('uniform_assignments').select('*'),
-    ]);
-
-    const tables={
-      employes:(emp.data||[]).map(e=>({id:e.id,nom:e.nom,poste:e.poste,poste_specifique:e.poste_specifique||'',local:e.local,marque:e.marque||'',date_entree:e.date_entree||'',actif:e.actif,telephone:e.telephone||'',motif_depart:e.motif_depart||'',note_depart:e.note_depart||''})),
-      presences:(pres.data||[]).map(p=>({id:p.id,employe_id:p.employe_id,employe_nom:p.employe_nom,local:p.local,date:p.date,statut:p.statut,heure:p.heure||'',turno:p.turno||'',cloture:p.cloture||false})),
-      absences:(abs.data||[]).map(a=>({id:a.id,employe_id:a.employe_id,employe_nom:a.employe_nom,local:a.local,date:a.date,motif:a.motif,prevenu:a.prevenu||'',reporte_par:a.reporte_par||'',notes:a.notes||''})),
-      plannings:(plan.data||[]).map(p=>({id:p.id,employe_id:p.employe_id,employe_nom:p.employe_nom,local:p.local,semaine:p.semaine,lundi:p.lundi||'',mardi:p.mardi||'',mercredi:p.mercredi||'',jeudi:p.jeudi||'',vendredi:p.vendredi||'',samedi:p.samedi||'',dimanche:p.dimanche||'',publie:p.publie||false})),
-      demandes:(dem.data||[]).map(d=>({id:d.id,local:d.local,poste:d.poste,urgence:d.urgence||'',motif:d.motif||'',date:d.date,statut:d.statut||'',demande_par:d.demande_par||''})),
-      recrutements:(rec.data||[]).map(r=>({id:r.id,nom:r.nom,tel:r.tel||'',local:r.local,poste:r.poste,etape:r.etape||'',demande_id:r.demande_id||'',notes:r.notes||''})),
-      uniform_types:(ut.data||[]).map(t=>({id:t.id,local:t.local,nom:t.nom,description:t.description||'',stock_total:t.stock_total||0})),
-      uniform_assignments:(ua.data||[]).map(a=>({id:a.id,employee_id:a.employee_id,employee_nom:a.employee_nom,local:a.local,uniform_type_id:a.uniform_type_id||'',uniform_nom:a.uniform_nom||'',taille:a.taille||'',quantite:a.quantite||1,date_livraison:a.date_livraison||'',date_retour:a.date_retour||'',retourne:a.retourne||false,notes:a.notes||''})),
-    };
-
-    const r=await fetch(SHEETS_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'bulkSync',tables})});
-    const json=await r.json();
-    if(json.ok){
-      const counts=json.results||{};
-      const summary=Object.entries(counts).map(([k,v])=>v+' '+k).join(', ');
-      toast('✅ Sync complete: '+summary);
-    }else{
-      toast('Erreur sync: '+(json.error||'inconnu'),true);
-    }
-  }catch(e){
-    toast('Erreur sync: '+e.message,true);
-    console.error('syncEverything:',e);
-  }
-}
+// Stubs for removed Sheets sync
+function syncToSheets(){}
+function syncAllEmployeesToSheets(){}
+function syncEverythingToSheets(){}
+function retrySyncQueue(){}
+function showSyncBanner(){}
+function hideSyncBanner(){}
 
 // ============================================================
 // UTILS
@@ -499,6 +486,34 @@ function tri(key){
 }
 function today(){return new Date().toISOString().slice(0,10)}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+
+// Visual helpers
+const POSTE_COLORS={
+  'Polyvalent Cuisine':{bg:'#1a3a2a',fg:'#2ecc71',cls:'cuisine'},
+  'Polyvalent Salle':{bg:'#1a2a3a',fg:'#3498db',cls:'salle'},
+  'Operateur Laboratoire':{bg:'#2a1a3a',fg:'#9b59b6',cls:'labo'},
+  'Plonge':{bg:'#3a2a1a',fg:'#e67e22',cls:'plonge'},
+  'Gerant Matin':{bg:'#3a3a1a',fg:'#f1c40f',cls:'gerant'},
+  'Gerant Soir':{bg:'#3a3a1a',fg:'#f1c40f',cls:'gerant'},
+  'Chef de Cuisine':{bg:'#3a1a1a',fg:'#e74c3c',cls:'chef'},
+};
+function posteColor(p){return POSTE_COLORS[p]||{bg:'#2a2a3a',fg:'#a29bfe',cls:''}}
+function getInitials(nom){
+  if(!nom||typeof nom!=='string')return '??';
+  const words=nom.trim().split(/\s+/).filter(w=>w.length>0&&/^[A-Za-zÀ-ÿ\u0600-\u06FF]/.test(w));
+  if(!words.length)return '??';
+  if(words.length===1)return words[0].substring(0,2).toUpperCase();
+  return(words[0][0]+words[1][0]).toUpperCase();
+}
+function avatar(nom,poste){
+  const pc=posteColor(poste);
+  return `<div class="avatar" style="background:${pc.bg};color:${pc.fg}">${getInitials(nom)}</div>`;
+}
+function avatarSm(nom,poste){
+  const pc=posteColor(poste);
+  return `<div class="avatar avatar-sm" style="background:${pc.bg};color:${pc.fg}">${getInitials(nom)}</div>`;
+}
+function posteBadge(p){const pc=posteColor(p);return `<span style="color:${pc.fg};font-size:.72rem">${esc(p)}</span>`}
 // Lookup helpers to avoid JSON.stringify in onclick (breaks on apostrophes)
 function findEmp(id){return(appData.employes||[]).find(e=>e.id===id)}
 function findCand(id){return(appData.recrutements||[]).find(c=>c.id===id)}
@@ -582,24 +597,24 @@ function initApp(){
 }
 function getTabs(){
   if(role==='gerant')return[
-    {id:'plantillaG',label:'Equipe',render:renderPlantillaG},
-    {id:'presences',label:'Presences',render:renderPresences},
-    {id:'planning',label:'Planning',render:renderPlanning},
-    {id:'absences',label:'Absences',render:renderAbsences},
-    {id:'demandes',label:'Demandes',render:renderDemandes},
-    {id:'uniformes',label:'Uniformes',render:renderUniformesGerant},
-    {id:'protocoles',label:'Protocoles',render:renderProtocoles},
+    {id:'plantillaG',label:'<span class="tab-icon">👥</span> Equipe',render:renderPlantillaG},
+    {id:'presences',label:'<span class="tab-icon">✅</span> Presences',render:renderPresences},
+    {id:'planning',label:'<span class="tab-icon">📅</span> Planning',render:renderPlanning},
+    {id:'demandes',label:'<span class="tab-icon">📤</span> Demandes',render:renderDemandes},
+    {id:'uniformes',label:'<span class="tab-icon">👕</span> Uniformes',render:renderUniformesGerant},
+    {id:'protocoles',label:'<span class="tab-icon">📜</span> Protocoles',render:renderProtocoles},
   ];
   if(role==='rh')return[
-    {id:'effectifs',label:'Effectifs',render:renderEffectifs},
-    {id:'recrutement',label:'Recrutement',render:renderRecrutement},
-    {id:'uniformes',label:'Uniformes',render:renderUniformesRH},
-    {id:'absHist',label:'Abs. & Pres.',render:renderAbsHist},
+    {id:'dashboard',label:'<span class="tab-icon">🏠</span> Dashboard',render:renderRHDashboard},
+    {id:'effectifs',label:'<span class="tab-icon">👥</span> Effectifs',render:renderEffectifs},
+    {id:'recrutement',label:'<span class="tab-icon">🔍</span> Recrutement',render:renderRecrutement},
+    {id:'uniformes',label:'<span class="tab-icon">👕</span> Uniformes',render:renderUniformesRH},
+    {id:'absHist',label:'<span class="tab-icon">📋</span> Presences',render:renderAbsHist},
   ];
   return[
-    {id:'alertes',label:'Alertes',render:renderAlertes},
-    {id:'resume',label:'Resume',render:renderResume},
-    {id:'uniformes',label:'Uniformes',render:renderUniformesDir},
+    {id:'alertes',label:'<span class="tab-icon">🚨</span> Alertes',render:renderAlertes},
+    {id:'resume',label:'<span class="tab-icon">📊</span> Resume',render:renderResume},
+    {id:'uniformes',label:'<span class="tab-icon">👕</span> Uniformes',render:renderUniformesDir},
   ];
 }
 
@@ -623,16 +638,23 @@ function renderPlantillaG(){
       ${POSTES.filter(p=>emps.some(e=>e.poste===p)).map(p=>`<div class="stat"><div class="num">${emps.filter(e=>e.poste===p).length}</div><div class="label">${esc(p)}</div></div>`).join('')}
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>Nom / الإسم</th><th>Poste / البوسط</th><th>Entree / الدخول</th><th></th></tr></thead>
-      <tbody>${emps.map(e=>`<tr>
-        <td><strong>${esc(e.nom)}</strong></td>
-        <td>${esc(e.poste)}${e.poste_specifique?`<br><span style="font-size:.72rem;color:var(--tx3)">${esc(e.poste_specifique)}</span>`:''}</td>
-        <td>${e.date_entree||'—'}</td>
+      <thead><tr><th></th><th>Nom / الإسم</th><th>Poste / البوسط</th><th>👕</th><th>Entree</th><th></th></tr></thead>
+      <tbody>${emps.map(e=>{
+        const assigns=(appData.uniAssign||[]).filter(a=>a.employee_id===e.id);
+        const pending=assigns.filter(a=>!a.retourne);
+        const uniIcon=!assigns.length?'⚪':pending.length?'🟡':'✅';
+        const uniTip=!assigns.length?'Pas d\'uniforme':assigns.length+' pieces, '+pending.length+' en cours';
+        return `<tr>
+        <td>${avatar(e.nom,e.poste)}</td>
+        <td><strong>${esc(e.nom)}</strong>${e.poste_specifique?`<br><span style="font-size:.68rem;color:var(--tx3)">${esc(e.poste_specifique)}</span>`:''}</td>
+        <td>${posteBadge(e.poste)}</td>
+        <td style="cursor:help;font-size:1rem" title="${uniTip}">${uniIcon}</td>
+        <td style="font-size:.78rem;color:var(--tx2)">${e.date_entree||'—'}</td>
         <td style="white-space:nowrap">
-          <button class="btn btn-s btn-g" onclick="openEmpFormG(findEmp('${e.id}'))">Modifier</button>
-          <span class="del-link" onclick="openDeactivateModal('${e.id}')">Desactiver</span>
+          <button class="btn btn-s btn-g" onclick="openEmpFormG(findEmp('${e.id}'))">✏️</button>
+          <span class="del-link" onclick="openDeactivateModal('${e.id}')">🚫</span>
         </td>
-      </tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>'}</tbody>
+      </tr>`}).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>'}</tbody>
     </table></div>
   `;
 }
@@ -667,8 +689,65 @@ async function saveEmpG(id){
   syncAllEmployeesToSheets();
 }
 
+// ============================================================
+// UNIVERSAL GO-TO NAVIGATION
+// ============================================================
+function goTo(tabId,selector){
+  const tabs=getTabs();
+  const idx=tabs.findIndex(t=>t.id===tabId);
+  if(idx<0)return;
+  document.querySelector(`button[data-idx="${idx}"]`)?.click();
+  if(selector)setTimeout(()=>{
+    const el=document.querySelector(selector);
+    if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--or)';el.style.transition='outline .3s';setTimeout(()=>el.style.outline='',3000)}
+  },600);
+}
+
+function goBtn(tabId,sel,label){
+  return `<button class="btn btn-s btn-p" onclick="goTo('${tabId}','${sel||''}')" style="font-size:.7rem;padding:3px 10px">Go → ${label||''}</button>`;
+}
+
+function goToUniformesForEmp(empNom){
+  // Find Uniformes tab index dynamically
+  const tabs=getTabs();
+  const idx=tabs.findIndex(t=>t.id==='uniformes');
+  if(idx<0)return;
+  document.querySelector(`button[data-idx="${idx}"]`)?.click();
+  // Scroll to employee row after render
+  setTimeout(()=>{
+    const rows=document.querySelectorAll('#p-uniformes td strong');
+    for(const r of rows){if(r.textContent.includes(empNom)){r.closest('tr')?.scrollIntoView({behavior:'smooth',block:'center'});r.closest('tr').style.outline='2px solid var(--or)';setTimeout(()=>r.closest('tr').style.outline='',3000);break}}
+  },600);
+}
+
+function getEmpPendingUniforms(empId){
+  return(appData.uniAssign||[]).filter(a=>a.employee_id===empId&&!a.retourne);
+}
+
 function openDeactivateModal(id){
   const emp=findEmp(id);if(!emp)return;
+  const pending=getEmpPendingUniforms(id);
+
+  // R1: Block if uniforms not returned
+  if(pending.length){
+    openModal(`<div style="text-align:center;padding:10px">
+      <div style="font-size:2rem;margin-bottom:10px">🚫</div>
+      <h3 style="color:var(--rd)">Uniforme(s) non retourne(s)<span class="tri-ar">اللباس ما ترجعش</span></h3>
+      <p style="font-size:.88rem;margin:12px 0">${esc(emp.nom)} a <strong>${pending.length} piece(s)</strong> non retournee(s) :</p>
+      <div style="text-align:left;margin:10px 0">${pending.map(a=>`<div style="padding:4px 0;font-size:.82rem">• ${esc(a.uniform_nom)} — taille ${esc(a.taille)} (x${a.quantite||1})</div>`).join('')}</div>
+      <p style="font-size:.82rem;color:var(--tx2)">Tu dois d'abord enregistrer le retour avant de desactiver.<span class="tri-ar">خاصك تسجل الرجوع قبل ما تعطل.</span></p>
+      <div class="modal-actions" style="justify-content:center;margin-top:14px">
+        <button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button>
+        <button class="btn btn-p" onclick="closeModal();goToUniformesForEmp('${emp.nom}')">Aller aux Uniformes / روح للأونيفورم →</button>
+      </div>
+    </div>`);
+    return;
+  }
+
+  // R2: Check if employee had uniforms (even if returned)
+  const allAssigns=(appData.uniAssign||[]).filter(a=>a.employee_id===id);
+  const hasUniHistory=allAssigns.length>0;
+
   openModal(`<h3 style="color:var(--rd)">Desactiver ${esc(emp.nom)}<span class="tri-ar">تعطيل ${esc(emp.nom)}</span></h3>
     <div class="fg"><label>Motif de depart (obligatoire) <span class="ar">سبب المغادرة</span></label><select id="fDeactMotif">
       <option value="">— Choisir / ختار —</option>
@@ -680,24 +759,47 @@ function openDeactivateModal(id){
       <option value="Autre">Autre / آخر</option>
     </select></div>
     <div class="fg"><label>Note (min 10 caracteres) <span class="ar">ملاحظة</span></label><textarea id="fDeactNote" rows="3" placeholder="Details du depart..."></textarea></div>
+    ${hasUniHistory?`<div style="background:var(--s2);border-radius:8px;padding:10px;margin-bottom:12px">
+      <p style="font-size:.82rem;font-weight:600;margin-bottom:6px">Confirmer retour uniformes / تأكيد رجوع اللباس :</p>
+      ${allAssigns.map((a,i)=>`<label style="display:flex;align-items:center;gap:6px;font-size:.8rem;margin-bottom:4px">
+        <input type="checkbox" class="uni-confirm" data-idx="${i}" ${a.retourne?'checked disabled':''}>
+        ${esc(a.uniform_nom)} — ${esc(a.taille)} (x${a.quantite||1}) ${a.retourne?'<span class="badge b-gn" style="font-size:.65rem">retourne</span>':''}
+      </label>`).join('')}
+    </div>`:''}
     <div class="modal-actions">
       <button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button>
-      <button class="btn btn-d" onclick="confirmDeactivate('${id}')">Desactiver / تعطيل</button>
+      <button class="btn btn-d" onclick="confirmDeactivate('${id}',${hasUniHistory})">Desactiver / تعطيل</button>
     </div>
   `);
 }
 
-async function confirmDeactivate(id){
+async function confirmDeactivate(id,hasUni){
   const motif=document.getElementById('fDeactMotif').value;
   const note=document.getElementById('fDeactNote').value.trim();
   if(!motif){toast('Motif obligatoire / خاصك السبب',true);return}
   if(note.length<10){toast('Note trop courte (min 10 car.) / الملاحظة قصيرة بزاف',true);return}
+  // R2: Verify all uniform checkboxes are checked
+  if(hasUni){
+    const checks=document.querySelectorAll('.uni-confirm:not(:disabled)');
+    const allChecked=Array.from(checks).every(c=>c.checked);
+    if(!allChecked){toast('Confirme le retour de toutes les pieces / أكّد رجوع كل القطع',true);return}
+  }
   closeModal();
+  const dateDepart=today();
+  // Store deactivated employee info for tracking before removing from active list
+  const emp=findEmp(id);
+  const pendingUni=getEmpPendingUniforms(id);
+  if(pendingUni.length){
+    // Save return dossier in localStorage for RH tracking
+    const dossiers=JSON.parse(localStorage.getItem('tima_return_dossiers')||'[]');
+    dossiers.push({empId:id,empNom:emp?.nom||'',local:local,dateDepart,motif,prendas:pendingUni.map(a=>({id:a.id,nom:a.uniform_nom,taille:a.taille,quantite:a.quantite,dateLivraison:a.date_livraison})),statut:'pendiente'});
+    localStorage.setItem('tima_return_dossiers',JSON.stringify(dossiers));
+  }
   appData.employes=appData.employes.filter(e=>e.id!==id);
   renderPlantillaG();
-  toast('✅ Employe desactive. N\'oubliez pas le retour uniforme dans Uniformes / الموظف تعطّل. ما تنساش ترجّع اللباس');
-  sb.from('empleados').update({actif:false,motif_depart:motif,note_depart:note}).eq('id',id).then();
-  syncAllEmployeesToSheets();
+  toast('✅ Employe desactive. Fiche PDF en cours... / الموظف تعطّل. الفيش PDF كتتحمّل...');
+  sb.from('empleados').update({actif:false,motif_depart:motif,note_depart:note,date_depart:dateDepart}).eq('id',id).then();
+  downloadEmployeeSheet(id);
 }
 
 // ============================================================
@@ -724,11 +826,12 @@ function renderChecklist(){
   if(allDone){cl.innerHTML='';return}
 
   cl.innerHTML=`<div class="card" style="border-left:3px solid var(--or);margin:14px">
-    <h3 style="font-size:.9rem">Checklist du jour / قائمة اليوم <span class="tri-es">Checklist del dia</span></h3>
-    <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:.84rem">
-      <div>${matinDone?'✅':'☐'} Cloturer Matin <span style="font-size:.72rem;color:var(--tx3)">(${tc.matin_entree||'08:00'}–${tc.matin_sortie||'16:00'}+30min)</span> <span class="tri-ar">سكّر الصباح</span>${matinDone?' <span style="color:var(--gn);font-size:.75rem">'+matinHeure+'</span>':''}</div>
-      <div>${soirDone?'✅':'☐'} Cloturer Soir <span style="font-size:.72rem;color:var(--tx3)">(${tc.soir_entree||'16:00'}–${tc.soir_sortie||'00:00'}+3h30)</span> <span class="tri-ar">سكّر العشية</span>${soirDone?' <span style="color:var(--gn);font-size:.75rem">'+soirHeure+'</span>':''}</div>
-      ${isSunday?`<div>${planPub?'✅':'☐'} Publier le planning semaine prochaine <span class="tri-ar">نشر برنامج الأسبوع الجاي</span> <span style="font-size:.72rem;color:var(--or)">avant 00:00, limite lundi 03:00</span></div>`:''}
+    <h3 style="font-size:.9rem">Checklist du jour / قائمة اليوم</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;font-size:.84rem">
+      <div style="display:flex;align-items:center;justify-content:space-between">${matinDone?'✅':'☐'} Cloturer Matin <span style="font-size:.7rem;color:var(--tx3)">(${tcMe()}–${tcMsLimit()})</span>${matinDone?' <span style="color:var(--gn);font-size:.72rem">'+matinHeure+'</span>':goBtn('presences','.btn-cta','Presences')}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">${soirDone?'✅':'☐'} Cloturer Soir <span style="font-size:.7rem;color:var(--tx3)">(${tcSe()}–${tcSsLimit()})</span>${soirDone?' <span style="color:var(--gn);font-size:.72rem">'+soirHeure+'</span>':goBtn('presences','.btn-cta','Presences')}</div>
+      ${!tcConfigured()?`<div style="display:flex;align-items:center;justify-content:space-between;color:var(--or)">⚠️ Configurer horaires ${goBtn('planning','.config-box','Config')}</div>`:''}
+      ${isSunday?`<div style="display:flex;align-items:center;justify-content:space-between">${planPub?'✅':'☐'} Publier planning <span style="font-size:.7rem;color:var(--or)">avant 00:00</span>${planPub?'':goBtn('planning','.btn-cta','Planning')}</div>`:''}
     </div>
   </div>`;
 }
@@ -752,7 +855,7 @@ function getTodayShifts(){
   const JOUR_COLS=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
   const col=JOUR_COLS[dayIdx];
   const plans=appData.plannings||[];
-  const shifts={matin:[],soir:[],off:[],sans:[]};
+  const shifts={matin:[],soir:[],labo:[],off:[],sans:[]};
   const emps=appData.employes||[];
   const assigned=new Set();
 
@@ -763,6 +866,7 @@ function getTodayShifts(){
     assigned.add(emp.id);
     if(val==='M')shifts.matin.push(emp);
     else if(val==='S')shifts.soir.push(emp);
+    else if(val==='L')shifts.labo.push(emp);
     else if(val==='OFF')shifts.off.push(emp);
   });
   emps.forEach(e=>{if(!assigned.has(e.id))shifts.sans.push(e)});
@@ -778,8 +882,42 @@ function getClotureHeure(turno){
   return p?.heure||'';
 }
 
+function getSetupStep(){
+  const emps=appData.employes||[];
+  if(!emps.length)return{step:1,
+    fr:'Ton equipe est vide. Ajoute tes employes dans Equipe avant de continuer.',
+    ar:'الفريق ديالك فارغ. زيد الموظفين ديالك فقسم الفريق قبل ما تكمّل.',
+    icon:'👥',btn:'Aller a Equipe / روح للفريق',tab:0};
+  if(!tcConfigured())return{step:2,
+    fr:'Configure les heures de tes turnos (Matin/Soir/Labo) dans Planification.',
+    ar:'ضبط ساعات الشيفتات (صباح/عشية/معمل) فقسم البلانينغ.',
+    icon:'⚙️',btn:'Configurer les horaires / ضبط الساعات',tab:2};
+  const published=(appData.plannings||[]).some(p=>p.publie);
+  if(!published)return{step:3,
+    fr:'Publie le planning de cette semaine pour que les presences se divisent par turno.',
+    ar:'نشر البلانينغ ديال هاد السيمانة باش الحضور يتقسّم حسب الشيفت.',
+    icon:'📅',btn:'Publier le planning / نشر البلانينغ',tab:2};
+  return null;
+}
+
 function renderPresences(){
   const pg=document.getElementById('p-presences');
+
+  // Setup flow: guide gérant if local not configured
+  const setup=getSetupStep();
+  if(setup){
+    pg.innerHTML=`
+      <div class="section-header"><h2>${tri('presences')}</h2><span style="color:var(--tx2);font-size:.82rem">${today()}</span></div>
+      <div class="card" style="border-left:3px solid var(--or);text-align:center;padding:24px 16px">
+        <div style="font-size:2rem;margin-bottom:10px">${setup.icon}</div>
+        <h3 style="font-size:1rem;margin-bottom:8px;color:var(--or)">Etape ${setup.step}/3 — Configuration requise<span class="tri-ar">الخطوة ${setup.step}/3 — خاصك تضبط</span></h3>
+        <p style="font-size:.88rem;margin-bottom:6px">${setup.fr}</p>
+        <p class="tri-ar" style="margin-bottom:14px">${setup.ar}</p>
+        <button class="btn-cta" onclick="document.querySelector('button[data-idx=&quot;${setup.tab}&quot;]')?.click()" style="padding:12px 30px">${setup.btn}</button>
+      </div>`;
+    return;
+  }
+
   const shifts=getTodayShifts();
   const matinClosed=isTurnoClosed('matin');
   const soirClosed=isTurnoClosed('soir');
@@ -788,33 +926,128 @@ function renderPresences(){
   const existing={};
   (appData.presences||[]).forEach(p=>{existing[p.employe_id+'_'+p.turno]=p.statut});
 
-  [...shifts.matin,...shifts.soir,...shifts.sans].forEach(e=>{
-    const turno=shifts.matin.includes(e)?'matin':shifts.soir.includes(e)?'soir':'matin';
+  [...shifts.matin,...shifts.soir,...shifts.labo,...shifts.sans].forEach(e=>{
+    const turno=shifts.matin.includes(e)?'matin':shifts.soir.includes(e)?'soir':shifts.labo.includes(e)?'labo':'matin';
     presData[e.id]={statut:existing[e.id+'_'+turno]||'present',motif:'',turno};
   });
 
   pg.innerHTML=`
     <div class="section-header"><h2>${tri('presences')}</h2><span style="color:var(--tx2);font-size:.82rem">${today()}</span></div>
-    ${renderTurnoSection('matin','Turno Matin / الصباح',shifts.matin,matinClosed)}
-    ${renderTurnoSection('soir','Turno Soir / العشية',shifts.soir,soirClosed)}
-    ${shifts.sans.length?renderTurnoSection('matin','Sans affectation / بلا تعيين',shifts.sans,matinClosed):''}
-    ${!shifts.matin.length&&!shifts.soir.length&&!shifts.sans.length?'<div class="card" style="color:var(--tx2)">Aucun planning publie pour cette semaine. Publiez le planning d\'abord.<span class="tri-ar">ما كاين حتا بلانينغ منشور. نشر البلانينغ أولا.</span></div>':''}
+    <div style="background:var(--s2);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:.78rem;color:var(--tx2);line-height:1.5">
+      📋 Les presences = la preuve que chaque personne a travaille ce jour.<br>
+      Sans cloture → donnees perdues → RH et Direction recoivent alerte.<br>
+      <strong>Matin: avant ${tcMsLimit()}</strong> · <strong>Soir: avant ${tcSsLimit()}</strong>
+      <span class="tri-ar">الحضور = دليل أن كل واحد خدم. بلا إغلاق = ضياع المعلومات. الصباح: قبل ${tcMsLimit()} · العشية: قبل ${tcSsLimit()}</span>
+    </div>
+    ${turnoUrgencyBanner('matin',matinClosed)}
+    ${turnoUrgencyBanner('labo',isTurnoClosed('labo'))}
+    ${turnoUrgencyBanner('soir',soirClosed)}
+    ${renderTurnoSection('matin',shifts.matin,matinClosed)}
+    ${shifts.labo.length?renderTurnoSection('labo',shifts.labo,isTurnoClosed('labo')):''}
+    ${renderTurnoSection('soir',shifts.soir,soirClosed)}
+    ${shifts.sans.length?renderTurnoSection('matin',shifts.sans,matinClosed,true):''}
+    ${!shifts.matin.length&&!shifts.soir.length&&!shifts.labo.length&&!shifts.sans.length?'<div class="card" style="color:var(--tx2)">Aucun planning publie pour cette semaine.<span class="tri-ar">ما كاين حتا بلانينغ منشور.</span></div>':''}
+
+    <div class="card" style="margin-top:16px">
+      <h3 style="cursor:pointer;font-size:.88rem" onclick="const el=document.getElementById('presHistory');el.style.display=el.style.display==='none'?'':'none'">
+        📋 Historique 7 derniers jours / تاريخ 7 أيام الأخيرة <span style="font-size:.7rem;color:var(--tx3)">▼</span>
+      </h3>
+      <div id="presHistory" style="display:none;margin-top:8px">
+        ${renderPresHistory()}
+      </div>
+    </div>
+
+    <div style="margin-top:10px;text-align:center">
+      <button class="btn btn-g btn-s" onclick="openAbsenceForm()">+ Signaler absence manuellement / + بلّغ على غياب يدوي</button>
+    </div>
   `;
+  updatePresTabBadge();
 }
 
-function renderTurnoSection(turno,title,emps,closed){
+let historyDayOffset=0;
+
+function renderPresHistory(){
+  const abs=(appData.absences||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const pres=(appData.presences||[]).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const allDates=new Set();
+  abs.forEach(a=>allDates.add(a.date));
+  pres.forEach(p=>allDates.add(p.date));
+  const sorted=[...allDates].sort().reverse().slice(0,7);
+  if(!sorted.length)return '<p style="color:var(--tx2);font-size:.8rem">Aucun historique / ما كاين حتا تاريخ</p>';
+
+  const idx=Math.min(historyDayOffset,sorted.length-1);
+  const date=sorted[idx];
+  const dayAbs=abs.filter(a=>a.date===date);
+  const dayPres=pres.filter(p=>p.date===date);
+  const turnos=['matin','labo','soir'];
+
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <button class="btn btn-s btn-g" onclick="historyDayOffset=Math.min(historyDayOffset+1,6);document.getElementById('presHistory').innerHTML=renderPresHistory()" ${idx>=sorted.length-1?'disabled':''}>← Avant</button>
+    <strong style="font-size:.85rem">${date}</strong>
+    <button class="btn btn-s btn-g" onclick="historyDayOffset=Math.max(historyDayOffset-1,0);document.getElementById('presHistory').innerHTML=renderPresHistory()" ${idx<=0?'disabled':''}>Apres →</button>
+  </div>`;
+
+  turnos.forEach(turno=>{
+    const tp=dayPres.filter(p=>p.turno===turno);
+    if(!tp.length)return;
+    const presents=tp.filter(p=>p.statut==='present');
+    const absents=tp.filter(p=>p.statut!=='present');
+    const closed=tp.some(p=>p.cloture);
+    const heure=tp.find(p=>p.cloture)?.heure||'';
+    const icon=turno==='matin'?'🌅':turno==='labo'?'🔬':'🌙';
+    html+=`<div style="padding:8px;background:var(--s2);border-radius:6px;margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:600">
+        <span>${icon} ${turno.toUpperCase()}</span>
+        <span>${closed?'<span class="badge b-gn">Cloture '+heure+'</span>':'<span class="badge b-or">Ouvert</span>'} · <span style="color:var(--gn)">✅${presents.length}</span> <span style="color:var(--rd)">❌${absents.length}</span></span>
+      </div>
+      ${absents.length?`<div style="margin-top:4px;font-size:.73rem;color:var(--tx2)">${absents.map(p=>esc(p.employe_nom)).join(', ')}</div>`:''}
+    </div>`;
+  });
+
+  if(dayAbs.length){
+    html+=`<div style="padding:6px;font-size:.73rem;color:var(--tx2);margin-top:4px">Absences avec motif: ${dayAbs.map(a=>{
+      const noShow=a.motif==='sans preavis';
+      return `<span style="${noShow?'color:var(--rd);font-weight:600':''}">${esc(a.employe_nom)}: ${esc(a.motif)}</span>`;
+    }).join(' · ')}</div>`;
+  }
+  return html;
+}
+
+function renderTurnoSection(turno,emps,closed,isSans){
   if(!emps.length)return '';
   const heure=getClotureHeure(turno);
-  return `<div class="card" style="margin-bottom:12px">
-    <h3 style="font-size:.9rem">${title} ${closed?'<span class="badge b-gn">✅ Cloture a '+heure+'</span>':''}</h3>
-    ${closed?'':`<div class="pres-list">
+  const isMatin=turno==='matin',isLabo=turno==='labo';
+  const icon=isSans?'❓':isLabo?'🔬':isMatin?'🌅':'🌙';
+  const title=isSans?'Sans affectation / بلا تعيين':isLabo?'LABO':isMatin?'MATIN':'SOIR';
+  const thCls=isSans?'':isLabo?'th-matin':isMatin?'th-matin':'th-soir'; // labo uses green like matin
+  const limStr=isMatin?tcMsLimit():tcSsLimit();
+  const total=emps.length;
+  const presentCount=emps.filter(e=>presData[e.id]?.statut==='present').length;
+  const absentCount=total-presentCount;
+  const minsLeft=closed?0:turnoMinutesLeft(turno);
+  const countdownStr=closed?'':minsLeft>0?minsLeft+'min':'RETARD';
+  const countdownColor=closed?'var(--gn)':minsLeft>30?'var(--gn)':minsLeft>0?'var(--or)':'var(--rd)';
+
+  return `<div class="card" style="margin-bottom:12px;padding:0;overflow:hidden">
+    <div class="turno-header ${thCls}">
+      <div class="th-title">${icon} ${title} ${closed?'<span class="badge b-gn">✅ '+heure+'</span>':''}</div>
+      <div class="th-stats">
+        <span style="color:var(--gn)">✅ ${closed?'—':presentCount}</span>
+        <span style="color:var(--rd)">❌ ${closed?'—':absentCount}</span>
+        <span style="color:var(--tx2)">/ ${total}</span>
+        ${!closed&&!isSans?`<span class="th-countdown" style="background:${countdownColor};color:#fff">${countdownStr}</span>`:''}
+      </div>
+    </div>
+    <div style="padding:10px 12px">
+    ${closed?`<div style="text-align:center;padding:12px;color:var(--gn);font-size:.85rem">✅ Cloture a ${heure} — Donnees sauvegardees<span class="tri-ar">تسكّر ف${heure} — الداتا تحفظات</span></div>`:`<div class="pres-list">
       ${emps.map(e=>{
         const isP=presData[e.id]?.statut==='present';
         return `<div class="pres-item ${isP?'':'absent'}" id="pi-${e.id}">
           <button class="pres-check ${isP?'checked':''}" onclick="togglePres('${e.id}',this)" id="pc-${e.id}">${isP?'&#10003;':''}</button>
+          ${avatarSm(e.nom,e.poste)}
           <div class="emp-info">
             <div class="emp-name">${esc(e.nom)}</div>
-            <div class="emp-poste">${esc(e.poste)}${e.poste_specifique?' · '+esc(e.poste_specifique):''}</div>
+            <div class="emp-poste">${posteBadge(e.poste)}${e.poste_specifique?' · <span style="color:var(--tx3);font-size:.68rem">'+esc(e.poste_specifique)+'</span>':''}</div>
             <div class="pres-motif" id="pm-${e.id}" style="${isP?'display:none':''}">
               ${MOTIFS_ABS.map(m=>`<button onclick="setPresMotif('${e.id}','${m}',this)">${MOTIFS_AR[m]} / ${m}</button>`).join('')}
             </div>
@@ -823,10 +1056,61 @@ function renderTurnoSection(turno,title,emps,closed){
       }).join('')}
     </div>
     <div style="margin-top:10px;text-align:center">
-      <button class="btn-cta" onclick="savePresencesTurno('${turno}')" style="padding:10px 30px" ${canCloseTurno(turno)?'':'disabled'}>Cloturer ${turno==='matin'?'Matin / الصباح':'Soir / العشية'}</button>
+      <button class="btn-cta" onclick="confirmCloturer('${turno}')" style="padding:10px 30px" ${canCloseTurno(turno)?'':'disabled'}>Cloturer ${isMatin?'Matin / سكّر الصباح':'Soir / سكّر العشية'}</button>
       <div style="font-size:.7rem;color:var(--tx3);margin-top:4px">${turnoTimeMsg(turno)}</div>
     </div>`}
+    </div>
   </div>`;
+}
+
+// M2: Tab badge for pending presences
+function updatePresTabBadge(){
+  const presTab=document.querySelector('button[data-idx="1"]');
+  if(!presTab)return;
+  if(presNeedAttention()){presTab.classList.add('tab-badge')}
+  else{presTab.classList.remove('tab-badge')}
+}
+
+// M2: Global warning on all tabs
+function renderGlobalPresWarning(){
+  const el=document.getElementById('gerantChecklist');
+  if(!el)return;
+  // Remove old warning
+  const old=el.querySelector('.pres-global-warn');if(old)old.remove();
+  if(!presNeedAttention())return;
+  const mc=isTurnoClosed('matin'),sc=isTurnoClosed('soir'),lc=isTurnoClosed('labo');
+  let msg='',urgent=false;
+  if(!mc&&turnoMinutesLeft('matin')<=0){const late=Math.abs(turnoMinutesLeft('matin'));msg=`🔴 Presences Matin en retard (${Math.floor(late/60)}h${late%60}min) / حضور الصباح متأخر`;urgent=late>=120}
+  else if(!lc&&turnoMinutesLeft('labo')<=0){const late=Math.abs(turnoMinutesLeft('labo'));msg=`🔴 Presences Labo en retard / حضور المعمل متأخر`;urgent=late>=120}
+  else if(!sc&&turnoMinutesLeft('soir')<=0){const late=Math.abs(turnoMinutesLeft('soir'));msg=`🔴 Presences Soir en retard (${Math.floor(late/60)}h${late%60}min) / حضور العشية متأخر`;urgent=late>=120}
+  else if(!mc&&turnoMinutesLeft('matin')<=60)msg='⚠️ Presences Matin a cloturer bientot / سكّر الصباح قريب';
+  else if(!sc&&turnoMinutesLeft('soir')<=60)msg='⚠️ Presences Soir a cloturer bientot / سكّر العشية قريب';
+  if(msg)el.insertAdjacentHTML('afterbegin',`<div class="pres-global-warn" style="${urgent?'animation:urgPulse .8s infinite;border-color:var(--rd)':''}">${msg} <button class="btn btn-s btn-p" onclick="document.querySelector('button[data-idx=\\'1\\']')?.click()" style="margin-left:auto">Aller / روح</button></div>`);
+}
+
+// M6: Confirmation modal before closing
+function confirmCloturer(turno){
+  const shifts=getTodayShifts();
+  const emps=turno==='matin'?[...shifts.matin,...shifts.sans]:shifts.soir;
+  const presents=emps.filter(e=>presData[e.id]?.statut==='present');
+  const absents=emps.filter(e=>presData[e.id]?.statut!=='present');
+  const tName=turno==='matin'?'Matin / الصباح':'Soir / العشية';
+
+  openModal(`<div style="padding:6px">
+    <h3>Confirmer la cloture ${tName}<span class="tri-ar">تأكيد الإغلاق</span></h3>
+    <div style="display:flex;gap:16px;margin:12px 0">
+      <div style="text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--gn)">${presents.length}</div><div style="font-size:.75rem;color:var(--tx2)">Presents / حاضرين</div></div>
+      <div style="text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--rd)">${absents.length}</div><div style="font-size:.75rem;color:var(--tx2)">Absents / غايبين</div></div>
+    </div>
+    ${absents.length?`<div style="background:var(--s2);border-radius:6px;padding:8px;margin-bottom:10px;font-size:.8rem">
+      <strong style="color:var(--rd)">Absents :</strong> ${absents.map(e=>esc(e.nom)).join(', ')}
+    </div>`:''}
+    <p style="font-size:.78rem;color:var(--or);margin-bottom:12px">⚠️ Une fois cloture, impossible de modifier. / من بعد ما تسكّر ما يمكنش تبدّل.</p>
+    <div class="modal-actions">
+      <button class="btn btn-g" onclick="closeModal()">Annuler / corriger</button>
+      <button class="btn btn-p" onclick="closeModal();savePresencesTurno('${turno}')">Confirmer la cloture ✅</button>
+    </div>
+  </div>`);
 }
 
 function togglePres(empId,btn){
@@ -845,9 +1129,26 @@ function setPresMotif(empId,motif,btn){
   presData[empId].motif=motif;
   btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
+  // Auto-save absence to Supabase in background
+  const emp=findEmp(empId);
+  if(emp&&motif){
+    sb.from('absences').insert({employe_id:empId,employe_nom:emp.nom,local,date:today(),motif,prevenu:motif==='sans preavis'?'non':'oui',reporte_par:'Gerant',notes:''}).select().single().then(({data})=>{
+      if(data){appData.absences=appData.absences||[];appData.absences.unshift(data)}
+    });
+  }
 }
 
 function timeToMin(s){if(!s)return 0;const p=s.split(':');return parseInt(p[0])*60+parseInt(p[1]||0)}
+function tcMe(){return turnosConfig.matin_entree||'08:00'}
+function tcMs(){return turnosConfig.matin_sortie||'16:00'}
+function tcSe(){return turnosConfig.soir_entree||'16:00'}
+function tcSs(){return turnosConfig.soir_sortie||'00:00'}
+function tcMsLimit(){const m=timeToMin(tcMs())+30;const h=Math.floor(m/60),mm=m%60;return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0')}
+function tcSsLimit(){const base=timeToMin(tcSs());const lim=base+210;if(lim>=1440){const ov=lim-1440;return String(Math.floor(ov/60)).padStart(2,'0')+':'+String(ov%60).padStart(2,'0')}const h=Math.floor(lim/60),mm=lim%60;return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0')}
+function tcConfigured(){return!!turnosConfig.id}
+function tcLe(){return turnosConfig.labo_entree||'07:00'}
+function tcLs(){return turnosConfig.labo_sortie||'15:00'}
+function tcLsLimit(){const m=timeToMin(tcLs())+30;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
 function canCloseTurno(turno){
   const tc=turnosConfig||{};
   const now=new Date().getHours()*60+new Date().getMinutes();
@@ -855,15 +1156,60 @@ function canCloseTurno(turno){
     const start=timeToMin(tc.matin_entree||'08:00'),end=timeToMin(tc.matin_sortie||'16:00')+30;
     return now>=start&&now<=end;
   }
+  if(turno==='labo'){
+    const start=timeToMin(tc.labo_entree||'07:00'),end=timeToMin(tc.labo_sortie||'15:00')+30;
+    return now>=start&&now<=end;
+  }
   const start=timeToMin(tc.soir_entree||'16:00'),end=timeToMin(tc.soir_sortie||'00:00')+210;
-  // Handle overnight: soir_sortie could be 00:00-03:30
   if(end>1440)return now>=start||now<=(end-1440);
   return now>=start&&now<=end;
 }
 function turnoTimeMsg(turno){
   const tc=turnosConfig||{};
-  if(turno==='matin')return`Matin: ${tc.matin_entree||'08:00'} – ${tc.matin_sortie||'16:00'}+30min / الصباح`;
-  return`Soir: ${tc.soir_entree||'16:00'} – ${tc.soir_sortie||'00:00'}+3h30 / العشية`;
+  if(turno==='matin')return`Matin: ${tc.matin_entree||'08:00'} – ${tcMsLimit()} / الصباح`;
+  if(turno==='labo')return`Labo: ${tcLe()} – ${tcLsLimit()} / المعمل`;
+  return`Soir: ${tc.soir_entree||'16:00'} – ${tcSsLimit()} / العشية`;
+}
+
+// Urgency: minutes until deadline, negative = late
+function turnoMinutesLeft(turno){
+  const now=new Date().getHours()*60+new Date().getMinutes();
+  if(turno==='matin')return timeToMin(tcMsLimit())-now;
+  const lim=timeToMin(tcSsLimit());
+  // Handle overnight
+  if(lim<timeToMin(tcSe())){
+    // soir limit is after midnight (e.g. 03:30)
+    if(now>=timeToMin(tcSe()))return(1440-now)+lim; // evening before midnight
+    return lim-now; // after midnight
+  }
+  return lim-now;
+}
+
+function turnoUrgencyBanner(turno,closed){
+  if(closed)return '';
+  if(!canCloseTurno(turno)&&turnoMinutesLeft(turno)>60)return '';
+  const mins=turnoMinutesLeft(turno);
+  const limStr=turno==='matin'?tcMsLimit():tcSsLimit();
+  const tName=turno==='matin'?'Matin':'Soir';
+  const tAr=turno==='matin'?'الصباح':'العشية';
+  if(mins<0){
+    const late=Math.abs(mins);
+    const h=Math.floor(late/60),m=late%60;
+    return `<div class="pres-urgency urg-late">🔴 RETARD: ${tName} aurait du etre cloture a ${limStr}. ${h?h+'h':''}${m}min de retard. Cloture maintenant! / متأخر ${h?h+'سا':''}${m}د. سكّر دابا!</div>`;
+  }
+  if(mins<=30)return `<div class="pres-urgency urg-danger">⚠️ ${mins} min restantes pour cloturer ${tName}! / باقي ${mins} دقيقة باش تسكّر ${tAr}!</div>`;
+  if(mins<=60)return `<div class="pres-urgency urg-warn">⏰ Il te reste ${mins} min pour cloturer ${tName} / كاين ${mins} دقيقة باش تسكّر ${tAr}</div>`;
+  return '';
+}
+
+function presNeedAttention(){
+  const mc=isTurnoClosed('matin'),sc=isTurnoClosed('soir');
+  if(mc&&sc)return false;
+  if(!mc&&turnoMinutesLeft('matin')<=60&&canCloseTurno('matin'))return true;
+  if(!sc&&turnoMinutesLeft('soir')<=60&&canCloseTurno('soir'))return true;
+  if(!mc&&turnoMinutesLeft('matin')<0)return true;
+  if(!sc&&turnoMinutesLeft('soir')<0)return true;
+  return false;
 }
 
 async function savePresencesTurno(turno){
@@ -879,17 +1225,8 @@ async function savePresencesTurno(turno){
   appData.presences=[...(appData.presences||[]),...(data||rows)];
   syncToSheets('presences',rows);
 
-  // Auto-register absences
-  const absToInsert=emps.filter(e=>presData[e.id]?.statut==='absent'&&presData[e.id]?.motif).map(e=>({
-    employe_id:e.id,employe_nom:e.nom,local,date:todayStr,motif:presData[e.id].motif,
-    prevenu:presData[e.id].motif==='sans preavis'?'non':'oui',reporte_par:'Gerant',notes:''
-  }));
-  if(absToInsert.length){
-    const{data:ad}=await sb.from('absences').insert(absToInsert).select();
-    appData.absences=[...(appData.absences||[]),...(ad||absToInsert)];
-    syncToSheets('absences',ad||absToInsert);
-  }
-  toast(turno==='matin'?'✅ Matin cloture. Donnees sauvegardees. Pensez a cloturer le Soir avant 03:30 / الصباح تسكّر. الداتا تحفظات. ما تنساش تسكّر العشية قبل 03:30':'✅ Soir cloture. Donnees sauvegardees. Bon repos! / العشية تسكّرت. الداتا تحفظات. الله يعطيك الصحة!');
+  // Absences already saved in real-time via setPresMotif
+  toast(turno==='matin'?'✅ Matin cloture. Pensez au Soir avant '+tcSsLimit()+' / الصباح تسكّر. ما تنساش العشية قبل '+tcSsLimit():'✅ Soir cloture. Bon repos! / العشية تسكّرت. الله يعطيك الصحة!');
   renderPresences();
   renderChecklist();
 }
@@ -914,8 +1251,8 @@ function renderProtocoles(){
       <h3 style="font-size:.88rem">⭐ Regles d'or du gerant <span class="tri-ar">القواعد الذهبية</span></h3>
       <div style="display:grid;gap:6px;font-size:.82rem;margin-top:8px">
         <div style="padding:8px;background:var(--s2);border-radius:6px">📅 <strong>Dimanche avant 00:00</strong> : Publier le planning<span class="tri-ar">الحد قبل نص الليل : نشر البلانينغ</span></div>
-        <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ <strong>Chaque jour avant 16:30</strong> : Cloturer Matin<span class="tri-ar">كل نهار قبل 16:30 : سكّر الصباح</span></div>
-        <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 <strong>Chaque jour avant 03:30</strong> : Cloturer Soir<span class="tri-ar">كل نهار قبل 03:30 : سكّر العشية</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ <strong>Chaque jour avant ${tcMsLimit()}</strong> : Cloturer Matin<span class="tri-ar">كل نهار قبل ${tcMsLimit()} : سكّر الصباح</span></div>
+        <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 <strong>Chaque jour avant ${tcSsLimit()}</strong> : Cloturer Soir<span class="tri-ar">كل نهار قبل ${tcSsLimit()} : سكّر العشية</span></div>
         <div style="padding:8px;background:var(--s2);border-radius:6px">🆕 <strong>Nouvel employe</strong> : Ajouter le jour meme<span class="tri-ar">موظف جديد : زيدو نفس النهار</span></div>
         <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 <strong>Employe part</strong> : Desactiver + retour uniforme<span class="tri-ar">موظف مشا : نحّيه + رجّع اللباس</span></div>
         <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 <strong>JAMAIS WhatsApp</strong> pour du personnel → Demandes<span class="tri-ar">ما تستعملش الواتساب → استعمل الطلبات</span></div>
@@ -937,8 +1274,9 @@ const JOURS_FULL=[
   {fr:'Dim',ar:'الأحد',es:'Dom',col:'dimanche'}
 ];
 const PLAN_CYCLE=['','M','S','OFF'];
+const PLAN_CYCLE_LAB=['','L','OFF'];
 let planData={},planPublished=false,planCurrentWeek='';
-let turnosConfig={matin_entree:'08:00',matin_sortie:'16:00',soir_entree:'16:00',soir_sortie:'00:00'};
+let turnosConfig={matin_entree:'08:00',matin_sortie:'16:00',soir_entree:'16:00',soir_sortie:'00:00',labo_entree:'07:00',labo_sortie:'15:00'};
 
 function isPlanningLate(wk){
   // A planning is late if it's the current week, it's Monday after 03:00, and not published
@@ -1005,6 +1343,11 @@ async function renderPlanning(){
         <label>Entree:</label><input type="time" id="cfgSE" value="${tc.soir_entree}" onchange="saveTurnosConfig()">
         <label>Sortie:</label><input type="time" id="cfgSS" value="${tc.soir_sortie}" onchange="saveTurnosConfig()">
       </div>
+      <div class="config-row">
+        <span class="badge" style="background:rgba(155,89,182,.15);color:#9b59b6">LABO</span>
+        <label>Entree:</label><input type="time" id="cfgLE" value="${tc.labo_entree||'07:00'}" onchange="saveTurnosConfig()">
+        <label>Sortie:</label><input type="time" id="cfgLS" value="${tc.labo_sortie||'15:00'}" onchange="saveTurnosConfig()">
+      </div>
     </div>
 
     <div class="filter-bar">
@@ -1018,13 +1361,15 @@ async function renderPlanning(){
       ${emps.map(e=>{
         const isLab=e.poste==='Operateur Laboratoire';
         const hasOff=Array.from({length:7},(_,di)=>planData[e.id+'_'+di]).some(v=>v==='OFF');
-        return `<div class="pg poste">${esc(e.poste)}</div>
-          <div class="pg nom">${esc(e.nom)}${!isLab&&!hasOff?'<span class="plan-warn">! pas de OFF</span>':''}</div>
+        return `<div class="pg poste" style="color:${posteColor(e.poste).fg}">${esc(e.poste)}</div>
+          <div class="pg nom">${esc(e.nom)}${!hasOff?'<span class="plan-warn">! pas de OFF</span>':''}</div>
           ${JOURS_FULL.map((_,di)=>{
             const key=e.id+'_'+di;
             const val=planData[key]||'';
             if(isLab){
-              return `<div class="pg cell c-custom"><input class="lab-input" value="${esc(val)}" placeholder="HH-HH" oninput="planData['${key}']=this.value"></div>`;
+              const cls=val==='L'?'c-l':val==='OFF'?'c-off':'';
+              const label=val==='L'?'L':val==='OFF'?'OFF':'—';
+              return `<div class="pg cell ${cls}" onclick="cyclePlanCellLab('${key}',this)">${label}</div>`;
             }
             const cls=val==='M'?'c-m':val==='S'?'c-s':val==='OFF'?'c-off':'';
             const label=val==='M'?'M':val==='S'?'S':val==='OFF'?'OFF':'—';
@@ -1035,9 +1380,10 @@ async function renderPlanning(){
     </div></div>
 
     <div style="margin-top:8px;display:flex;gap:14px;justify-content:center;font-size:.72rem;color:var(--tx2)">
-      <span><span style="color:var(--gn)">&#9632;</span> M = Matin (${tc.matin_entree}–${tc.matin_sortie})</span>
-      <span><span style="color:var(--or)">&#9632;</span> S = Soir (${tc.soir_entree}–${tc.soir_sortie})</span>
-      <span><span style="color:var(--rd)">&#9632;</span> OFF = Repos</span>
+      <span><span style="color:var(--gn)">&#9632;</span> M (${tc.matin_entree}–${tc.matin_sortie})</span>
+      <span><span style="color:var(--or)">&#9632;</span> S (${tc.soir_entree}–${tc.soir_sortie})</span>
+      <span><span style="color:#9b59b6">&#9632;</span> L (${tc.labo_entree||'07:00'}–${tc.labo_sortie||'15:00'})</span>
+      <span><span style="color:var(--rd)">&#9632;</span> OFF</span>
     </div>
 
     <div class="plan-actions">
@@ -1050,12 +1396,19 @@ async function renderPlanning(){
   `;
 }
 
+function isoWeekOf(d){
+  const date=new Date(d.getTime());
+  date.setHours(0,0,0,0);
+  date.setDate(date.getDate()+3-(date.getDay()+6)%7);
+  const week1=new Date(date.getFullYear(),0,4);
+  const wn=1+Math.round(((date-week1)/86400000-(3-(week1.getDay()+6)%7))/7);
+  return`${date.getFullYear()}-W${String(wn).padStart(2,'0')}`;
+}
+
 function getWeekStr(){
   const el=document.getElementById('planWeek');
   if(el&&el.value)return el.value;
-  const now=new Date(),y=now.getFullYear(),jan1=new Date(y,0,1);
-  const wn=Math.ceil(((now-jan1)/86400000+jan1.getDay()+1)/7);
-  return `${y}-W${String(wn).padStart(2,'0')}`;
+  return isoWeekOf(new Date());
 }
 
 function getWeekDates(wkStr){
@@ -1064,7 +1417,7 @@ function getWeekDates(wkStr){
   const year=parseInt(match[1]),week=parseInt(match[2]);
   const jan4=new Date(year,0,4);
   const start=new Date(jan4);
-  start.setDate(jan4.getDate()-jan4.getDay()+1+(week-1)*7);
+  start.setDate(jan4.getDate()-(jan4.getDay()+6)%7+(week-1)*7);
   const dates=[];
   for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);dates.push(d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}))}
   return dates;
@@ -1082,9 +1435,8 @@ function cyclePlanCell(key,el){
   // Re-check OFF warnings
   const empId=key.split('_')[0];
   const emp=(appData.employes||[]).find(e=>e.id===empId);
-  if(emp&&emp.poste!=='Operateur Laboratoire'){
+  if(emp){
     const hasOff=Array.from({length:7},(_,di)=>planData[empId+'_'+di]).some(v=>v==='OFF');
-    // Find the nom cell for this employee and update warning
     const allNoms=document.querySelectorAll('.plan-grid .pg.nom');
     allNoms.forEach(n=>{
       if(n.textContent.includes(emp.nom)){
@@ -1096,8 +1448,30 @@ function cyclePlanCell(key,el){
   }
 }
 
+function cyclePlanCellLab(key,el){
+  const cur=planData[key]||'';
+  const ci=PLAN_CYCLE_LAB.indexOf(cur);
+  const next=PLAN_CYCLE_LAB[(ci+1)%PLAN_CYCLE_LAB.length];
+  if(next){planData[key]=next}else{delete planData[key]}
+  el.className='pg cell '+(next==='L'?'c-l':next==='OFF'?'c-off':'');
+  el.textContent=next||'—';
+  // OFF warning check
+  const empId=key.split('_')[0];
+  const emp=(appData.employes||[]).find(e=>e.id===empId);
+  if(emp){
+    const hasOff=Array.from({length:7},(_,di)=>planData[empId+'_'+di]).some(v=>v==='OFF');
+    document.querySelectorAll('.plan-grid .pg.nom').forEach(n=>{
+      if(n.textContent.includes(emp.nom)){
+        const warn=n.querySelector('.plan-warn');
+        if(!hasOff&&!warn)n.insertAdjacentHTML('beforeend','<span class="plan-warn">! pas de OFF</span>');
+        else if(hasOff&&warn)warn.remove();
+      }
+    });
+  }
+}
+
 async function saveTurnosConfig(){
-  const obj={local,matin_entree:document.getElementById('cfgME').value,matin_sortie:document.getElementById('cfgMS').value,soir_entree:document.getElementById('cfgSE').value,soir_sortie:document.getElementById('cfgSS').value};
+  const obj={local,matin_entree:document.getElementById('cfgME').value,matin_sortie:document.getElementById('cfgMS').value,soir_entree:document.getElementById('cfgSE').value,soir_sortie:document.getElementById('cfgSS').value,labo_entree:document.getElementById('cfgLE').value,labo_sortie:document.getElementById('cfgLS').value};
   turnosConfig={...turnosConfig,...obj};
   if(turnosConfig.id){
     await sb.from('turnos_config').update(obj).eq('id',turnosConfig.id);
@@ -1143,7 +1517,7 @@ function downloadPlanningPDF(){
   doc.setFontSize(9);doc.setFont(undefined,'normal');
   doc.text('Planning Hebdomadaire — Semaine '+wk,14,29);
   doc.text(weekDates.length?weekDates[0]+' au '+weekDates[6]:'',14,34);
-  doc.text('M = Matin ('+tc.matin_entree+'-'+tc.matin_sortie+')  |  S = Soir ('+tc.soir_entree+'-'+tc.soir_sortie+')  |  OFF = Repos',14,40);
+  doc.text('M=Matin ('+tc.matin_entree+'-'+tc.matin_sortie+') | S=Soir ('+tc.soir_entree+'-'+tc.soir_sortie+') | L=Labo ('+(tc.labo_entree||'07:00')+'-'+(tc.labo_sortie||'15:00')+') | OFF',14,40);
   doc.text('Genere: '+new Date().toLocaleDateString('fr-FR'),230,16);
 
   const head=[['Poste','Nom et Prenom',...JOURS_FULL.map((j,di)=>j.fr+'\n'+(weekDates[di]||''))]];
@@ -1151,7 +1525,8 @@ function downloadPlanningPDF(){
     const row=[e.poste,e.nom];
     for(let di=0;di<7;di++){
       const v=planData[e.id+'_'+di]||'';
-      if(v==='M')row.push('M\n'+tc.matin_entree+'-'+tc.matin_sortie);
+      if(v==='L')row.push('L\n'+(tc.labo_entree||'07:00')+'-'+(tc.labo_sortie||'15:00'));
+      else if(v==='M')row.push('M\n'+tc.matin_entree+'-'+tc.matin_sortie);
       else if(v==='S')row.push('S\n'+tc.soir_entree+'-'+tc.soir_sortie);
       else if(v==='OFF')row.push('OFF');
       else row.push(v||'');
@@ -1168,7 +1543,8 @@ function downloadPlanningPDF(){
     didParseCell(d){
       if(d.section!=='body'||d.column.index<2)return;
       const v=String(d.cell.raw||'');
-      if(v.startsWith('M')){d.cell.styles.fillColor=[230,255,245];d.cell.styles.textColor=[0,150,100];d.cell.styles.fontStyle='bold'}
+      if(v.startsWith('L')){d.cell.styles.fillColor=[240,230,255];d.cell.styles.textColor=[130,70,170];d.cell.styles.fontStyle='bold'}
+      else if(v.startsWith('M')){d.cell.styles.fillColor=[230,255,245];d.cell.styles.textColor=[0,150,100];d.cell.styles.fontStyle='bold'}
       else if(v.startsWith('S')){d.cell.styles.fillColor=[255,248,230];d.cell.styles.textColor=[200,160,0];d.cell.styles.fontStyle='bold'}
       else if(v==='OFF'){d.cell.styles.fillColor=[255,235,230];d.cell.styles.textColor=[200,80,60];d.cell.styles.fontStyle='bold'}
     }
@@ -1185,6 +1561,215 @@ function downloadPlanningPDF(){
     <p class="tri-ar" style="margin-bottom:14px">ما تنساش تصيفط هاد البلانينغ فڭروب الواتساب ديال الفريق ديالك. الفريق خاصو يعرف الشيفتات ديالو قبل الإثنين.</p>
     <button class="btn btn-p" onclick="closeModal()" style="padding:10px 30px">Compris / فهمت ✅</button>
   </div>`);
+}
+
+// ============================================================
+// PDF GENERATORS (2-6)
+// ============================================================
+function pdfHeader(doc,title,loc,landscape){
+  doc.setFontSize(16);doc.setFont(undefined,'bold');doc.text('TIMA GRUPO',14,16);
+  doc.setFontSize(10);doc.text(title,14,23);
+  if(loc){doc.setFontSize(9);doc.text(loc,14,29)}
+  doc.setFontSize(7);doc.setFont(undefined,'normal');
+  const w=landscape?297:210;
+  doc.text('Genere: '+new Date().toLocaleDateString('fr-FR')+' '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),w-50,16);
+  return loc?35:29;
+}
+function pdfFooter(doc,extra){
+  const pc=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pc;i++){doc.setPage(i);doc.setFontSize(6);doc.setTextColor(150);
+    doc.text('Tima Grupo'+(extra?' — '+extra:''),10,doc.internal.pageSize.height-5);
+    doc.text('Page '+i+'/'+pc,doc.internal.pageSize.width-25,doc.internal.pageSize.height-5);doc.setTextColor(0)}
+}
+
+// PDF2: Monthly presences report
+function openMonthlyReportModal(){
+  openModal(`<h3>Rapport mensuel presences<span class="tri-ar">تقرير شهري ديال الحضور</span></h3>
+    <div class="fg"><label>Local <span class="ar">اللوكال</span></label><select id="fRptLocal">
+      ${role==='gerant'?`<option value="${local}">${local}</option>`:`<option value="">Tous les locaux</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}`}
+    </select></div>
+    <div class="fg"><label>Mois <span class="ar">الشهر</span></label><input type="month" id="fRptMonth" value="${today().substring(0,7)}"></div>
+    <div class="fg"><label>Ou dates personnalisees <span class="ar">ولا تواريخ مخصصة</span></label>
+      <div style="display:flex;gap:6px"><input type="date" id="fRptFrom" placeholder="Du" style="flex:1"><input type="date" id="fRptTo" placeholder="Au" style="flex:1"></div>
+    </div>
+    <div class="fg" style="font-size:.75rem;color:var(--tx2)">Si dates personnalisees remplies, elles ont priorite sur le mois.</div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler</button><button class="btn btn-p" onclick="generateMonthlyReport()">Generer PDF / توليد</button></div>
+  `);
+}
+
+async function downloadMonthlyPresencesPDF(){openMonthlyReportModal()}
+
+async function generateMonthlyReport(){
+  const{jsPDF}=window.jspdf||{};if(!jsPDF){toast('PDF non disponible',true);return}
+  const filterLocal=document.getElementById('fRptLocal').value;
+  const month=document.getElementById('fRptMonth').value;
+  const fromDate=document.getElementById('fRptFrom').value;
+  const toDate=document.getElementById('fRptTo').value;
+  const dateFrom=fromDate||month+'-01';
+  const dateTo=toDate||month+'-31';
+  const period=fromDate&&toDate?fromDate+' → '+toDate:month;
+  closeModal();toast('Generation du rapport...');
+
+  const{data:pres}=await sb.from('presences').select('*').gte('date',dateFrom).lte('date',dateTo);
+  const{data:abs}=await sb.from('absences').select('*').gte('date',dateFrom).lte('date',dateTo);
+  const{data:emps}=await sb.from('empleados').select('*').eq('actif',true);
+
+  const locals=filterLocal?[filterLocal]:LOCALES;
+
+  locals.forEach(loc=>{
+    const locEmps=(emps||[]).filter(e=>e.local===loc);
+    if(!locEmps.length)return;
+
+    const doc=new jsPDF({unit:'mm',format:'a4'});
+    let y=pdfHeader(doc,'Rapport Presences — '+period,loc);
+
+    const body=locEmps.map(e=>{
+      const ep=(pres||[]).filter(p=>p.employe_id===e.id&&p.statut==='present');
+      const ea=(abs||[]).filter(a=>a.employe_id===e.id);
+      const totalDays=ep.length;
+      const sansAvis=ea.filter(a=>a.motif==='sans preavis').length;
+      return[e.nom,e.poste,totalDays,ea.length,sansAvis];
+    });
+
+    doc.autoTable({startY:y,
+      head:[['Employe','Poste','Jours travailles','Jours absent','Sans aviso']],
+      body,theme:'grid',
+      styles:{fontSize:8,cellPadding:3},
+      headStyles:{fillColor:[108,92,231],fontSize:7},
+      didParseCell(d){if(d.section==='body'&&d.column.index===4&&parseInt(d.cell.raw)>0){d.cell.styles.textColor=[220,80,60];d.cell.styles.fontStyle='bold'}}
+    });
+
+    // Absence detail section
+    const allAbs=(abs||[]).filter(a=>locEmps.find(e=>e.id===a.employe_id));
+    if(allAbs.length){
+      const detY=doc.lastAutoTable.finalY+8;
+      doc.setFontSize(9);doc.setFont(undefined,'bold');doc.text('Detail des absences',14,detY);
+      doc.autoTable({startY:detY+3,
+        head:[['Date','Employe','Motif','Prevenu']],
+        body:allAbs.map(a=>[a.date,a.employe_nom,a.motif,a.prevenu]),
+        theme:'grid',styles:{fontSize:7,cellPadding:2},headStyles:{fillColor:[180,180,180],fontSize:6.5},
+        didParseCell(d){if(d.section==='body'&&d.column.index===2&&d.cell.raw==='sans preavis'){d.cell.styles.textColor=[220,80,60];d.cell.styles.fontStyle='bold'}}
+      });
+    }
+
+    pdfFooter(doc,loc+' — '+period);
+    doc.save('Presences_'+loc.replace(/[^a-zA-Z0-9]/g,'_')+'_'+period.replace(/[^a-zA-Z0-9]/g,'_')+'.pdf');
+  });
+  toast('✅ '+locals.length+' PDF(s) genere(s)');
+}
+
+// PDF3: Absences report
+async function downloadAbsencesPDF(){
+  const{jsPDF}=window.jspdf||{};if(!jsPDF)return;
+  const month=prompt('Mois (YYYY-MM):',today().substring(0,7));if(!month)return;
+  toast('Generation...');
+  const{data:abs}=await sb.from('absences').select('*').gte('date',month+'-01').lte('date',month+'-31').order('date',{ascending:false});
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  let y=pdfHeader(doc,'Rapport Absences — '+month);
+  const body=(abs||[]).map(a=>[a.date,a.employe_nom,a.local,a.motif,a.prevenu,a.reporte_par]);
+  doc.autoTable({startY:y,head:[['Date','Employe','Local','Motif','Prevenu','Reporte par']],body,theme:'grid',styles:{fontSize:7,cellPadding:2},headStyles:{fillColor:[108,92,231],fontSize:6.5},
+    didParseCell(d){if(d.section==='body'&&d.column.index===3&&d.cell.raw==='sans preavis'){d.cell.styles.textColor=[220,80,60];d.cell.styles.fontStyle='bold'}}
+  });
+  // Summary
+  const total=(abs||[]).length,sansPreavis=(abs||[]).filter(a=>a.motif==='sans preavis').length;
+  const finalY=doc.lastAutoTable.finalY+8;
+  doc.setFontSize(9);doc.setFont(undefined,'bold');
+  doc.text(`Resume: ${total} absences, ${sansPreavis} sans preavis`,14,finalY);
+  pdfFooter(doc,month);
+  doc.save('Rapport_Absences_'+month+'.pdf');toast('✅ PDF genere');
+}
+
+// PDF4: Employee exit sheet
+async function downloadEmployeeSheet(empId){
+  const{jsPDF}=window.jspdf||{};if(!jsPDF)return;
+  const{data:emp}=await sb.from('empleados').select('*').eq('id',empId).single();
+  if(!emp){toast('Employe non trouve',true);return}
+  const{data:pres}=await sb.from('presences').select('*').eq('employe_id',empId);
+  const{data:abs}=await sb.from('absences').select('*').eq('employe_id',empId);
+  const{data:uni}=await sb.from('uniform_assignments').select('*').eq('employee_id',empId);
+
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  let y=pdfHeader(doc,'Fiche Employe — '+emp.nom,emp.local);
+
+  doc.setFontSize(10);doc.setFont(undefined,'bold');doc.text('Informations',14,y);y+=6;
+  doc.setFontSize(8);doc.setFont(undefined,'normal');
+  const info=[['Nom',emp.nom],['Poste',emp.poste+(emp.poste_specifique?' ('+emp.poste_specifique+')':'')],['Local',emp.local],['Date entree',emp.date_entree||'—'],['Statut',emp.actif?'Actif':'Inactif'],['Motif depart',emp.motif_depart||'—'],['Note depart',emp.note_depart||'—']];
+  info.forEach(([k,v])=>{doc.text(k+': '+v,14,y);y+=5});
+
+  y+=4;doc.setFont(undefined,'bold');doc.text('Presences: '+(pres||[]).filter(p=>p.statut==='present').length+' jours',14,y);y+=5;
+  doc.text('Absences: '+(abs||[]).length,14,y);y+=6;
+
+  if((abs||[]).length){
+    doc.autoTable({startY:y,head:[['Date','Motif','Prevenu']],body:(abs||[]).map(a=>[a.date,a.motif,a.prevenu]),theme:'grid',styles:{fontSize:7},headStyles:{fillColor:[108,92,231],fontSize:6.5}});
+    y=doc.lastAutoTable.finalY+6;
+  }
+
+  if((uni||[]).length){
+    doc.setFont(undefined,'bold');doc.text('Uniformes',14,y);y+=4;
+    doc.autoTable({startY:y,head:[['Piece','Taille','Date livraison','Retourne']],body:(uni||[]).map(u=>[u.uniform_nom,u.taille,u.date_livraison||'—',u.retourne?'Oui':'Non']),theme:'grid',styles:{fontSize:7},headStyles:{fillColor:[108,92,231],fontSize:6.5}});
+  }
+  pdfFooter(doc,emp.nom);
+  doc.save('Fiche_'+emp.nom.replace(/\s+/g,'_')+'.pdf');toast('✅ Fiche PDF generee');
+}
+
+// PDF5: Uniforms report
+async function downloadUniformsPDF(){
+  const{jsPDF}=window.jspdf||{};if(!jsPDF)return;
+  const filterLocal=role==='gerant'?local:'';
+  toast('Generation...');
+  let assigns=appData.uniAssign||[];
+  if(filterLocal)assigns=assigns.filter(a=>a.local===filterLocal);
+
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  let y=pdfHeader(doc,'Rapport Uniformes',filterLocal);
+  const circ=assigns.filter(a=>!a.retourne).length,ret=assigns.filter(a=>a.retourne).length;
+  doc.setFontSize(9);doc.text(`En circulation: ${circ} | Retournes: ${ret} | Total: ${assigns.length}`,14,y);y+=6;
+
+  const body=assigns.map(a=>[a.employee_nom,a.local,a.uniform_nom,a.taille,a.quantite,a.date_livraison||'—',a.retourne?'Oui':'Non']);
+  doc.autoTable({startY:y,head:[['Employe','Local','Piece','Taille','Qty','Livraison','Retourne']],body,theme:'grid',styles:{fontSize:7,cellPadding:2},headStyles:{fillColor:[108,92,231],fontSize:6.5},
+    didParseCell(d){if(d.section==='body'&&d.column.index===6&&d.cell.raw==='Non'){d.cell.styles.textColor=[220,80,60];d.cell.styles.fontStyle='bold'}}
+  });
+  pdfFooter(doc);
+  doc.save('Rapport_Uniformes_'+(filterLocal||'Tous')+'.pdf');toast('✅ PDF genere');
+}
+
+// PDF6: Weekly Direction summary
+async function downloadWeeklyPDF(){
+  const{jsPDF}=window.jspdf||{};if(!jsPDF)return;
+  toast('Generation rapport semaine...');
+  const wk=getWeekStr();
+  const{data:emps}=await sb.from('empleados').select('*').eq('actif',true);
+  const{data:pres}=await sb.from('presences').select('*').gte('date',getWeekDates(wk)[0]?.split('/').reverse().join('-')||today());
+  const{data:abs}=await sb.from('absences').select('*').gte('date',getWeekDates(wk)[0]?.split('/').reverse().join('-')||today());
+  const{data:dem}=await sb.from('demandes_personnel').select('*').neq('statut','pourvu');
+  const{data:uni}=await sb.from('uniform_assignments').select('*').eq('retourne',false);
+
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  let y=pdfHeader(doc,'Rapport Hebdomadaire — '+wk,'Tous les locaux',true);
+
+  LOCALES.forEach(loc=>{
+    if(y>170){doc.addPage();y=16}
+    const locEmps=(emps||[]).filter(e=>e.local===loc);
+    const locPres=(pres||[]).filter(p=>p.local===loc);
+    const locAbs=(abs||[]).filter(a=>a.local===loc);
+    const locDem=(dem||[]).filter(d=>d.local===loc);
+    const locUni=(uni||[]).filter(u=>u.local===loc);
+    if(!locEmps.length&&!locPres.length)return;
+
+    doc.setFontSize(11);doc.setFont(undefined,'bold');doc.text(loc,14,y);y+=6;
+    const totalPres=locPres.filter(p=>p.statut==='present').length;
+    const totalDays=locPres.length?[...new Set(locPres.map(p=>p.date))].length:0;
+    const sansPreavis=locAbs.filter(a=>a.motif==='sans preavis').length;
+
+    doc.autoTable({startY:y,head:[['Effectif','Presences','Absences','Sans preavis','Demandes','Uniformes pend.']],
+      body:[[locEmps.length,totalPres+' ('+totalDays+' jours)',locAbs.length,sansPreavis,locDem.length,locUni.length]],
+      theme:'grid',styles:{fontSize:8,cellPadding:3,halign:'center'},headStyles:{fillColor:[108,92,231],fontSize:7},
+      didParseCell(d){if(d.section==='body'){if(d.column.index===3&&parseInt(d.cell.raw)>0){d.cell.styles.textColor=[220,80,60];d.cell.styles.fontStyle='bold'}}}
+    });
+    y=doc.lastAutoTable.finalY+10;
+  });
+  pdfFooter(doc,wk);
+  doc.save('Rapport_Semaine_'+wk+'.pdf');toast('✅ Rapport semaine genere');
 }
 
 // ============================================================
@@ -1301,6 +1886,278 @@ async function saveDemande(){
 // ============================================================
 // RH: EFFECTIFS
 // ============================================================
+// ============================================================
+// RH: DASHBOARD PRINCIPAL
+// ============================================================
+let rhWeekOffset=0;
+
+function renderRHChecklist(todayStr,turnosClosed,totalTurnos,planPubCount,demOuvertes,uniPending,abs){
+  const items=[];
+  const allClosed=turnosClosed.size>=totalTurnos;
+  const allPlan=planPubCount>=7;
+  const noMotif=abs.filter(a=>!a.motif&&a.date===todayStr);
+  const demLate=demOuvertes.filter(d=>demandeDays(d)>7);
+  const isLastDay=new Date().getDate()===new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+
+  if(!allClosed)items.push({done:false,label:'Verifier compliance locaux',ar:'تحقق من التزام اللوكالات',go:goBtn('dashboard','.table-wrap','Compliance')});
+  else items.push({done:true,label:'Tous les turnos clotures',ar:'كل الشيفتات تسكّرو'});
+
+  const noplan=LOCALES.filter(l=>!(appData.plannings||[]).some(p=>p.local===l&&p.publie));
+  if(noplan.length)items.push({done:false,label:noplan.length+' local(aux) sans planning',ar:noplan.length+' لوكال بلا بلانينغ',go:`<button class="btn btn-s btn-d" onclick="noplan=['${noplan.join("','")}'];noplan.forEach(l=>openRappelModal(l))" style="font-size:.7rem;padding:3px 10px">Rappel</button>`});
+
+  if(noMotif.length)items.push({done:false,label:noMotif.length+' absence(s) sans motif',ar:noMotif.length+' غياب بلا سبب',go:goBtn('absHist','#absHistBody','Absences')});
+
+  if(demLate.length)items.push({done:false,label:demLate.length+' demande(s) +7j',ar:demLate.length+' طلب فاتو 7 أيام',go:goBtn('recrutement','.pipe-col','Recrutement')});
+
+  if(uniPending.length)items.push({done:false,label:uniPending.length+' uniforme(s) en baja',ar:uniPending.length+' لباس فالمغادرين',go:goBtn('uniformes','.alert-card','Uniformes')});
+
+  if(isLastDay)items.push({done:false,label:'Generer informe mensuel (fin de mois)',ar:'توليد التقرير الشهري',go:`<button class="btn btn-s btn-p" onclick="openMonthlyReportModal()" style="font-size:.7rem;padding:3px 10px">Go → PDF</button>`});
+
+  const pending=items.filter(i=>!i.done).length;
+  if(!pending)return '';
+
+  return `<div class="card" style="border-left:3px solid var(--ac);margin-bottom:12px">
+    <h3 style="font-size:.88rem;color:var(--ac2)">Checklist RH — ${pending} tache(s) / ${pending} مهمة</h3>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;font-size:.82rem">
+      ${items.map(i=>`<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 0">${i.done?'✅':'☐'} ${i.label} <span class="tri-ar" style="font-size:.7em">${i.ar}</span>${i.done?'':i.go||''}</div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function getOffsetWeek(offset){
+  const d=new Date();d.setDate(d.getDate()+offset*7);
+  return isoWeekOf(d);
+}
+
+function renderRHDashboard(){
+  const pg=document.getElementById('p-dashboard');
+  const emps=appData.employes||[],pres=appData.presences||[],abs=appData.absences||[];
+  const dem=appData.demandes||[],plans=appData.plannings||[],assigns=appData.uniAssign||[];
+  const todayStr=today(),wk=getOffsetWeek(rhWeekOffset);
+
+  // KPIs
+  const totalEmps=emps.length;
+  const todayPres=pres.filter(p=>p.date===todayStr);
+  const turnosClosed=new Set();
+  todayPres.filter(p=>p.cloture).forEach(p=>turnosClosed.add(p.local+'|'+p.turno));
+  const totalTurnos=LOCALES.length*2; // matin+soir per local approx
+  const todayAbs=abs.filter(a=>a.date===todayStr);
+  const sansPreavis=todayAbs.filter(a=>a.motif==='sans preavis').length;
+  const planPubCount=LOCALES.filter(loc=>plans.some(p=>p.local===loc&&p.publie)).length;
+  const demOuvertes=dem.filter(d=>d.statut!=='pourvu');
+  const demUrgentes=demOuvertes.filter(d=>d.urgence==='urgente').length;
+  const inactiveEmps=(appData.employesAll||[]).filter(e=>!e.actif);
+  const uniPending=assigns.filter(a=>!a.retourne&&!emps.find(e=>e.id===a.employee_id));
+
+  pg.innerHTML=`
+    <div class="section-header"><h2><span class="sh-icon">🏠</span> Dashboard RH<span class="tri-ar">لوحة تحكم الموارد البشرية</span></h2></div>
+
+    ${renderRHChecklist(todayStr,turnosClosed,totalTurnos,planPubCount,demOuvertes,uniPending,abs)}
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">${totalEmps}</div><div class="label">Employes actifs</div></div>
+      <div class="stat"><div class="num" style="color:${turnosClosed.size<totalTurnos?'var(--or)':'var(--gn)'}">${turnosClosed.size}</div><div class="label">Turnos clotures auj.</div></div>
+      <div class="stat"><div class="num" style="color:${todayAbs.length?'var(--rd)':'var(--gn)'}">${todayAbs.length}</div><div class="label">Absences auj.${sansPreavis?` (${sansPreavis} sans avis)`:''}</div></div>
+      <div class="stat"><div class="num" style="color:${planPubCount<7?'var(--or)':'var(--gn)'}">${planPubCount}/7</div><div class="label">Plannings publies</div></div>
+      <div class="stat"><div class="num" style="color:${demOuvertes.length?'var(--or)':'var(--gn)'}">${demOuvertes.length}</div><div class="label">Demandes ouvertes${demUrgentes?` (${demUrgentes}🔴)`:''}</div></div>
+      <div class="stat"><div class="num" style="color:${uniPending.length?'var(--rd)':'var(--gn)'}">${uniPending.length}</div><div class="label">Uni. bajas pend.</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+      <h3 style="font-size:.9rem;color:var(--ac2);margin:0">Compliance / التزام</h3>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="btn btn-s btn-g" onclick="rhWeekOffset--;renderRHDashboard()">←</button>
+        <span style="font-size:.78rem;color:var(--tx2)">${(()=>{const wd=getWeekDates(wk);return wd.length?'Sem. '+wd[0]+' → '+wd[6]:'';})()}</span>
+        <button class="btn btn-s btn-g" onclick="rhWeekOffset++;renderRHDashboard()" ${rhWeekOffset>=0?'disabled':''}>→</button>
+        ${rhWeekOffset!==0?`<button class="btn btn-s btn-p" onclick="rhWeekOffset=0;renderRHDashboard()" style="font-size:.7rem">Auj. / اليوم</button>`:''}
+      </div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Local</th><th>🌅 Matin</th><th>🌙 Soir</th><th>📅 Planning</th><th>📤 Demandes</th><th>👕 Uni.</th><th></th></tr></thead>
+      <tbody>${LOCALES.map(loc=>{
+        const locPres=todayPres.filter(p=>p.local===loc);
+        const matinCl=locPres.some(p=>p.turno==='matin'&&p.cloture);
+        const soirCl=locPres.some(p=>p.turno==='soir'&&p.cloture);
+        const matinH=locPres.find(p=>p.turno==='matin'&&p.cloture)?.heure||'';
+        const soirH=locPres.find(p=>p.turno==='soir'&&p.cloture)?.heure||'';
+        const planOk=plans.some(p=>p.local===loc&&p.publie);
+        const locDem=demOuvertes.filter(d=>d.local===loc);
+        const locUniP=uniPending.filter(a=>a.local===loc);
+        const hasIssue=!matinCl||!soirCl||!planOk||locDem.length>0||locUniP.length>0;
+        return `<tr style="${hasIssue?'background:rgba(225,112,85,.04)':''}">
+          <td><strong>${esc(loc)}</strong></td>
+          <td>${matinCl?'<span class="badge b-gn">✅ '+matinH+'</span>':'<span class="badge b-or">⏳</span>'}</td>
+          <td>${soirCl?'<span class="badge b-gn">✅ '+soirH+'</span>':'<span class="badge b-or">⏳</span>'}</td>
+          <td>${planOk?'<span class="badge b-gn">✅</span>':'<span class="badge b-rd">❌</span>'}</td>
+          <td>${locDem.length?'<span class="badge b-or">'+locDem.length+'</span>':'—'}</td>
+          <td>${locUniP.length?'<span class="badge b-rd">'+locUniP.length+'</span>':'—'}</td>
+          <td>${hasIssue?`<button class="btn btn-s btn-d" onclick="openRappelModal('${esc(loc)}')">Rappel</button>`:''}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+
+    ${(()=>{
+      const gerantsWithIssues=LOCALES.filter(loc=>{
+        const lp=todayPres.filter(p=>p.local===loc);
+        return!lp.some(p=>p.turno==='matin'&&p.cloture)||!lp.some(p=>p.turno==='soir'&&p.cloture)||!plans.some(p=>p.local===loc&&p.publie);
+      });
+      return gerantsWithIssues.length?`<div class="card" style="background:rgba(225,112,85,.06);border:1px solid rgba(225,112,85,.2);margin-bottom:10px">
+        <div style="font-size:.85rem;font-weight:600;color:var(--rd)">${gerantsWithIssues.length} gerant(s) avec taches pendantes aujourd'hui / ${gerantsWithIssues.length} مسؤول عندو مهام معلقة</div>
+        <div style="font-size:.78rem;color:var(--tx2);margin-top:4px">${gerantsWithIssues.map(l=>esc(l)).join(', ')}</div>
+      </div>`:'';
+    })()}
+
+    ${renderRHAlerts()}
+
+    <h3 style="font-size:.9rem;margin:18px 0 8px;color:var(--ac2)">Mouvements du mois / حركات الشهر</h3>
+    ${renderMouvements()}
+
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-g btn-s" onclick="downloadMonthlyPresencesPDF()">📋 PDF Presences mensuel</button>
+      <button class="btn btn-g btn-s" onclick="downloadAbsencesPDF()">📝 PDF Absences</button>
+      <button class="btn btn-g btn-s" onclick="downloadUniformsPDF()">👕 PDF Uniformes</button>
+      <button class="btn btn-g btn-s" onclick="downloadWeeklyPDF()">📊 PDF Semaine</button>
+      <button class="btn btn-g btn-s" onclick="restartTour()">🎓 Revoir le tour RH</button>
+    </div>
+  `;
+}
+
+function renderRHAlerts(){
+  const abs=appData.absences||[],pres=appData.presences||[],dem=appData.demandes||[];
+  const emps=appData.employes||[],assigns=appData.uniAssign||[];
+  const todayStr=today();
+  const alerts=[];
+
+  // Critical: sans preavis today
+  abs.filter(a=>a.date===todayStr&&a.motif==='sans preavis').forEach(a=>{
+    alerts.push({sev:'rd',icon:'🔴',msg:`${a.employe_nom} (${a.local}) — absence sans preavis`,action:''});
+  });
+
+  // Critical: uniform pending >3 days after deactivation
+  const inactiveEmps=(appData.employesAll||[]).filter(e=>!e.actif&&e.date_depart);
+  inactiveEmps.forEach(ie=>{
+    const days=Math.floor((new Date()-new Date(ie.date_depart))/86400000);
+    const pending=assigns.filter(a=>a.employee_id===ie.id&&!a.retourne);
+    if(pending.length&&days>3){
+      const sev=days>7?'rd':'or';
+      alerts.push({sev,icon:days>7?'🔴':'🟠',msg:`${ie.nom} (${ie.local}) — ${pending.length} uniforme(s) non retourne(s), ${days}j depuis baja`,action:`<button class="btn btn-s btn-d" onclick="openRappelModal('${esc(ie.local)}')">Rappel</button>`});
+    }
+  });
+
+  // Important: demandes >7 days
+  dem.filter(d=>d.statut!=='pourvu').forEach(d=>{
+    const days=Math.floor((new Date()-new Date(d.date))/86400000);
+    if(days>7)alerts.push({sev:'or',icon:'🟠',msg:`${d.local} — ${d.poste} demande ouverte depuis ${days}j`,action:''});
+  });
+
+  if(!alerts.length)return '';
+  return `<h3 style="font-size:.9rem;margin:14px 0 8px;color:var(--rd)">Alertes actives (${alerts.length})</h3>
+    ${alerts.map(a=>`<div class="alert-card${a.sev==='or'?' warn':''}"><div class="at">${a.icon} ${a.msg}</div>${a.action?'<div class="ad">'+a.action+'</div>':''}</div>`).join('')}`;
+}
+
+function renderMouvements(){
+  const month=today().substring(0,7);
+  const allEmps=appData.employesAll||appData.employes||[];
+  const entrees=allEmps.filter(e=>e.date_entree&&e.date_entree.startsWith(month));
+  const sorties=allEmps.filter(e=>e.date_depart&&e.date_depart.startsWith(month));
+  const motifs={};sorties.forEach(e=>{const m=e.motif_depart||'Autre';motifs[m]=(motifs[m]||0)+1});
+
+  return `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+    <div class="stat" style="flex:1;min-width:100px"><div class="num" style="color:var(--gn)">${entrees.length}</div><div class="label">Entrees ce mois</div></div>
+    <div class="stat" style="flex:1;min-width:100px"><div class="num" style="color:var(--rd)">${sorties.length}</div><div class="label">Sorties ce mois</div></div>
+  </div>
+  ${Object.keys(motifs).length?`<div style="font-size:.78rem;color:var(--tx2)">Motifs: ${Object.entries(motifs).map(([k,v])=>v+'x '+k).join(' · ')}</div>`:''}
+  ${sorties.length?`<div class="table-wrap" style="margin-top:6px"><table style="font-size:.76rem">
+    <thead><tr><th>Employe</th><th>Local</th><th>Poste</th><th>Date depart</th><th>Motif</th></tr></thead>
+    <tbody>${sorties.map(e=>`<tr><td>${esc(e.nom)}</td><td>${esc(e.local)}</td><td>${esc(e.poste)}</td><td>${e.date_depart||'—'}</td><td>${esc(e.motif_depart||'—')}</td></tr>`).join('')}</tbody>
+  </table></div>`:''}`;
+}
+
+// ============================================================
+// RH: RAPPEL SYSTEM (send reminders to gérants)
+// ============================================================
+function openRappelModal(loc,context){
+  // Auto-detect issues for this local
+  const todayPres=(appData.presences||[]).filter(p=>p.date===today()&&p.local===loc);
+  const matinCl=todayPres.some(p=>p.turno==='matin'&&p.cloture);
+  const soirCl=todayPres.some(p=>p.turno==='soir'&&p.cloture);
+  const planOk=(appData.plannings||[]).some(p=>p.local===loc&&p.publie);
+  const uniP=(appData.uniAssign||[]).filter(a=>!a.retourne&&a.local===loc&&!(appData.employes||[]).find(e=>e.id===a.employee_id)).length;
+
+  const issues=[];
+  if(!matinCl)issues.push({fr:'⚠️ Presences Matin non cloturees. Merci de cloturer des que possible.',ar:'⚠️ حضور الصباح ما تسكّرش. سكّرو في أقرب وقت.'});
+  if(!soirCl)issues.push({fr:'⚠️ Presences Soir non cloturees. Merci de cloturer des que possible.',ar:'⚠️ حضور العشية ما تسكّرش. سكّرو في أقرب وقت.'});
+  if(!planOk)issues.push({fr:'📅 Planning non publie. La deadline est passee. Merci de publier immediatement.',ar:'📅 البلانينغ ما تنشرش. الوقت فات. نشرو دابا.'});
+  if(uniP>0)issues.push({fr:`👕 ${uniP} uniforme(s) non retourne(s) apres depart. Merci de recuperer et enregistrer le retour.`,ar:`👕 ${uniP} لباس ما ترجعش بعد المغادرة. رجّعو وسجّل الرجوع.`});
+
+  const defaultMsg=issues.length?issues.map(i=>i.fr+'\n'+i.ar).join('\n\n'):'Merci de verifier votre local.\nمن فضلك تأكد من اللوكال ديالك.';
+
+  openModal(`<h3>Envoyer rappel a ${esc(loc)}<span class="tri-ar">أرسل تذكير ل${esc(loc)}</span></h3>
+    ${issues.length?`<div style="margin-bottom:8px;font-size:.78rem;color:var(--tx2)">Problemes detectes / المشاكل المكتشفة :</div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">${issues.map(i=>`<div style="padding:6px;background:var(--s2);border-radius:4px;font-size:.76rem;border-left:2px solid var(--or)">${i.fr}</div>`).join('')}</div>`:''}
+    <div class="fg"><label>Message a envoyer (editable) <span class="ar">الرسالة (تقدر تعدّلها)</span></label>
+      <textarea id="fRappelMsg" rows="5" style="width:100%;padding:8px;background:var(--s2);border:1px solid var(--s3);border-radius:6px;color:var(--tx);font-size:.82rem">${defaultMsg}</textarea>
+    </div>
+    <div style="font-size:.72rem;color:var(--tx3);margin-bottom:10px;font-style:italic">Le gerant verra ce message en entrant dans l'app. Il devra confirmer "Lu" pour le fermer.</div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler</button><button class="btn btn-d" onclick="sendRappel('${esc(loc)}')">Envoyer rappel / أرسل ↗️</button></div>
+  `);
+}
+
+async function sendRappel(loc){
+  const msg=document.getElementById('fRappelMsg').value.trim();
+  if(!msg){toast('Message requis',true);return}
+  // Save to Supabase rappels table
+  const row={local:loc,message:msg,envoy_par:'RH',lu:false,date:today(),heure:new Date().toTimeString().slice(0,5)};
+  const{data,error}=await sb.from('rappels').insert(row).select().single();
+  if(error){
+    // Table might not exist yet — save locally
+    const rappels=JSON.parse(localStorage.getItem('tima_rappels')||'[]');
+    rappels.unshift({...row,id:'local_'+Date.now()});
+    localStorage.setItem('tima_rappels',JSON.stringify(rappels));
+  }else{
+    appData.rappels=appData.rappels||[];appData.rappels.unshift(data);
+  }
+  closeModal();toast('✅ Rappel envoye a '+loc+' / التذكير تصيفط');
+}
+
+// Show rappels to gérant — fixed banner on ALL tabs
+function checkGerantRappels(){
+  if(role!=='gerant'||!local)return;
+  // Remove old banners
+  document.querySelectorAll('.rappel-banner').forEach(el=>el.remove());
+  const rappels=appData.rappels||[];
+  const unread=rappels.filter(r=>r.local===local&&!r.lu);
+  if(!unread.length)return;
+  // Show fixed banner at top of app for EACH unread rappel
+  const container=document.getElementById('pagesContainer');
+  if(!container)return;
+  unread.forEach(r=>{
+    container.insertAdjacentHTML('afterbegin',`<div class="rappel-banner" style="background:rgba(225,112,85,.15);border:2px solid var(--rd);border-radius:var(--r);padding:12px 14px;margin:8px 14px;animation:urgPulse 2s infinite">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:1.3rem;flex-shrink:0">📩</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:.85rem;color:var(--rd);margin-bottom:4px">Message de RH — ${r.date||''} ${r.heure||''}</div>
+          <div style="font-size:.82rem;white-space:pre-wrap;margin-bottom:6px">${esc(r.message)}</div>
+          <div style="font-size:.72rem;color:var(--tx2)">Pour toute question, contactez RH directement par telephone.</div>
+        </div>
+        <button class="btn btn-p btn-s" onclick="markRappelLu('${r.id}')" style="flex-shrink:0">Lu / قريت ✅</button>
+      </div>
+    </div>`);
+  });
+}
+
+async function markRappelLu(id){
+  sb.from('rappels').update({lu:true}).eq('id',id).then();
+  // Remove from local data and re-render
+  if(appData.rappels)appData.rappels=appData.rappels.filter(r=>r.id!==id);
+  document.querySelectorAll('.rappel-banner').forEach(el=>el.remove());
+  checkGerantRappels();
+  toast('✅ Marque comme lu / تعلّم مقري');
+}
+
+// ============================================================
+// RH: EFFECTIFS
+// ============================================================
 function renderEffectifs(){
   const pg=document.getElementById('p-effectifs');
   let emps=appData.employes||[];
@@ -1310,28 +2167,32 @@ function renderEffectifs(){
       <div class="stat"><div class="num">${emps.length}</div><div class="label">Total employes<span class="tri-ar">مجموع الموظفين</span></div></div>
       ${LOCALES.filter(l=>emps.some(e=>e.local===l)).map(l=>`<div class="stat"><div class="num">${emps.filter(e=>e.local===l).length}</div><div class="label">${esc(l)}</div></div>`).join('')}
     </div>
-    <div class="section-header"><h2>${tri('effectifs')}</h2><div style="display:flex;gap:6px"><button class="btn btn-g" onclick="syncEverythingToSheets()" style="font-size:.72rem">Sync Sheets / مزامنة</button><button class="btn btn-p" onclick="openEmpForm()">+ Employe / + موظف</button></div></div>
+    <div class="section-header"><h2>${tri('effectifs')}</h2><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-g btn-s" onclick="downloadMonthlyPresencesPDF()">PDF Presences</button><button class="btn btn-g btn-s" onclick="downloadAbsencesPDF()">PDF Absences</button><button class="btn btn-p" onclick="openEmpForm()">+ Employe</button></div></div>
     <div class="filter-bar">
       <select id="filtEmpLocal" onchange="filterEffectifs()"><option value="">Tous les locaux / كل اللوكالات</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select>
       <input id="filtEmpNom" placeholder="Chercher... قلّب..." oninput="filterEffectifs()">
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>Nom / الإسم</th><th>Local / اللوكال</th><th>Poste / البوسط</th><th>Entree / الدخول</th><th></th></tr></thead>
+      <thead><tr><th></th><th>Nom</th><th>Local</th><th>Poste</th><th>📎</th><th>Entree</th><th></th></tr></thead>
       <tbody id="empBody">${empRows(emps)}</tbody>
     </table></div>
   `;
 }
 
 function empRows(emps){
-  return emps.map(e=>`<tr>
+  return emps.map(e=>{
+    const docs=(appData.empDocs||[]).filter(d=>d.employe_id===e.id);
+    const docIcon=docs.length?`<span title="${docs.length} doc(s)" style="color:var(--gn);cursor:help">📎${docs.length}</span>`:'<span title="Pas de contrat" style="color:var(--rd);font-size:.7rem">⚠️</span>';
+    return `<tr>
+    <td>${avatarSm(e.nom,e.poste)}</td>
     <td><strong>${esc(e.nom)}</strong></td><td>${esc(e.local)}</td>
-    <td>${esc(e.poste)}${e.poste_specifique?`<br><span style="font-size:.72rem;color:var(--tx3)">${esc(e.poste_specifique)}</span>`:''}</td>
-    <td>${e.date_entree||'—'}</td>
+    <td>${posteBadge(e.poste)}${e.poste_specifique?`<br><span style="font-size:.68rem;color:var(--tx3)">${esc(e.poste_specifique)}</span>`:''}</td>
+    <td>${docIcon}</td>
+    <td style="font-size:.78rem;color:var(--tx2)">${e.date_entree||'—'}</td>
     <td style="white-space:nowrap">
-      <button class="btn btn-s btn-g" onclick="openEmpForm(findEmp('${e.id}'))">Modifier</button>
-      <span class="del-link" onclick="if(confirm('Supprimer ?'))delEmp('${e.id}')">Suppr.</span>
+      <button class="btn btn-s btn-g" onclick="openEmpForm(findEmp('${e.id}'))">✏️</button>
     </td>
-  </tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>';
+  </tr>`}).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--tx2)">Aucun employe / ما كاين حتا موظف</td></tr>';
 }
 
 function filterEffectifs(){
@@ -1344,24 +2205,77 @@ function filterEffectifs(){
 
 function openEmpForm(emp){
   const e=emp||{};
+  // Load existing documents for this employee
+  const docs=(appData.empDocs||[]).filter(d=>d.employe_id===e.id);
   openModal(`<h3>${e.id?'Modifier':'Nouvel'} employe<span class="tri-ar">${e.id?'عدّل':'زيد'} موظف</span></h3>
     <div class="fg"><label>Nom complet <span class="ar">الإسم الكامل</span></label><input id="fEmpNom" value="${esc(e.nom||'')}"></div>
     <div class="fg"><label>Local <span class="ar">اللوكال</span></label><select id="fEmpLocal">${LOCALES.map(l=>`<option ${l===e.local?'selected':''}>${l}</option>`).join('')}</select></div>
     <div class="fg"><label>Poste general <span class="ar">البوسط العام</span></label><select id="fEmpPoste">${POSTES.map(p=>`<option ${p===e.poste?'selected':''}>${p}</option>`).join('')}</select></div>
     <div class="fg"><label>Poste specifique <span class="ar">البوسط الدقيق</span></label><select id="fEmpSpec"><option value="">— Aucun —</option>${POSTES_SPEC.filter(Boolean).map(p=>`<option ${p===e.poste_specifique?'selected':''}>${p}</option>`).join('')}</select></div>
     <div class="fg"><label>Date d'entree <span class="ar">تاريخ الدخول</span></label><input type="date" id="fEmpDate" value="${e.date_entree||today()}"></div>
+    ${e.id?`<div class="fg" style="border-top:1px solid var(--s3);padding-top:10px;margin-top:6px">
+      <label>📎 Documents / Contrat <span class="ar">الوثائق / العقد</span></label>
+      <input type="file" id="fEmpDoc" accept=".pdf,.jpg,.jpeg,.png,.webp" multiple style="margin-top:4px;font-size:.78rem;color:var(--tx2)">
+      <div style="font-size:.7rem;color:var(--tx3);margin-top:2px">PDF, JPG, PNG — max 5MB par fichier</div>
+      ${docs.length?`<div style="margin-top:6px">${docs.map(d=>`<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:.78rem">
+        <span>${d.type==='pdf'?'📄':'🖼️'}</span>
+        <a href="${d.url}" target="_blank" style="color:var(--ac2);flex:1">${esc(d.nom)}</a>
+        <span style="font-size:.68rem;color:var(--tx3)">${d.date||''}</span>
+        <button class="btn btn-s btn-g" onclick="deleteEmpDoc('${d.id}')" style="font-size:.6rem;color:var(--rd)">✕</button>
+      </div>`).join('')}</div>`:'<div style="font-size:.75rem;color:var(--tx3);margin-top:4px">Aucun document / ما كاين حتا وثيقة</div>'}
+    </div>`:''}
     <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveEmp('${e.id||''}')">Enregistrer / سجّل</button></div>
   `);
+}
+
+async function uploadEmpDocs(empId){
+  const input=document.getElementById('fEmpDoc');
+  if(!input||!input.files.length)return;
+  for(const file of input.files){
+    if(file.size>5*1024*1024){toast('Fichier trop grand (max 5MB): '+file.name,true);continue}
+    const ext=file.name.split('.').pop().toLowerCase();
+    const type=['pdf'].includes(ext)?'pdf':'image';
+    const path=`contracts/${empId}/${Date.now()}_${file.name}`;
+    // Upload to Supabase Storage
+    const{data:upData,error:upErr}=await sb.storage.from('documents').upload(path,file,{upsert:true});
+    if(upErr){
+      // Fallback: store as base64 in documents table
+      const reader=new FileReader();
+      reader.onload=async()=>{
+        const row={employe_id:empId,nom:file.name,type,url:reader.result,date:today()};
+        const{data}=await sb.from('emp_documents').insert(row).select().single();
+        if(data){appData.empDocs=appData.empDocs||[];appData.empDocs.push(data)}
+      };
+      reader.readAsDataURL(file);
+    }else{
+      const{data:urlData}=sb.storage.from('documents').getPublicUrl(path);
+      const url=urlData?.publicUrl||path;
+      const row={employe_id:empId,nom:file.name,type,url,date:today()};
+      const{data}=await sb.from('emp_documents').insert(row).select().single();
+      if(data){appData.empDocs=appData.empDocs||[];appData.empDocs.push(data)}
+    }
+  }
+  toast('✅ '+input.files.length+' document(s) uploade(s) / الوثائق تحمّلو');
+}
+
+async function deleteEmpDoc(docId){
+  if(!confirm('Supprimer ce document ?'))return;
+  await sb.from('emp_documents').delete().eq('id',docId);
+  appData.empDocs=(appData.empDocs||[]).filter(d=>d.id!==docId);
+  toast('Document supprime / الوثيقة تمسحات');
+  renderEffectifs();
 }
 
 async function saveEmp(id){
   const nom=document.getElementById('fEmpNom').value.trim();
   if(!nom){toast('Nom obligatoire / خاصك الإسم',true);return}
   const loc=document.getElementById('fEmpLocal').value,poste=document.getElementById('fEmpPoste').value,poste_specifique=document.getElementById('fEmpSpec').value,date_entree=document.getElementById('fEmpDate').value;
+  const hasFiles=document.getElementById('fEmpDoc')?.files?.length>0;
   closeModal();
   if(id){
     const emp=(appData.employes||[]).find(e=>e.id===id);
     if(emp)Object.assign(emp,{nom,local:loc,poste,poste_specifique,date_entree});
+    if(hasFiles)await uploadEmpDocs(id);
     toast('Employe modifie / تعدّل');renderEffectifs();
     sb.from('empleados').update({nom,local:loc,poste,poste_specifique,date_entree}).eq('id',id).then();
   }else{
@@ -1373,12 +2287,7 @@ async function saveEmp(id){
   syncAllEmployeesToSheets();
 }
 
-async function delEmp(id){
-  appData.employes=(appData.employes||[]).filter(e=>e.id!==id);
-  toast('Employe supprime / الموظف تمسح');renderEffectifs();
-  sb.from('empleados').update({actif:false}).eq('id',id).then();
-  syncAllEmployeesToSheets();
-}
+// delEmp removed — employees can only be deactivated, never deleted
 
 // ============================================================
 // RH: RECRUTEMENT
@@ -1512,20 +2421,21 @@ function renderUniformesGerant(){
   const inactiveWithUni=assigns.filter(a=>!a.retourne&&!emps.find(e=>e.id===a.employee_id));
 
   pg.innerHTML=`
-    <div class="section-header"><h2>${tri('uniformes')}</h2></div>
+    <div class="section-header"><h2>${tri('uniformes')}</h2><button class="btn btn-g btn-s" onclick="downloadUniformsPDF()">PDF Uniformes</button></div>
 
     ${inactiveWithUni.length?`<div style="margin-bottom:12px">${inactiveWithUni.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — Baja sin devolucion / خرج بلا ما رجّع</div><div class="ad">${esc(a.uniform_nom)} · <button class="btn btn-s btn-d" onclick="markRetour('${a.id}')" style="font-size:.7rem">Marquer retour</button></div></div>`).join('')}</div>`:''}
 
     <h3 style="font-size:.9rem;margin-bottom:8px;color:var(--ac2)">Equipe & Uniformes / الفريق واللباس</h3>
     <div class="table-wrap"><table>
-      <thead><tr><th>Employe / الموظف</th><th>Statut / الحالة</th><th>Details</th><th></th></tr></thead>
+      <thead><tr><th></th><th>Employe</th><th>Statut</th><th>Details</th><th></th></tr></thead>
       <tbody>${emps.map(e=>{
         const us=getEmpUniStatus(e.id,assigns);
         return `<tr>
-          <td><strong>${esc(e.nom)}</strong><br><span style="font-size:.7rem;color:var(--tx3)">${esc(e.poste)}</span></td>
+          <td>${avatarSm(e.nom,e.poste)}</td>
+          <td><strong>${esc(e.nom)}</strong><br>${posteBadge(e.poste)}</td>
           <td><span class="badge ${us.cls}">${us.label}</span></td>
           <td style="font-size:.72rem;color:var(--tx2)">${us.assigns.filter(a=>!a.retourne).map(a=>esc(a.uniform_nom)+' ('+esc(a.taille)+')').join(', ')||'—'}</td>
-          <td><button class="btn btn-s btn-p" onclick="openUniAssignForm(null,'${e.id}','${esc(e.nom)}')">+ Attribuer</button></td>
+          <td><button class="btn btn-s btn-p" onclick="openUniAssignForm(null,'${e.id}','${esc(e.nom)}')">+</button></td>
         </tr>`;
       }).join('')}</tbody>
     </table></div>
@@ -1554,21 +2464,46 @@ function renderUniformesRH(){
   const types=appData.uniTypes||[],assigns=appData.uniAssign||[],emps=appData.employes||[];
 
   const inactiveNoReturn=assigns.filter(a=>!a.retourne&&!emps.find(e=>e.id===a.employee_id));
+  // Group by employee for cleaner display
+  const inactiveByEmp={};
+  inactiveNoReturn.forEach(a=>{if(!inactiveByEmp[a.employee_nom])inactiveByEmp[a.employee_nom]={nom:a.employee_nom,local:a.local,items:[]};inactiveByEmp[a.employee_nom].items.push(a)});
   const oldPending=assigns.filter(a=>{
     if(a.retourne||!a.date_livraison)return false;
-    return(new Date()-new Date(a.date_livraison))/86400000>30&&emps.find(e=>e.id===a.employee_id);
+    return(new Date()-new Date(a.date_livraison))/86400000>3&&emps.find(e=>e.id===a.employee_id);
   });
   const lowStock=types.filter(t=>(t.stock_total-uniStockUsed(t.id))<2);
 
-  const alertHtml=(inactiveNoReturn.length||oldPending.length||lowStock.length)?`
+  const alertHtml=(Object.keys(inactiveByEmp).length||oldPending.length||lowStock.length)?`
     <div style="margin-bottom:14px">
-      ${inactiveNoReturn.map(a=>`<div class="alert-card"><div class="at">🔴 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Employe de baja con uniforme pendiente / موظف خرج واللباس عندو</div></div>`).join('')}
-      ${oldPending.map(a=>`<div class="alert-card warn"><div class="at">🟠 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">Entregado hace +30 dias sin devolucion / تسلّم قبل 30 يوم بلا رجوع</div></div>`).join('')}
+      ${Object.values(inactiveByEmp).map(g=>`<div class="alert-card"><div class="at">🔴 ${esc(g.nom)} — ${esc(g.local)} — ${g.items.length} piece(s) non retournee(s)</div><div class="ad">${g.items.map(a=>esc(a.uniform_nom)+' ('+esc(a.taille)+')').join(', ')} · <strong>BAJA PENDIENTE</strong><br>موظف خرج واللباس عندو — ${g.items.map(a=>`<button class="btn btn-s btn-d" onclick="markRetour('${a.id}')" style="font-size:.65rem;margin:2px">Retour ${esc(a.uniform_nom)}</button>`).join('')}</div></div>`).join('')}
+      ${oldPending.map(a=>`<div class="alert-card warn"><div class="at">🟠 ${esc(a.employee_nom)} — ${esc(a.uniform_nom)}</div><div class="ad">+3 jours sans retour / +3 أيام بلا رجوع</div></div>`).join('')}
       ${lowStock.map(t=>`<div class="alert-card warn"><div class="at">🟠 ${esc(t.nom)} — ${esc(t.local)}</div><div class="ad">Stock bas: ${t.stock_total-uniStockUsed(t.id)} dispo / ستوك قليل</div></div>`).join('')}
     </div>`:'';
 
+  // Build dossiers from inactive employees with pending uniforms
+  const dossiers=Object.values(inactiveByEmp).map(g=>{
+    // Try to find date_depart from localStorage dossiers
+    const saved=JSON.parse(localStorage.getItem('tima_return_dossiers')||'[]');
+    const savedD=saved.find(d=>d.empNom===g.nom);
+    const dateDepart=savedD?.dateDepart||'';
+    const daysSince=dateDepart?Math.floor((new Date()-new Date(dateDepart))/86400000):999;
+    const urgCls=daysSince>30?'b-rd':daysSince>7?'b-or':'b-or';
+    const urgLabel=daysSince>30?'🔴 URGENT +'+daysSince+'j':daysSince>7?'⚠️ '+daysSince+'j':''+daysSince+'j';
+    return{...g,dateDepart,daysSince,urgCls,urgLabel};
+  });
+
   pg.innerHTML=`
-    <div class="section-header"><h2>${tri('uniformes')}</h2></div>
+    <div class="section-header"><h2>${tri('uniformes')}</h2><button class="btn btn-g btn-s" onclick="downloadUniformsPDF()">PDF Uniformes</button></div>
+
+    ${dossiers.length?`<h3 style="font-size:.9rem;margin-bottom:8px;color:var(--rd)">🔴 Uniformes en bajas / متابعة اللباس فالمغادرين (${dossiers.length})</h3>
+    ${dossiers.map(d=>`<div class="card" style="border-left:3px solid ${d.daysSince>30?'var(--rd)':d.daysSince>7?'var(--or)':'var(--or)'}">
+      <h3 style="font-size:.88rem">${esc(d.nom)} — ${esc(d.local)} <span class="badge ${d.urgCls}">${d.urgLabel}</span></h3>
+      <div style="font-size:.78rem;color:var(--tx2);margin-bottom:6px">${d.dateDepart?'Baja: '+d.dateDepart:'Date de depart inconnue'} · ${d.items.length} piece(s) pendante(s)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">${d.items.map(a=>`<div style="background:var(--s2);border-radius:6px;padding:4px 8px;font-size:.76rem;display:flex;align-items:center;gap:4px">
+        ${esc(a.uniform_nom)} (${esc(a.taille)}) <button class="btn btn-s btn-d" onclick="markRetour('${a.id}')" style="font-size:.62rem;padding:2px 6px">Retour ✅</button>
+      </div>`).join('')}</div>
+    </div>`).join('')}`:''}
+
     ${alertHtml}
     <div class="filter-bar"><select id="filtUniLocal" onchange="filterUniformesRH()"><option value="">Tous les locaux / كل اللوكالات</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select></div>
 
@@ -1604,7 +2539,7 @@ function renderUniformesDir(){
   const types=appData.uniTypes||[],assigns=appData.uniAssign||[];
 
   pg.innerHTML=`
-    <div class="section-header"><h2>${tri('uniformes')}</h2></div>
+    <div class="section-header"><h2>${tri('uniformes')}</h2><button class="btn btn-g btn-s" onclick="downloadUniformsPDF()">PDF Uniformes</button></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">
       ${LOCALES.map(loc=>{
         const locAssigns=assigns.filter(a=>a.local===loc);
@@ -1675,6 +2610,8 @@ async function saveUniType(id){
   if(role==='gerant')renderUniformesGerant();else renderUniformesRH();
 }
 
+const DEFAULT_PIECES=['Camiseta','Pantalon','Gorra','Delantal','Chaussures','Veste'];
+
 function openUniAssignForm(a,preEmpId,preEmpNom){
   const e=a||{};
   if(preEmpId&&!e.employee_id){e.employee_id=preEmpId;e.employee_nom=preEmpNom}
@@ -1682,6 +2619,20 @@ function openUniAssignForm(a,preEmpId,preEmpNom){
   const types=appData.uniTypes||[];
   const loc=role==='gerant'?local:'';
   const filtTypes=loc?types.filter(t=>t.local===loc):types;
+
+  // No pieces created yet → guide to create them first, inline
+  if(!filtTypes.length){
+    openModal(`<h3>Creer les pieces d'abord<span class="tri-ar">خاصك تزيد القطع أولا</span></h3>
+      <p style="font-size:.85rem;margin-bottom:10px">Avant d'attribuer un uniforme, cree les types de pieces que tu utilises dans ton local (camiseta, pantalon, gorra...).<span class="tri-ar">قبل ما توزّع اللباس، زيد القطع اللي كتستعمل فاللوكال (قميص، سروال، كاسكيطة...).</span></p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">${DEFAULT_PIECES.map(p=>`<button class="btn btn-s btn-g" onclick="quickCreatePiece('${p}')" id="qp-${p}">${p}</button>`).join('')}</div>
+      <p style="font-size:.75rem;color:var(--tx2);margin-bottom:6px">Ou cree une piece personnalisee :<span class="tri-ar">ولا زيد قطعة خاصة:</span></p>
+      <div style="display:flex;gap:6px;margin-bottom:14px"><input id="fQuickPiece" placeholder="Nom de la piece..." style="flex:1;padding:8px;background:var(--s2);border:1px solid var(--s3);border-radius:6px;color:var(--tx)"><button class="btn btn-p btn-s" onclick="quickCreatePiece(document.getElementById('fQuickPiece').value)">Creer / زيد</button></div>
+      <div id="quickPieceStatus" style="font-size:.78rem;color:var(--gn);margin-bottom:10px"></div>
+      <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler</button><button class="btn btn-p" onclick="closeModal();openUniAssignForm(${preEmpId?`null,'${preEmpId}','${esc(preEmpNom||'')}'`:''})" id="btnContinueAssign" disabled>Continuer l'attribution →</button></div>
+    `);
+    return;
+  }
+
   openModal(`<h3>${e.id?'Modifier':'Attribuer'} uniforme<span class="tri-ar">${e.id?'عدّل':'وزّع'} لباس</span></h3>
     <div class="fg"><label>Employe <span class="ar">الموظف</span></label><select id="fUaEmp">${emps.map(emp=>`<option value="${emp.id}" data-nom="${esc(emp.nom)}" data-local="${esc(emp.local)}" ${emp.id===e.employee_id?'selected':''}>${emp.nom}${role!=='gerant'?' — '+emp.local:''}</option>`).join('')}</select></div>
     <div class="fg"><label>Piece <span class="ar">القطعة</span></label><select id="fUaType">${filtTypes.map(t=>`<option value="${t.id}" data-nom="${esc(t.nom)}" ${t.id===e.uniform_type_id?'selected':''}>${t.nom} (dispo: ${t.stock_total-uniStockUsed(t.id)})</option>`).join('')}</select></div>
@@ -1691,6 +2642,18 @@ function openUniAssignForm(a,preEmpId,preEmpNom){
     <div class="fg"><label>Notes <span class="ar">ملاحظات</span></label><textarea id="fUaNotes" rows="2">${esc(e.notes||'')}</textarea></div>
     <div class="modal-actions"><button class="btn btn-g" onclick="closeModal()">Annuler / إلغاء</button><button class="btn btn-p" onclick="saveUniAssign('${e.id||''}')">Enregistrer / سجّل</button></div>
   `);
+}
+
+async function quickCreatePiece(nom){
+  nom=(nom||'').trim();if(!nom){toast('Nom requis',true);return}
+  const{data}=await sb.from('uniform_types').insert({nom,local:local||'',description:'',stock_total:10}).select().single();
+  if(data){appData.uniTypes=appData.uniTypes||[];appData.uniTypes.push(data)}
+  const btn=document.getElementById('qp-'+nom);
+  if(btn){btn.disabled=true;btn.style.opacity='.5';btn.textContent=nom+' ✅'}
+  const status=document.getElementById('quickPieceStatus');
+  if(status)status.textContent='✅ '+nom+' cree / '+nom+' تزادت';
+  const cont=document.getElementById('btnContinueAssign');
+  if(cont)cont.disabled=false;
 }
 
 async function saveUniAssign(id){
@@ -1740,15 +2703,54 @@ function renderAbsHist(){
       <tbody id="absHistBody">${absRows(abs)}</tbody>
     </table></div>
     <div class="section-header" style="margin-top:20px"><h2>Presences recentes / الحضور الأخير</h2></div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Date</th><th>Employe</th><th>Local</th><th>Statut</th><th>Heure</th></tr></thead>
-      <tbody>${pres.slice(0,100).map(p=>`<tr>
-        <td>${p.date}</td><td>${esc(p.employe_nom)}</td><td>${esc(p.local)}</td>
-        <td><span class="badge ${p.statut==='present'?'b-gn':'b-rd'}">${p.statut==='present'?'Present / حاضر':'Absent / غايب'}</span></td>
-        <td>${p.heure}</td>
-      </tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--tx2)">Aucune presence</td></tr>'}</tbody>
-    </table></div>
+    <div class="filter-bar"><select id="filtPresLocal" onchange="filterPresHist()"><option value="">Tous les locaux</option>${LOCALES.map(l=>`<option>${l}</option>`).join('')}</select></div>
+    <div id="presHistBodyRH">${renderPresHistRH(pres)}</div>
   `;
+}
+
+function renderPresHistRH(pres){
+  // Group by date+local+turno
+  const groups={};
+  pres.forEach(p=>{
+    const key=p.date+'|'+p.local+'|'+(p.turno||'?');
+    if(!groups[key])groups[key]={date:p.date,local:p.local,turno:p.turno||'?',items:[],cloture:false,heure:''};
+    groups[key].items.push(p);
+    if(p.cloture){groups[key].cloture=true;groups[key].heure=p.heure||''}
+  });
+  const sorted=Object.values(groups).sort((a,b)=>(b.date+b.turno).localeCompare(a.date+a.turno));
+  if(!sorted.length)return '<p style="color:var(--tx2);font-size:.82rem">Aucune presence</p>';
+  return `<div class="table-wrap"><table>
+    <thead><tr><th>Date</th><th>Local</th><th>Turno</th><th>Presents</th><th>Absents</th><th>Statut</th><th></th></tr></thead>
+    <tbody>${sorted.slice(0,50).map(g=>{
+      const presents=g.items.filter(p=>p.statut==='present').length;
+      const absents=g.items.filter(p=>p.statut==='absent').length;
+      return `<tr>
+        <td>${g.date}</td><td>${esc(g.local)}</td>
+        <td><span class="badge ${g.turno==='matin'?'b-gn':g.turno==='soir'?'b-ac':g.turno==='labo'?'b-bl':'b-or'}">${g.turno}</span></td>
+        <td style="color:var(--gn)">${presents}</td><td style="color:var(--rd)">${absents}</td>
+        <td>${g.cloture?'<span class="badge b-gn">Cloture '+g.heure+'</span>':'<span class="badge b-or">Ouvert</span>'}</td>
+        <td>${g.cloture?`<button class="btn btn-s btn-g" onclick="reopenTurno('${g.date}','${g.local}','${g.turno}')">Reouvrir</button>`:''}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+function filterPresHist(){
+  const fl=document.getElementById('filtPresLocal')?.value||'';
+  let pres=(appData.presences||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if(fl)pres=pres.filter(p=>p.local===fl);
+  document.getElementById('presHistBodyRH').innerHTML=renderPresHistRH(pres);
+}
+
+async function reopenTurno(date,loc,turno){
+  if(!confirm('Reouvrir le turno '+turno+' du '+date+' a '+loc+' ?'))return;
+  // Set cloture=false for all presences of this turno
+  const{error}=await sb.from('presences').update({cloture:false}).eq('date',date).eq('local',loc).eq('turno',turno);
+  if(error){toast('Erreur: '+error.message,true);return}
+  // Update local cache
+  (appData.presences||[]).forEach(p=>{if(p.date===date&&p.local===loc&&p.turno===turno)p.cloture=false});
+  toast('✅ Turno '+turno+' rouvert par RH / الشيفت تفتح من جديد');
+  renderAbsHist();
 }
 
 function absRows(abs){
@@ -1776,8 +2778,24 @@ function renderAlertes(){
   const pg=document.getElementById('p-alertes');
   const d=appData.alertes||{sansPreavis:[],postesOuverts:[],sansRapport:[],today:today()};
 
+  // Direction checklist
+  const dirItems=[];
+  if(d.sansRapport.length)dirItems.push({label:d.sansRapport.length+' locaux sans rapport',ar:d.sansRapport.length+' لوكالات ما بلّغوش'});
+  if(d.postesOuverts.length)dirItems.push({label:d.postesOuverts.length+' postes ouverts +7j',ar:d.postesOuverts.length+' بوسطات فاتو 7 أيام'});
+  if(d.sansPreavis.length)dirItems.push({label:d.sansPreavis.length+' absences sans preavis',ar:d.sansPreavis.length+' غياب بلا ما خبّر'});
+  const uniDir=(appData.uniAssign||[]).filter(a=>!a.retourne&&!(appData.employes||[]).find(e=>e.id===a.employee_id));
+  if(uniDir.length)dirItems.push({label:uniDir.length+' uniformes en baja pendants',ar:uniDir.length+' لباس فالمغادرين'});
+
   pg.innerHTML=`
-    <div class="section-header"><h2>${tri('alertes')}</h2><div style="display:flex;gap:8px;align-items:center"><span style="color:var(--tx2);font-size:.82rem">${d.today}</span><button class="btn btn-g btn-s" onclick="syncEverythingToSheets()">Sync Sheets / مزامنة</button></div></div>
+    <div class="section-header"><h2>${tri('alertes')}</h2><div style="display:flex;gap:8px;align-items:center"><span style="color:var(--tx2);font-size:.82rem">${d.today}</span><button class="btn btn-g btn-s" onclick="downloadWeeklyPDF()">PDF Semaine</button></div></div>
+
+    ${dirItems.length?`<div class="card" style="border-left:3px solid var(--or);margin-bottom:12px">
+      <h3 style="font-size:.88rem;color:var(--or)">Checklist Direction — ${dirItems.length} point(s) / نقطة</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;font-size:.82rem">
+        ${dirItems.map(i=>`<div>☐ ${i.label} <span class="tri-ar" style="font-size:.7em">${i.ar}</span></div>`).join('')}
+      </div>
+    </div>`:'<div class="card" style="color:var(--gn);margin-bottom:12px">✅ Aucune action requise / ما كاين ما تدير</div>'}
+
     <h3 style="font-size:.88rem;margin-bottom:8px">Absences sans preavis (7j) / غياب بلا ما خبّر (7 أيام)</h3>
     ${d.sansPreavis.length?d.sansPreavis.map(a=>`<div class="alert-card"><div class="at">${esc(a.employe_nom)} — ${esc(a.local)}</div><div class="ad">${a.date} &middot; ${esc(a.motif)} &middot; بلّغ: ${esc(a.reporte_par)}</div></div>`).join(''):'<div class="card" style="color:var(--gn);font-size:.85rem">Aucune alerte / ما كاين حتا تنبيه &#10003;</div>'}
     <h3 style="font-size:.88rem;margin:16px 0 8px">Postes ouverts +7 jours / بوسطات مفتوحين +7 أيام</h3>
@@ -1795,7 +2813,7 @@ function renderResume(){
   const data=appData.resumen||[];
 
   pg.innerHTML=`
-    <div class="section-header"><h2>${tri('resume')}</h2></div>
+    <div class="section-header"><h2>${tri('resume')}</h2><button class="btn btn-g btn-s" onclick="downloadWeeklyPDF()">PDF Semaine</button></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
       ${data.map(r=>`<div class="card">
         <h3>${esc(r.local)}</h3>
@@ -1803,6 +2821,7 @@ function renderResume(){
           <div class="stat"><div class="num">${r.effectif}</div><div class="label">Effectif<span class="tri-ar">الموظفين</span></div></div>
           <div class="stat"><div class="num" style="color:${r.absencesAujourdhui>0?'var(--rd)':'var(--gn)'}">${r.absencesAujourdhui}</div><div class="label">Abs. auj.<span class="tri-ar">الغياب اليوم</span></div></div>
           <div class="stat"><div class="num" style="color:${r.demandesOuvertes>0?'var(--or)':'var(--gn)'}">${r.demandesOuvertes}</div><div class="label">Demandes<span class="tri-ar">الطلبات</span></div></div>
+          <div class="stat"><div class="num" style="color:${(appData.uniAssign||[]).filter(a=>!a.retourne&&a.local===r.local&&!(appData.employes||[]).find(e=>e.id===a.employee_id)).length>0?'var(--rd)':'var(--gn)'}">${(appData.uniAssign||[]).filter(a=>!a.retourne&&a.local===r.local&&!(appData.employes||[]).find(e=>e.id===a.employee_id)).length}</div><div class="label">Uni. bajas<span class="tri-ar">لباس مغادرين</span></div></div>
         </div>
       </div>`).join('')}
     </div>
@@ -1848,9 +2867,10 @@ async function initPublicPlanning(loc){
 
   document.getElementById('pubPlanContent').innerHTML=`
     <div style="margin-bottom:10px;display:flex;gap:14px;justify-content:center;font-size:.75rem;color:var(--tx2)">
-      <span><span style="color:var(--gn)">&#9632;</span> M = Matin (${tc.matin_entree}–${tc.matin_sortie})</span>
-      <span><span style="color:var(--or)">&#9632;</span> S = Soir (${tc.soir_entree}–${tc.soir_sortie})</span>
-      <span><span style="color:var(--rd)">&#9632;</span> OFF = Repos</span>
+      <span><span style="color:var(--gn)">&#9632;</span> M (${tc.matin_entree}–${tc.matin_sortie})</span>
+      <span><span style="color:var(--or)">&#9632;</span> S (${tc.soir_entree}–${tc.soir_sortie})</span>
+      <span><span style="color:#9b59b6">&#9632;</span> L (${tc.labo_entree||'07:00'}–${tc.labo_sortie||'15:00'})</span>
+      <span><span style="color:var(--rd)">&#9632;</span> OFF</span>
     </div>
     <div class="table-wrap"><div class="plan-grid" style="pointer-events:none">
       <div class="pg hd">Poste</div><div class="pg hd">Nom</div>
@@ -1859,7 +2879,7 @@ async function initPublicPlanning(loc){
         return `<div class="pg poste">${esc(e.poste)}</div><div class="pg nom">${esc(e.nom)}</div>
           ${JOURS_FULL.map((_,di)=>{
             const v=pd[e.id+'_'+di]||'';
-            const cls=v==='M'?'c-m':v==='S'?'c-s':v==='OFF'?'c-off':v?'c-custom':'';
+            const cls=v==='M'?'c-m':v==='S'?'c-s':v==='L'?'c-l':v==='OFF'?'c-off':'';
             return `<div class="pg cell ${cls}">${v||'—'}</div>`;
           }).join('')}`;
       }).join('')}
@@ -1887,7 +2907,7 @@ const HELP={
     a:'هنا فين كتدبّر الفريق ديالك. كل موظف جديد خاصك تزيدو هنا باش يبان فالبلانينغ والحضور. إلا ما زدتوش، ما غاديش يبان فحتا بلاصة.'},
   presences:{t:'📋 PRESENCES / الحضور',
     b:`<strong>Qu'est-ce que c'est :</strong> Le registre quotidien de qui a travaille.<br><br>
-<strong>Quand l'utiliser :</strong><br>• Matin → cloturer entre 08:00 et 16:30<br>• Soir → cloturer entre 16:00 et 03:30<br><br>
+<strong>Quand l'utiliser :</strong><br>• Matin → cloturer dans la fenetre configuree<br>• Soir → cloturer dans la fenetre configuree<br><br>
 <strong>Comment faire :</strong><br>1) Cochez ✅ les employes presents<br>2) Laissez decoches les absents + choisissez le motif<br>3) Cliquez "Cloturer"<br><br>
 <strong>Exemple :</strong> Smail a travaille matin → ✅. Yahya n'est pas venu → ☐ + motif "sans preavis"<br><br>
 <strong>Si vous ne le faites pas :</strong> RH n'a pas de donnees, impossible de calculer les paies et les absences.<br><br>
@@ -1929,8 +2949,8 @@ Les operateurs labo ont des horaires personnalises. Pour chaque jour, ecris manu
     b:'Remplissez: nom complet, poste general (Polyvalent Cuisine, etc.), poste specifique (Runner, Cajero...), et date d\'entree. L\'employe apparaitra dans le planning et les presences.',
     a:'عمّر الإسم الكامل، البوسط العام، البوسط الدقيق، وتاريخ الدخول. الموظف غادي يبان فالبلانينغ والحضور.'},
   cloturer:{t:'🔒 CLOTURER / سكّر',
-    b:'Ferme definitivement le pointage de ce turno pour aujourd\'hui. Matin: 08:00-16:30. Soir: 16:00-03:30. Une fois cloture, impossible de modifier.',
-    a:'كيسكّر نهائيا الحضور ديال هاد الشيفت لليوم. الصباح: 08:00-16:30. العشية: 16:00-03:30. من بعد ما تسكّر ما يمكنش تبدّل.'},
+    b:'Ferme definitivement le pointage de ce turno. Consultez vos horaires configures dans Planning. Une fois cloture, impossible de modifier.',
+    a:'كيسكّر نهائيا الحضور ديال هاد الشيفت. شوف الساعات المضبوطة فالبلانينغ. من بعد ما تسكّر ما يمكنش تبدّل.'},
   publier:{t:'📢 PUBLIER / نشر',
     b:'Rend le planning visible pour toute l\'equipe. Alimente automatiquement la division Matin/Soir des presences pour toute la semaine. Envoyez-le au groupe WhatsApp apres.',
     a:'كيخلّي البلانينغ باين للفريق كامل. كيقسّم الحضور أوتوماتيك لصباح/عشية. صيفطو فالواتساب من بعد.'},
@@ -1945,10 +2965,14 @@ Les operateurs labo ont des horaires personnalises. Pour chaque jour, ecris manu
 
 function showHelp(key){
   const h=HELP[key];if(!h)return;
+  // Inject dynamic hours into help text
+  const hoursInfo=tcConfigured()?`<div style="background:var(--s2);border-radius:6px;padding:8px;margin:8px 0;font-size:.78rem">
+    <strong>Horaires de ton local :</strong> Matin ${tcMe()}–${tcMsLimit()} · Soir ${tcSe()}–${tcSsLimit()}</div>`:'';
   document.getElementById('helpModalContainer').innerHTML=`<div class="help-modal" onclick="if(event.target===this)closeHelp()">
     <div class="help-box">
       <h4>${h.t}</h4>
       <p>${h.b}</p>
+      ${(key==='presences'||key==='cloturer'||key==='planning')?hoursInfo:''}
       <div class="har">${h.a}</div>
       <div class="help-close"><button class="btn btn-s btn-g" onclick="closeHelp()">Fermer / إغلاق</button></div>
     </div>
@@ -1970,57 +2994,53 @@ const DEMO_STEPS=[
 <p>Ce tour t'enseigne tout en 5 minutes.</p>`,
     a:'مرحبا ف Tima RRHH. هاد التطبيق كيدبّر كلشي فاللوكال ديالك. الإدارة كتشوف كلشي. هاد الجولة غادي تعلّمك كلشي ف5 دقائق.',
     btn:'Commencer / نبداو'},
-  {type:'tab',tab:2,sel:'.config-box',t:'1/9 — Configuration horaires / ضبط الساعات',
+  {type:'tab',tab:2,sel:'.config-box',t:'1/8 — Configuration horaires / ضبط الساعات',
     d:`<p><strong>Premiere chose a faire :</strong> configure les heures de ton local.</p>
 <p><span style="color:var(--gn)">☀️ Turno Matin</span> : heure d'entree et de sortie de l'equipe du matin.</p>
 <p><span style="color:var(--or)">🌙 Turno Soir</span> : heure d'entree et de sortie de l'equipe du soir.</p>
 <p>Ces heures s'appliquent partout : presences, checklist, protocoles. <strong>Une seule fois.</strong></p>`,
     a:'أول حاجة : ضبط ساعات اللوكال ديالك. الصباح: دخول وخروج. العشية: دخول وخروج. هاد الساعات كيتستعملو فكلشي. مرة وحدة.'},
-  {type:'tab',tab:0,sel:'.btn-p',t:'2/9 — Equipe / الفريق',
+  {type:'tab',tab:0,sel:'.btn-p',t:'2/8 — Equipe / الفريق',
     d:`<p><strong>Ton equipe est la base.</strong> Si quelqu'un n'est pas ici, il n'existe pas.</p>
 <p style="color:var(--gn)"><strong>+ Employe</strong> : Ajoute chaque personne le <strong>premier jour</strong>.</p>
 <p style="color:var(--ac2)"><strong>Modifier</strong> : Corrige nom, poste ou date.</p>
 <p style="color:var(--rd)"><strong>Desactiver ≠ Borrar.</strong> Desactiver conserve tout l'historique (presences, absences, uniformes). <strong>JAMAIS supprimer.</strong> Si tu supprimes → donnees perdues pour toujours.</p>
 <p>Procedure depart : 1) Uniformes → retour 2) Equipe → Desactiver + motif + note.</p>`,
     a:'الفريق هو الأساس. تعطيل ≠ مسح. التعطيل كيحفظ كلشي (حضور، غياب، لباس). ما تمسحش أبدا! إلا مسحتي كتخسر كلشي. ملي كيمشي: 1) رجّع اللباس 2) نحّيه مع السبب.'},
-  {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'3/9 — Presences / الحضور',
-    d:`<p><strong>Le registre le plus important.</strong> La preuve que chaque personne a travaille.</p>
-<p><span style="color:var(--gn)">☀️ Matin</span> : cloturer dans la fenetre configuree. <span style="color:var(--or)">🌙 Soir</span> : idem.</p>
-<p>✅ = present. ☐ = absent (motif obligatoire). 🔒 <strong>Cloturer</strong> = UNE seule fois.</p>
-<p style="color:var(--rd);font-size:.78rem">⚠️ Pas de cloture = alerte Direction + donnees perdues.</p>`,
-    a:'الحضور أهم حاجة. علّم اللي جا ✅، اللي ما جاش ☐ مع السبب. سكّر مرة وحدة. بلا إغلاق = إنذار + ضياع المعلومات.'},
-  {type:'tab',tab:2,sel:'.plan-grid',t:'4/9 — Planning / البلانينغ',
+  {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'3/8 — Presences & Absences / الحضور والغياب',
+    d:`<p><strong>Presences + Absences en une seule page.</strong></p>
+<p>✅ = present. ☐ = absent → choisis le motif (sauvegarde auto).</p>
+<p>🔒 <strong>Cloturer</strong> ferme le turno definitivement. L'historique des 7 derniers jours est en bas de page.</p>
+<p style="color:var(--rd);font-size:.78rem">⚠️ Pas de cloture = alerte Direction.</p>`,
+    a:'الحضور والغياب فصفحة وحدة. ✅ = حاضر. ☐ = غايب مع السبب (كيتسجّل أوتوماتيك). سكّر الشيفت نهائيا. التاريخ ديال 7 أيام الأخيرة فالأسفل.'},
+  {type:'tab',tab:2,sel:'.plan-grid',t:'4/8 — Planning / البلانينغ',
     d:`<p><strong>Le programme des shifts (7 jours).</strong></p>
 <p>📅 <strong>Deadline : dimanche avant 00:00</strong> (limite lundi 03:00).</p>
 <p><span style="color:var(--gn)">■ M</span> Matin &nbsp; <span style="color:var(--or)">■ S</span> Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> Repos</p>
 <p style="color:var(--or)"><strong>Enregistrer</strong> = brouillon (toi seul). <strong style="color:var(--ac2)">Publier</strong> = officiel (equipe le voit, presences divisees auto). Impossible de depublier sans RH.</p>
 <p style="color:var(--bl)">🔬 <strong>Operateurs Labo</strong> : horaire libre, ecris HH:MM-HH:MM pour chaque jour.</p>`,
     a:'سجّل = مسودة غير نتا. نشر = رسمي الفريق كيشوفو والحضور كيتقسّم. أوبيراتور اللابو: كتب الساعات يدويا.'},
-  {type:'tab',tab:3,sel:'.btn-p',t:'5/9 — Absences / الغياب',
-    d:`<p>Enregistre chaque absence avec le <strong>motif</strong>.</p>
-<p><strong style="color:var(--rd)">Sans preavis</strong> = le plus grave → alerte immediate RH + Direction.</p>
-<p>Ca protege ton local legalement.</p>`,
-    a:'سجّل كل غياب مع السبب. "بلا ما خبّر" = أخطر حاجة → إنذار فوري.'},
-  {type:'tab',tab:5,sel:'.table-wrap',t:'6/9 — Uniformes / اللباس',
-    d:`<p>Les uniformes se gerent en <strong>2 etapes</strong> :</p>
-<p>1️⃣ <strong>+ Nouvelle piece</strong> → cree un type de vetement (nom, description, stock).</p>
-<p>2️⃣ <strong>+ Attribuer</strong> → donne la piece a un employe (taille, quantite, date).</p>
-<p>Quand quelqu'un part → <strong>Marquer retour</strong> AVANT de desactiver.</p>
-<p style="color:var(--or)">Un employe desactive <strong>reste visible</strong> tant qu'il n'a pas tout rendu.</p>`,
-    a:'اللباس فيه مرحلتين: 1) زيد القطعة 2) وزّعها على الموظف. ملي كيمشي شي واحد سجّل الرجوع قبل ما تنحيه. ما كيتنحاش حتى يرجّع كلشي.'},
-  {type:'tab',tab:4,sel:'.btn-cta',t:'7/9 — Demandes / الطلبات',
+  {type:'tab',tab:4,sel:'.table-wrap',t:'5/8 — Uniformes / اللباس',
+    d:`<p><strong>Avant de donner de baja un employe tu DOIS enregistrer le retour de son uniforme.</strong></p>
+<p>L'app te <strong>bloquera</strong> si tu essaies de desactiver quelqu'un avec des uniformes non retournes.</p>
+<p style="margin:8px 0"><strong>Flujo correct :</strong></p>
+<p>1️⃣ Employe part → Uniformes → <strong>Marquer retour</strong> chaque piece</p>
+<p>2️⃣ Tout retourne → Equipe → <strong>Desactiver</strong> → motif + note</p>
+<p style="color:var(--or)">Si tu sautes cette etape tu ne pourras pas completer la baja.</p>`,
+    a:'قبل ما تعطّل شي موظف خاصك تسجّل رجوع اللباس ديالو. التطبيق غادي يبلوكيك إلا حاولتي تعطّلو بلا ما ترجّع اللباس. أولا رجّع كل القطع، من بعد نحّيه مع السبب.'},
+  {type:'tab',tab:3,sel:'.btn-cta',t:'6/8 — Demandes / الطلبات',
     d:`<p>Besoin de renfort ? <strong>Demande ICI — jamais par WhatsApp.</strong></p>
 <p>Chaque demande affiche les jours ouverts. +7 jours = <strong style="color:var(--rd)">URGENT</strong> parpadeante.</p>
 <p>Urgence haute = RH alerte immediate.</p>`,
     a:'كتحتاج تعزيزات؟ طلبهم هنا ماشي بالواتساب. كل طلب كيبان أشحال من يوم فاتت. +7 أيام = مستعجل.'},
-  {type:'center',t:'🚪 Desactivation / التعطيل',
+  {type:'center',t:'7/8 — Desactivation / التعطيل',
     d:`<p>Quand un employe quitte le local :</p>
 <p>1️⃣ Va dans <strong>Uniformes</strong> → <strong>Marquer retour</strong> de toutes ses pieces.</p>
 <p>2️⃣ Va dans <strong>Equipe</strong> → <strong>Desactiver</strong>.</p>
 <p>3️⃣ Le systeme te demande le <strong>motif</strong> (demission, licenciement, abandon...) et une <strong>note</strong> obligatoire.</p>
 <p>Ses donnees historiques sont conservees pour toujours.</p>`,
     a:'ملي كيمشي موظف: 1) رجّع اللباس 2) نحّيه من الفريق مع السبب والملاحظة. التاريخ ديالو كيبقا محفوظ ديما.'},
-  {type:'center',t:'⭐ Regles d\'or / القواعد الذهبية',
+  {type:'center',t:'8/8 — Regles d\'or / القواعد الذهبية',
     d:`<div style="display:grid;gap:8px;text-align:left;font-size:.84rem">
       <div style="padding:8px;background:var(--s2);border-radius:6px">⚙️ Premiere fois → configurer les heures du local<span class="tri-ar">أول مرة → ضبط الساعات</span></div>
       <div style="padding:8px;background:var(--s2);border-radius:6px">📅 Dimanche avant 00:00 → publier planning<span class="tri-ar">الحد قبل نص الليل → نشر البلانينغ</span></div>
@@ -2035,65 +3055,145 @@ const DEMO_STEPS=[
 
 let demoIdx=0;
 
-function startFullDemo(){demoIdx=0;showDemoStep();}
-function startTour(){if(!localStorage.getItem('tima_tour_done'))startFullDemo();}
+const RH_DEMO_STEPS=[
+  {type:'center',t:'Bienvenue RH / مرحبا بالموارد البشرية',
+    d:`<p style="font-size:.9rem">Bienvenue sur <strong>Tima RRHH — Espace RH</strong>.</p>
+<p>Tu supervises TOUS les locaux. Tu controles que les gerants font leur travail, tu geres le personnel globalement, et tu generes les rapports pour la comptabilite.</p>
+<p>Ce tour t'explique tout en 5 minutes.</p>`,
+    a:'مرحبا فمساحة الموارد البشرية. نتا كتراقب كل اللوكالات. كتتأكد أن المسؤولين كيديرو خدمتهم. هاد الجولة غادي تعلّمك كلشي.',
+    btn:'Commencer / نبداو'},
+  {type:'tab',tab:0,sel:'.stat-row',t:'1/5 — Dashboard / لوحة التحكم',
+    d:`<p><strong>Ton centre de controle.</strong> Tu vois en un coup d'oeil :</p>
+<p>• Combien de turnos sont clotures aujourd'hui</p>
+<p>• Quels locaux n'ont pas publie le planning</p>
+<p>• Les absences du jour et les demandes en attente</p>
+<p><strong>Bouton Rappel</strong> : envoie un message directement au gerant en faute.</p>
+<p>Le gerant verra ton message en ouvrant l'app — il ne peut pas l'ignorer.</p>`,
+    a:'مركز التحكم ديالك. كتشوف كلشي بنظرة وحدة: شحال من شيفت تسكّر، شنو اللوكالات اللي ما نشروش البلانينغ. زر "تذكير" كيصيفط رسالة مباشرة للمسؤول.'},
+  {type:'tab',tab:1,sel:'.table-wrap',t:'2/5 — Effectifs / الموظفين',
+    d:`<p><strong>Gestion globale du personnel.</strong></p>
+<p>• Ajouter/modifier des employes dans n'importe quel local</p>
+<p>• <strong>📎 Colonne contrat</strong> : uploade le contrat de chaque employe (PDF ou photo). ⚠️ = pas de contrat.</p>
+<p>• Genere les <strong>PDF Presences</strong> et <strong>PDF Absences</strong> pour la comptabilite</p>
+<p>• Filtre par local pour voir un seul restaurant</p>`,
+    a:'تدبير شامل ديال الموظفين. زيد، عدّل، حمّل العقود. ولّد PDF ديال الحضور والغياب للمحاسبة.'},
+  {type:'tab',tab:3,sel:'.alert-card,.table-wrap',t:'3/5 — Uniformes / اللباس',
+    d:`<p><strong>Suivi global des uniformes.</strong></p>
+<p>• En haut : les <strong>alertes rouges</strong> = employes partis sans rendre l'uniforme</p>
+<p>• Delai max : <strong>3 jours</strong> apres la baja pour recuperer. Apres → alerte critique.</p>
+<p>• Bouton <strong>Retour ✅</strong> pour marquer chaque piece retournee</p>
+<p>• <strong>PDF Uniformes</strong> pour le bilan complet</p>`,
+    a:'متابعة شاملة ديال اللباس. الإنذارات الحمر = موظفين مشاو بلا ما رجّعو. 3 أيام هو الحد الأقصى.'},
+  {type:'tab',tab:4,sel:'.stat-row',t:'4/5 — Presences & Rapports / الحضور والتقارير',
+    d:`<p><strong>Historique complet des presences et absences.</strong></p>
+<p>• Filtre par local pour voir un seul restaurant</p>
+<p>• <strong>Reouvrir</strong> un turno si le gerant a fait une erreur</p>
+<p>• Absences <strong style="color:var(--rd)">sans preavis</strong> en rouge = les plus graves</p>
+<p>• C'est ici que tu generes le <strong>rapport mensuel pour la comptable</strong></p>`,
+    a:'التاريخ الكامل ديال الحضور والغياب. فتح شيفت إلا غلط المسؤول. الغياب بلا ما خبّر بالأحمر. هنا كتولّد التقرير الشهري.'},
+  {type:'center',t:'⭐ Tes responsabilites / المسؤوليات ديالك',
+    d:`<div style="display:grid;gap:8px;text-align:left;font-size:.84rem">
+      <div style="padding:8px;background:var(--s2);border-radius:6px">🔍 <strong>Chaque jour</strong> : verifier la compliance des locaux sur le Dashboard</div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">📩 <strong>Si non-compliance</strong> : envoyer un Rappel au gerant</div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">📎 <strong>Nouvel employe</strong> : uploader son contrat dans Effectifs</div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">📋 <strong>Fin de mois</strong> : generer PDF presences + absences pour la comptable</div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">👕 <strong>Depart employe</strong> : verifier retour uniforme dans les 3 jours</div>
+      <div style="padding:8px;background:var(--s2);border-radius:6px">🔓 <strong>Erreur gerant</strong> : reouvrir un turno ferme par erreur dans Presences</div>
+    </div>`,
+    a:'',btn:"J'ai compris / فهمت ✅"}
+];
+
+function startFullDemo(){
+  const steps=role==='rh'?RH_DEMO_STEPS:DEMO_STEPS;
+  // Temporarily swap
+  const orig=[...DEMO_STEPS];
+  DEMO_STEPS.length=0;DEMO_STEPS.push(...steps);
+  demoIdx=0;
+  const origEnd=endDemo;
+  endDemo=function(){document.getElementById('tourContainer').innerHTML='';localStorage.setItem('tima_tour_done_'+role,'1');DEMO_STEPS.length=0;DEMO_STEPS.push(...orig);endDemo=origEnd};
+  showDemoStep();
+}
+function startTour(){if(!localStorage.getItem('tima_tour_done_'+role))startFullDemo();}
 function restartTour(){startFullDemo();}
 function startDemoTour(){startFullDemo();}
+
+function tourNavHtml(btnLabel){
+  return `<div class="tour-nav"><button class="btn btn-s btn-g" onclick="endDemo()">Passer / تجاوز</button><button class="btn btn-p" onclick="demoIdx++;showDemoStep()" style="padding:8px 20px">${btnLabel||'Suivant / التالي →'}</button></div>`;
+}
 
 function showDemoStep(){
   if(demoIdx>=DEMO_STEPS.length){endDemo();return}
   const step=DEMO_STEPS[demoIdx];
   const tc=document.getElementById('tourContainer');
+  const TAB_NAMES=['Equipe','Presences','Planning','Absences','Demandes','Uniformes','Protocoles'];
 
   if(step.type==='center'){
-    // Full-screen centered panel
-    tc.innerHTML=`<div class="tour-overlay" style="display:flex;align-items:center;justify-content:center">
+    tc.innerHTML=`<div class="tour-overlay" style="display:flex;align-items:center;justify-content:center;pointer-events:auto">
       <div class="tour-popup" style="position:relative;top:auto;left:auto;max-width:400px;text-align:center">
-        <h4 style="font-size:1.05rem;color:var(--ac2);margin-bottom:10px">${step.t}</h4>
+        <div class="tour-content"><h4 style="font-size:1.05rem;color:var(--ac2);margin-bottom:10px">${step.t}</h4>
         ${step.d}
-        <div class="tar" style="margin:10px 0">${step.a}</div>
-        <div class="tour-btns" style="justify-content:center">
-          <button class="btn btn-s btn-g" onclick="endDemo()">Passer / تجاوز</button>
-          <button class="btn btn-p" onclick="demoIdx++;showDemoStep()" style="padding:10px 24px">${step.btn||'Suivant / التالي →'}</button>
-        </div>
+        <div class="tar" style="margin:10px 0">${step.a}</div></div>
       </div>
-    </div>`;
+    </div>${tourNavHtml(step.btn)}`;
     return;
   }
 
-  // Tab-based step: navigate first
+  // Navigate to tab
   const tabBtn=document.querySelector(`button[data-idx="${step.tab}"]`);
   if(tabBtn)tabBtn.click();
+  const tabName=TAB_NAMES[step.tab]||'';
+  const locLabel=`📍 ${tabName} → ${step.sel.replace(/[.#\[\]'",]/g,' ').trim()}`;
 
   setTimeout(()=>{
     const el=document.querySelector(step.sel);
     if(el){
-      const r=el.getBoundingClientRect();
-      const popTop=r.bottom+16>window.innerHeight-250?Math.max(10,r.top-280):r.bottom+16;
-      tc.innerHTML=`<div class="tour-overlay"></div>
-        <div class="tour-highlight" style="top:${r.top-6}px;left:${r.left-6}px;width:${r.width+12}px;height:${r.height+12}px"></div>
-        <div class="tour-popup" style="top:${popTop}px;left:${Math.min(Math.max(10,r.left),window.innerWidth-340)}px;max-width:340px">
-          <div class="tour-step" style="color:var(--ac2);font-size:.78rem">${step.t}</div>
-          ${step.d}
-          <div class="tar" style="margin-top:8px">${step.a}</div>
-          <div class="tour-btns">
-            <button class="btn btn-s btn-g" onclick="endDemo()">Passer / تجاوز</button>
-            <button class="btn btn-s btn-p" onclick="demoIdx++;showDemoStep()">Suivant / التالي →</button>
-          </div>
-        </div>`;
+      el.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(()=>{
+        const r=el.getBoundingClientRect();
+        const vw=window.innerWidth,vh=window.innerHeight;
+        const cx=r.left+r.width/2,cy=r.top+r.height/2;
+        const isMobile=vw<768;
+        const gap=16;
+        const popContent=`<div class="tour-content"><div class="tour-loc">${locLabel}</div>
+            <div class="tour-step" style="color:var(--ac2);font-size:.78rem">${step.t}</div>
+            ${step.d}
+            <div class="tar" style="margin-top:8px">${step.a}</div></div>`;
+
+        if(isMobile){
+          // Mobile: bottom sheet
+          tc.innerHTML=`<div class="tour-overlay"></div>
+            <div class="tour-highlight" style="top:${r.top-6}px;left:${r.left-6}px;width:${r.width+12}px;height:${r.height+12}px"></div>
+            <div class="tour-popup tp-mob">${popContent}</div>${tourNavHtml()}`;
+        }else{
+          // Desktop: element in top half → panel below, bottom half → panel above
+          const inTopHalf=(r.top+r.height/2)<vh/2;
+          const popW=Math.min(380,vw-20);
+          const px=Math.min(Math.max(8,cx-popW/2),vw-popW-8);
+          tc.innerHTML=`<div class="tour-overlay"></div>
+            <div class="tour-highlight" style="top:${r.top-6}px;left:${r.left-6}px;width:${r.width+12}px;height:${r.height+12}px"></div>
+            <div class="tour-arrow" style="top:-999px;left:-999px"></div>
+            <div class="tour-popup" style="visibility:hidden;left:${px}px;width:${popW}px">${popContent}</div>${tourNavHtml()}`;
+          setTimeout(()=>{
+            const popup=tc.querySelector('.tour-popup');if(!popup)return;
+            const arrow=tc.querySelector('.tour-arrow');
+            const popH=popup.offsetHeight;
+            let py,ay,aCls;
+            if(inTopHalf){py=r.bottom+gap+8;ay=r.bottom+2;aCls='arr-down'}
+            else{py=Math.max(8,r.top-popH-gap-8);ay=r.top-gap;aCls=''}
+            popup.style.top=py+'px';popup.style.visibility='visible';
+            arrow.style.top=ay+'px';arrow.style.left=(cx-8)+'px';arrow.className='tour-arrow '+aCls;
+          },50);
+        }
+      },400);
     } else {
-      // No element found, just show text
-      tc.innerHTML=`<div class="tour-overlay" style="display:flex;align-items:center;justify-content:center">
+      tc.innerHTML=`<div class="tour-overlay" style="display:flex;align-items:center;justify-content:center;pointer-events:auto">
         <div class="tour-popup" style="position:relative;top:auto;left:auto;max-width:380px">
+          <div class="tour-content"><div class="tour-loc">${locLabel}</div>
           <div class="tour-step" style="color:var(--ac2)">${step.t}</div>
           ${step.d}
-          <div class="tar" style="margin-top:8px">${step.a}</div>
-          <div class="tour-btns">
-            <button class="btn btn-s btn-g" onclick="endDemo()">Passer / تجاوز</button>
-            <button class="btn btn-s btn-p" onclick="demoIdx++;showDemoStep()">Suivant / التالي →</button>
-          </div>
+          <div class="tar" style="margin-top:8px">${step.a}</div></div>
         </div>
-      </div>`;
+      </div>${tourNavHtml()}`;
     }
   },500);
 }
@@ -2157,11 +3257,11 @@ function checkProactiveBanners(){
   }
   // After 23:00 soir not closed
   else if(hour>=23&&!soirClosed&&!proactiveDismissed.soirLate){
-    banner={id:'soirLate',cls:'danger',msg:'✅ Presences Soir pas encore cloturees (limite 03:30) / حضور العشية ما تسكّرش',action:'Presences',tab:1};
+    banner={id:'soirLate',cls:'danger',msg:'✅ Presences Soir pas encore cloturees (limite '+tcSsLimit()+') / حضور العشية ما تسكّرش',action:'Presences',tab:1};
   }
   // After 14:00 matin not closed
   else if(hour>=14&&!matinClosed&&!proactiveDismissed.matinLate){
-    banner={id:'matinLate',cls:'warn',msg:'✅ Presences Matin pas encore cloturees (limite 16:30) / حضور الصباح ما تسكّرش',action:'Presences',tab:1};
+    banner={id:'matinLate',cls:'warn',msg:'✅ Presences Matin pas encore cloturees (limite '+tcMsLimit()+') / حضور الصباح ما تسكّرش',action:'Presences',tab:1};
   }
   // 3 days without any presences (check for RH too)
   else if(!proactiveDismissed.noPres3d){
@@ -2212,12 +3312,16 @@ initApp=function(){
   _origInitApp();
   if(role==='gerant'){
     renderOnboarding();
+    checkGerantRappels();
     injectHelpButtons();
-    // Start tour on first login
-    if(!localStorage.getItem('tima_tour_done'))setTimeout(()=>startTour(),1500);
-    // Proactive banners check every 60s
+    if(!localStorage.getItem('tima_tour_done_gerant'))setTimeout(()=>startTour(),1500);
     checkProactiveBanners();
-    setInterval(checkProactiveBanners,60000);
+    renderGlobalPresWarning();
+    updatePresTabBadge();
+    setInterval(()=>{checkProactiveBanners();updatePresTabBadge();renderGlobalPresWarning()},60000);
+  }
+  if(role==='rh'){
+    if(!localStorage.getItem('tima_tour_done_rh'))setTimeout(()=>startTour(),1500);
   }
 };
 
