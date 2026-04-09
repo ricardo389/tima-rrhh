@@ -2988,67 +2988,204 @@ function hb(key){return `<button class="help-btn" onclick="event.stopPropagation
 // FULL INTERACTIVE DEMO TOUR (8 steps)
 // ============================================================
 const DEMO_STEPS=[
-  {type:'center',t:'Bienvenue / مرحبا',
-    d:`<p style="font-size:.9rem">Bienvenue sur <strong>Tima RRHH</strong>.</p>
-<p>Cette app gere tout ton local : equipe, horaires, presences et uniformes. <strong>Direction voit tout en temps reel.</strong></p>
-<p>Ce tour t'enseigne tout en 5 minutes.</p>`,
-    a:'مرحبا ف Tima RRHH. هاد التطبيق كيدبّر كلشي فاللوكال ديالك. الإدارة كتشوف كلشي. هاد الجولة غادي تعلّمك كلشي ف5 دقائق.',
+  // === BIENVENIDA ===
+  {type:'center',t:'Bienvenue Gerant / مرحبا بالمسؤول',
+    d:`<p style="font-size:.95rem"><strong>Bienvenue dans Tima RRHH.</strong></p>
+<p>Cette app remplace le papier et le WhatsApp. Tout ce que tu fais ici est enregistre et visible par RH et Direction en temps reel.</p>
+<p><strong>Ton role :</strong> Tu es responsable de ton local. Tu geres ton equipe, tu enregistres qui travaille chaque jour, tu planifies les horaires, et tu controles les uniformes.</p>
+<p>Ce tour va t'expliquer chaque section en detail. Suis les instructions pas a pas.</p>`,
+    a:'مرحبا ف Tima RRHH. هاد التطبيق كيعوّض الورقة والواتساب. كلشي اللي كتدير هنا كيتسجّل وكتشوفو RH والإدارة. نتا المسؤول على اللوكال ديالك.',
     btn:'Commencer / نبداو'},
-  {type:'tab',tab:2,sel:'.config-box',t:'1/8 — Configuration horaires / ضبط الساعات',
-    d:`<p><strong>Premiere chose a faire :</strong> configure les heures de ton local.</p>
-<p><span style="color:var(--gn)">☀️ Turno Matin</span> : heure d'entree et de sortie de l'equipe du matin.</p>
-<p><span style="color:var(--or)">🌙 Turno Soir</span> : heure d'entree et de sortie de l'equipe du soir.</p>
-<p>Ces heures s'appliquent partout : presences, checklist, protocoles. <strong>Une seule fois.</strong></p>`,
-    a:'أول حاجة : ضبط ساعات اللوكال ديالك. الصباح: دخول وخروج. العشية: دخول وخروج. هاد الساعات كيتستعملو فكلشي. مرة وحدة.'},
-  {type:'tab',tab:0,sel:'.btn-p',t:'2/8 — Equipe / الفريق',
-    d:`<p><strong>Ton equipe est la base.</strong> Si quelqu'un n'est pas ici, il n'existe pas.</p>
-<p style="color:var(--gn)"><strong>+ Employe</strong> : Ajoute chaque personne le <strong>premier jour</strong>.</p>
-<p style="color:var(--ac2)"><strong>Modifier</strong> : Corrige nom, poste ou date.</p>
-<p style="color:var(--rd)"><strong>Desactiver ≠ Borrar.</strong> Desactiver conserve tout l'historique (presences, absences, uniformes). <strong>JAMAIS supprimer.</strong> Si tu supprimes → donnees perdues pour toujours.</p>
-<p>Procedure depart : 1) Uniformes → retour 2) Equipe → Desactiver + motif + note.</p>`,
-    a:'الفريق هو الأساس. تعطيل ≠ مسح. التعطيل كيحفظ كلشي (حضور، غياب، لباس). ما تمسحش أبدا! إلا مسحتي كتخسر كلشي. ملي كيمشي: 1) رجّع اللباس 2) نحّيه مع السبب.'},
-  {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'3/8 — Presences & Absences / الحضور والغياب',
-    d:`<p><strong>Presences + Absences en une seule page.</strong></p>
-<p>✅ = present. ☐ = absent → choisis le motif (sauvegarde auto).</p>
-<p>🔒 <strong>Cloturer</strong> ferme le turno definitivement. L'historique des 7 derniers jours est en bas de page.</p>
-<p style="color:var(--rd);font-size:.78rem">⚠️ Pas de cloture = alerte Direction.</p>`,
-    a:'الحضور والغياب فصفحة وحدة. ✅ = حاضر. ☐ = غايب مع السبب (كيتسجّل أوتوماتيك). سكّر الشيفت نهائيا. التاريخ ديال 7 أيام الأخيرة فالأسفل.'},
-  {type:'tab',tab:2,sel:'.plan-grid',t:'4/8 — Planning / البلانينغ',
-    d:`<p><strong>Le programme des shifts (7 jours).</strong></p>
-<p>📅 <strong>Deadline : dimanche avant 00:00</strong> (limite lundi 03:00).</p>
-<p><span style="color:var(--gn)">■ M</span> Matin &nbsp; <span style="color:var(--or)">■ S</span> Soir &nbsp; <span style="color:var(--rd)">■ OFF</span> Repos</p>
-<p style="color:var(--or)"><strong>Enregistrer</strong> = brouillon (toi seul). <strong style="color:var(--ac2)">Publier</strong> = officiel (equipe le voit, presences divisees auto). Impossible de depublier sans RH.</p>
-<p style="color:var(--bl)">🔬 <strong>Operateurs Labo</strong> : horaire libre, ecris HH:MM-HH:MM pour chaque jour.</p>`,
-    a:'سجّل = مسودة غير نتا. نشر = رسمي الفريق كيشوفو والحضور كيتقسّم. أوبيراتور اللابو: كتب الساعات يدويا.'},
-  {type:'tab',tab:4,sel:'.table-wrap',t:'5/8 — Uniformes / اللباس',
-    d:`<p><strong>Avant de donner de baja un employe tu DOIS enregistrer le retour de son uniforme.</strong></p>
-<p>L'app te <strong>bloquera</strong> si tu essaies de desactiver quelqu'un avec des uniformes non retournes.</p>
-<p style="margin:8px 0"><strong>Flujo correct :</strong></p>
-<p>1️⃣ Employe part → Uniformes → <strong>Marquer retour</strong> chaque piece</p>
-<p>2️⃣ Tout retourne → Equipe → <strong>Desactiver</strong> → motif + note</p>
-<p style="color:var(--or)">Si tu sautes cette etape tu ne pourras pas completer la baja.</p>`,
-    a:'قبل ما تعطّل شي موظف خاصك تسجّل رجوع اللباس ديالو. التطبيق غادي يبلوكيك إلا حاولتي تعطّلو بلا ما ترجّع اللباس. أولا رجّع كل القطع، من بعد نحّيه مع السبب.'},
-  {type:'tab',tab:3,sel:'.btn-cta',t:'6/8 — Demandes / الطلبات',
-    d:`<p>Besoin de renfort ? <strong>Demande ICI — jamais par WhatsApp.</strong></p>
-<p>Chaque demande affiche les jours ouverts. +7 jours = <strong style="color:var(--rd)">URGENT</strong> parpadeante.</p>
-<p>Urgence haute = RH alerte immediate.</p>`,
-    a:'كتحتاج تعزيزات؟ طلبهم هنا ماشي بالواتساب. كل طلب كيبان أشحال من يوم فاتت. +7 أيام = مستعجل.'},
-  {type:'center',t:'7/8 — Desactivation / التعطيل',
-    d:`<p>Quand un employe quitte le local :</p>
-<p>1️⃣ Va dans <strong>Uniformes</strong> → <strong>Marquer retour</strong> de toutes ses pieces.</p>
-<p>2️⃣ Va dans <strong>Equipe</strong> → <strong>Desactiver</strong>.</p>
-<p>3️⃣ Le systeme te demande le <strong>motif</strong> (demission, licenciement, abandon...) et une <strong>note</strong> obligatoire.</p>
-<p>Ses donnees historiques sont conservees pour toujours.</p>`,
-    a:'ملي كيمشي موظف: 1) رجّع اللباس 2) نحّيه من الفريق مع السبب والملاحظة. التاريخ ديالو كيبقا محفوظ ديما.'},
-  {type:'center',t:'8/8 — Regles d\'or / القواعد الذهبية',
-    d:`<div style="display:grid;gap:8px;text-align:left;font-size:.84rem">
-      <div style="padding:8px;background:var(--s2);border-radius:6px">⚙️ Premiere fois → configurer les heures du local<span class="tri-ar">أول مرة → ضبط الساعات</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">📅 Dimanche avant 00:00 → publier planning<span class="tri-ar">الحد قبل نص الليل → نشر البلانينغ</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">☀️ Chaque jour → cloturer Matin dans la fenetre<span class="tri-ar">كل نهار → سكّر الصباح فالوقت</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">🌙 Chaque jour → cloturer Soir dans la fenetre<span class="tri-ar">كل نهار → سكّر العشية فالوقت</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">🆕 Nouvel employe → ajouter le jour meme<span class="tri-ar">موظف جديد → زيدو نفس النهار</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">🚪 Depart → retour uniforme + desactiver avec motif<span class="tri-ar">مغادرة → رجّع اللباس + نحّيه مع السبب</span></div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 JAMAIS WhatsApp pour du personnel<span class="tri-ar">ما تستعملش الواتساب</span></div>
+
+  // === CONFIG HORAIRES ===
+  {type:'tab',tab:2,sel:'.config-box',t:'1/18 — Configurer les heures de ton local',
+    d:`<p><strong>C'est la premiere chose a faire.</strong> Avant tout le reste.</p>
+<p><span style="color:var(--gn)">☀️ Turno Matin</span> : a quelle heure ton equipe du matin commence et finit.</p>
+<p><span style="color:var(--or)">🌙 Turno Soir</span> : a quelle heure ton equipe du soir commence et finit.</p>
+<p><span style="color:#9b59b6">🔬 Turno Labo</span> : si tu as des operateurs laboratoire, configure aussi leurs heures.</p>
+<p><strong>Pourquoi c'est important ?</strong> Ces heures definissent quand tu peux cloturer les presences. Si tu ne les configures pas, l'app ne sait pas quand ouvrir et fermer chaque turno.</p>
+<p>Tu ne le fais qu'une seule fois. Si les heures changent → modifie-les ici.</p>`,
+    a:'أول حاجة خاصك تديرها. ضبط ساعات كل شيفت: صباح، عشية، معمل. بلا هادشي التطبيق ما يعرفش إمتا يسكّر الحضور. مرة وحدة تضبطها.'},
+
+  // === EQUIPE: AJOUTER ===
+  {type:'tab',tab:0,sel:'.btn-p',t:'2/18 — Equipe: Ajouter un employe',
+    d:`<p><strong>Ton equipe est la base de TOUT.</strong> Si quelqu'un n'est pas dans cette liste, il n'existe pas dans le systeme.</p>
+<p>Quand un nouvel employe arrive → ajoute-le <strong>le premier jour</strong>. Pas demain, pas la semaine prochaine.</p>
+<p>Clique <strong style="color:var(--gn)">+ Employe</strong> → remplis : nom complet, poste general (Polyvalent Cuisine, Salle, etc.), poste specifique (Runner, Cajero, Barista...), date d'entree.</p>
+<p><strong>Si tu ne le fais pas :</strong> Il n'apparaitra pas dans le planning, pas dans les presences, pas dans les uniformes. RH et Direction verront des chiffres faux.</p>`,
+    a:'الفريق هو الأساس ديال كلشي. إلا ما كانش شي واحد فهاد الليستة، ما كاينش فالسيستم. ملي كيجي موظف جديد زيدو أول نهار. عمّر الإسم، البوسط، التاريخ.'},
+
+  // === EQUIPE: MODIFIER ===
+  {type:'tab',tab:0,sel:'.table-wrap',t:'3/18 — Equipe: Modifier et icones',
+    d:`<p><strong>Le tableau de ton equipe</strong> montre chaque employe avec :</p>
+<p>• <strong>Avatar colore</strong> : les initiales + couleur par poste (vert=Cuisine, bleu=Salle, violet=Labo, orange=Plonge, jaune=Gerant)</p>
+<p>• <strong>Icone 👕</strong> : ⚪ = pas d'uniforme, 🟡 = uniforme en cours, ✅ = tout en ordre</p>
+<p>• <strong>✏️</strong> = modifier les donnees de l'employe</p>
+<p>• <strong>🚫 Desactiver</strong> = quand l'employe part (on en parle plus tard)</p>
+<p><strong>Tu ne peux PAS supprimer un employe.</strong> Seulement le desactiver. Ses donnees historiques restent pour toujours.</p>`,
+    a:'جدول الفريق كيبيّن كل موظف: الأفاتار بالألوان حسب البوسط، إيقونة اللباس، زر التعديل. ما يمكنش تمسح موظف، غير تعطّلو.'},
+
+  // === EQUIPE: POSTE SPECIFIQUE ===
+  {type:'center',t:'4/18 — Poste general vs specifique',
+    d:`<p><strong>Chaque employe a 2 niveaux de poste :</strong></p>
+<p>1️⃣ <strong>Poste general</strong> : Polyvalent Cuisine, Polyvalent Salle, Operateur Laboratoire, Plonge, Chef, Gerant Matin/Soir</p>
+<p>2️⃣ <strong>Poste specifique</strong> (optionnel) : Runner, Cajero, Barista, Operario de Pollo, Operario de Burgers, Pase, Lider de Cocina, etc.</p>
+<p>Le poste general determine le <strong>planning</strong> (Matin/Soir/Labo). Le poste specifique apparait dans les <strong>presences</strong> et le <strong>planning</strong> pour que tu saches exactement qui fait quoi.</p>`,
+    a:'كل موظف عندو بوسط عام (مطبخ، صالة، معمل...) وبوسط دقيق (رانر، كاجيرو، باريستا...). البوسط العام كيحدد الشيفت، الدقيق كيبيّن شنو كيدير بالضبط.'},
+
+  // === PRESENCES: STRUCTURE ===
+  {type:'tab',tab:1,sel:'.card',t:'5/18 — Presences: Comment ca marche',
+    d:`<p><strong>C'est la page la plus importante de toute l'app.</strong></p>
+<p>Les presences = la preuve que chaque personne a travaille ce jour. Sans ca, pas de donnees pour la comptabilite.</p>
+<p><strong>La page est divisee en sections :</strong></p>
+<p>🌅 <strong>MATIN</strong> — les employes qui travaillent le matin (selon le planning)</p>
+<p>🔬 <strong>LABO</strong> — les operateurs laboratoire (si tu en as)</p>
+<p>🌙 <strong>SOIR</strong> — les employes qui travaillent le soir</p>
+<p>❓ <strong>Sans affectation</strong> — employes sans planning (tu dois publier le planning d'abord)</p>`,
+    a:'أهم صفحة فالتطبيق. الحضور = دليل أن كل واحد خدم. مقسّمة لشيفتات: صباح، معمل، عشية. بلا بلانينغ كيبانو ف"بلا تعيين".'},
+
+  // === PRESENCES: MARQUER ===
+  {type:'tab',tab:1,sel:'.pres-check,.pres-list',t:'6/18 — Presences: Marquer present/absent',
+    d:`<p><strong>Pour chaque employe :</strong></p>
+<p>✅ <strong>Coche verte</strong> = il est la, il travaille.</p>
+<p>☐ <strong>Pas coche</strong> = il est absent. <strong>Tu DOIS choisir un motif :</strong></p>
+<p>• <strong>Maladie</strong> — il est malade (مريض)</p>
+<p>• <strong>Personnel</strong> — raison personnelle (شخصي)</p>
+<p>• <strong style="color:var(--rd)">Sans preavis</strong> — il n'est pas venu et n'a pas prevenu. <strong>C'est le motif le plus grave.</strong> RH et Direction recoivent une alerte immediate.</p>
+<p>• <strong>Autre</strong> — autre raison</p>
+<p>Le motif se sauvegarde automatiquement des que tu le selectionnes.</p>`,
+    a:'✅ = حاضر. ☐ = غايب. خاصك تختار السبب: مريض، شخصي، بلا ما خبّر (أخطر حاجة — كيطلع إنذار فوري)، آخر. السبب كيتسجّل أوتوماتيك.'},
+
+  // === PRESENCES: CLOTURER ===
+  {type:'center',t:'7/18 — Presences: Cloturer un turno',
+    d:`<p><strong>Le bouton Cloturer ferme le turno definitivement.</strong></p>
+<p>☀️ <strong>Matin</strong> : tu peux cloturer uniquement pendant la fenetre configuree (ex: 08:00 → 17:30). Apres → bouton desactive.</p>
+<p>🌙 <strong>Soir</strong> : meme logique avec les heures du soir.</p>
+<p><strong>ATTENTION :</strong></p>
+<p>• Tu ne peux cloturer qu'<strong>UNE seule fois</strong> par turno par jour.</p>
+<p>• Une fois cloture → impossible de modifier. Si tu t'es trompe, contacte RH — c'est le seul qui peut reouvrir.</p>
+<p>• Avant de cloturer l'app te montre un <strong>resume</strong> : X presents, Y absents (avec noms). Verifie avant de confirmer.</p>
+<p style="color:var(--rd)"><strong>Si tu ne clotures pas :</strong> Direction recoit une alerte, les donnees du jour sont perdues, RH te contacte.</p>`,
+    a:'زر الإغلاق كيسكّر الشيفت نهائيا. مرة وحدة فاليوم. إلا غلطتي اتصل ب RH. قبل ما تسكّر التطبيق كيبيّنلك ملخص. إلا ما سكّرتيش الإدارة كتلقا إنذار.'},
+
+  // === PRESENCES: URGENCE ===
+  {type:'center',t:'8/18 — Presences: Alertes d\'urgence',
+    d:`<p><strong>L'app te rappelle automatiquement :</strong></p>
+<p>🟡 <strong>1 heure avant la limite</strong> → banner jaune : "Il te reste 1h"</p>
+<p>🟠 <strong>30 minutes avant</strong> → banner orange urgent</p>
+<p>🔴 <strong>Apres la limite</strong> → banner rouge parpadeant avec le temps de retard : "RETARD: 45 min"</p>
+<p>Ces banners apparaissent sur <strong>TOUTES les pages</strong>, pas seulement Presences. Tu ne peux pas les ignorer.</p>
+<p>En plus, un badge rouge <strong>!</strong> apparait sur l'onglet Presences en permanence tant que c'est pas cloture.</p>`,
+    a:'التطبيق كيفكّرك أوتوماتيك: أصفر (ساعة قبل)، برتقالي (30 دقيقة)، أحمر (فات الوقت). كيبان فكل الصفحات ما يمكنش تتجاهلو.'},
+
+  // === PRESENCES: HISTORIQUE ===
+  {type:'tab',tab:1,sel:'.card',t:'9/18 — Presences: Historique 7 jours',
+    d:`<p><strong>En bas de la page Presences</strong> tu as l'historique des 7 derniers jours.</p>
+<p>Tu peux naviguer jour par jour avec les fleches ← →.</p>
+<p>Chaque jour montre : par turno (Matin/Labo/Soir), combien de presents, combien d'absents, si c'est cloture ou encore ouvert.</p>
+<p><strong>Les jours ouverts (pas clotures)</strong> des 72 dernieres heures tu peux encore les editer. Apres → c'est fige.</p>`,
+    a:'فالأسفل عندك تاريخ 7 أيام. تنقّل بالسهام ← →. كل نهار كيبيّن الحضور والغياب حسب الشيفت. الأيام المفتوحين (72 ساعة الأخيرة) مازال تقدر تعدّلهم.'},
+
+  // === PLANNING: COMMENT ===
+  {type:'tab',tab:2,sel:'.plan-grid',t:'10/18 — Planning: Creer le planning',
+    d:`<p><strong>Le planning = le programme des shifts pour 7 jours.</strong></p>
+<p>Chaque employe a 7 cases (Lun → Dim). Clique sur chaque case pour choisir :</p>
+<p><span style="color:var(--gn)">■ M</span> = Matin &nbsp; <span style="color:var(--or)">■ S</span> = Soir &nbsp; <span style="color:#9b59b6">■ L</span> = Labo &nbsp; <span style="color:var(--rd)">■ OFF</span> = Repos</p>
+<p><strong>Regle importante :</strong> Chaque employe doit avoir au minimum <strong>1 jour OFF par semaine</strong>. Si tu oublies → l'app te previent avec un avertissement rouge "! pas de OFF".</p>
+<p>Les operateurs Labo ont la meme logique : L / OFF.</p>`,
+    a:'البلانينغ = برنامج الشيفتات ل7 أيام. ضغط على كل خانة: M=صباح، S=عشية، L=معمل، OFF=راحة. كل واحد خاصو يوم راحة على الأقل.'},
+
+  // === PLANNING: ENREGISTRER VS PUBLIER ===
+  {type:'center',t:'11/18 — Planning: Enregistrer vs Publier',
+    d:`<p><strong>TRES IMPORTANT — il y a 2 boutons et ils font des choses DIFFERENTES :</strong></p>
+<p style="padding:8px;background:var(--s2);border-radius:6px;margin:6px 0"><strong>Enregistrer</strong> = sauvegarde un brouillon. <strong>Personne d'autre ne le voit.</strong> C'est juste pour toi pendant que tu travailles le planning.</p>
+<p style="padding:8px;background:rgba(108,92,231,.1);border-radius:6px;margin:6px 0"><strong style="color:var(--ac2)">Publier</strong> = rend le planning <strong>OFFICIEL</strong>. A partir de ce moment :<br>
+• Ton equipe peut le voir (via le lien public)<br>
+• Les presences de la semaine se divisent automatiquement en Matin/Soir/Labo<br>
+• Tu ne peux PAS depublier sans contacter RH</p>
+<p><strong>📅 Deadline :</strong> dimanche avant 00:00 (limite absolue lundi 03:00). Apres → alerte rouge pour toi, RH et Direction.</p>`,
+    a:'سجّل = مسودة غير نتا اللي كتشوفها. نشر = رسمي كيشوفو الجميع والحضور كيتقسّم أوتوماتيك. ما يمكنش تلغي النشر بلا RH. الحد قبل نص الليل.'},
+
+  // === PLANNING: PDF + WHATSAPP ===
+  {type:'tab',tab:2,sel:'.btn-g',t:'12/18 — Planning: PDF et WhatsApp',
+    d:`<p>Apres avoir publie le planning :</p>
+<p>1️⃣ Clique <strong>"Telecharger PDF"</strong> → un fichier PDF se cree avec le planning complet, les couleurs, les heures de chaque turno.</p>
+<p>2️⃣ L'app te rappelle : <strong>"Envoie ce planning au groupe WhatsApp de ton equipe."</strong></p>
+<p>Ton equipe a besoin de connaitre ses turnos AVANT le lundi. C'est TA responsabilite de le diffuser.</p>
+<p>Le PDF est au format A4 paysage, pret a imprimer si necessaire.</p>`,
+    a:'من بعد ما تنشر البلانينغ: 1) حمّل PDF 2) صيفطو فڭروب الواتساب. الفريق خاصو يعرف الشيفتات ديالو قبل الإثنين.'},
+
+  // === UNIFORMES: CREER PIECES ===
+  {type:'tab',tab:4,sel:'.table-wrap',t:'13/18 — Uniformes: Creer les pieces',
+    d:`<p><strong>Les uniformes se gerent en 2 etapes :</strong></p>
+<p><strong>Etape 1 : Creer les types de pieces</strong></p>
+<p>Clique <strong>"+ Nouvelle piece"</strong> → donne un nom (Camiseta, Pantalon, Gorra, Delantal, Chaussures, Veste...), une description, et le stock total.</p>
+<p>Tu ne le fais qu'une fois par type. Ex: tu crees "Camiseta" avec stock 50 → c'est fait.</p>
+<p><strong>Etape 2 : Attribuer a chaque employe</strong></p>
+<p>Clique <strong>"+ Attribuer"</strong> sur un employe → choisis la piece, la taille, la quantite, la date de livraison.</p>
+<p>L'app calcule automatiquement le stock disponible = stock total - assigne.</p>`,
+    a:'اللباس فيه مرحلتين: 1) زيد نوع القطعة (قميص، سروال...) مع الستوك 2) وزّع على كل موظف مع المقاس والتاريخ.'},
+
+  // === UNIFORMES: DEVOLUCION ===
+  {type:'center',t:'14/18 — Uniformes: Regle de devolution',
+    d:`<p><strong>Quand un employe part → il DOIT rendre son uniforme.</strong></p>
+<p>L'app te <strong>BLOQUE</strong> si tu essaies de desactiver quelqu'un qui a des uniformes non retournes. Tu verras un message : "X piece(s) non retournee(s). Enregistre le retour d'abord."</p>
+<p><strong>Procedure :</strong></p>
+<p>1️⃣ Va dans Uniformes → trouve l'employe</p>
+<p>2️⃣ Clique <strong>"Retour ✅"</strong> pour chaque piece qu'il a rendue</p>
+<p>3️⃣ Une fois TOUT retourne → va dans Equipe → Desactiver</p>
+<p style="color:var(--rd)"><strong>Delai :</strong> 3 jours maximum apres le depart. Apres → RH recoit une alerte critique.</p>`,
+    a:'ملي كيمشي موظف خاصو يرجّع اللباس. التطبيق كيبلوكيك إلا ما رجّعش. 1) سجّل الرجوع فالأونيفورم 2) من بعد عطّلو فالفريق. 3 أيام هو الحد.'},
+
+  // === DESACTIVATION COMPLETE ===
+  {type:'center',t:'15/18 — Procedure complete de depart',
+    d:`<p><strong>Quand un employe quitte le travail, voici les etapes dans l'ordre :</strong></p>
+<p>1️⃣ <strong>Uniformes</strong> → Marquer retour de chaque piece (meme jour ou max 3 jours)</p>
+<p>2️⃣ <strong>Equipe</strong> → Desactiver → choisir le motif obligatoire :</p>
+<div style="font-size:.8rem;margin:4px 0 8px;padding-left:12px">
+• Demission (il part de lui-meme)<br>
+• Fin de contrat (contrat termine)<br>
+• Licenciement (tu le renvoies)<br>
+• Periode d'essai non concluante<br>
+• Abandon de poste (il a disparu sans prevenir)<br>
+• Autre
+</div>
+<p>3️⃣ Ecrire une <strong>note obligatoire</strong> (minimum 10 caracteres) avec les details</p>
+<p>4️⃣ L'app genere automatiquement une <strong>fiche PDF</strong> de l'employe avec tout son historique</p>
+<p><strong>IMPORTANT :</strong> Desactiver ≠ Supprimer. L'historique (presences, absences, uniformes) reste pour toujours.</p>`,
+    a:'ملي كيمشي موظف: 1) رجّع اللباس 2) عطّلو مع السبب (رنى، تسريح...) + ملاحظة 3) PDF كيتولّد أوتوماتيك. التعطيل ماشي المسح — التاريخ كيبقا.'},
+
+  // === DEMANDES ===
+  {type:'tab',tab:3,sel:'.btn-cta',t:'16/18 — Demandes de personnel',
+    d:`<p><strong>Quand tu as besoin de plus de personnel dans ton local.</strong></p>
+<p>Clique le bouton orange <strong>"Demander du personnel"</strong> → choisis le poste et l'urgence :</p>
+<p>• <strong>Normale</strong> : RH voit la demande dans sa liste</p>
+<p>• <strong>Haute</strong> : RH est alerte</p>
+<p>• <strong>Urgente</strong> : RH recoit une alerte immediate</p>
+<p>Chaque demande affiche les <strong>jours ouverts</strong> : vert (0-3j), orange (4-7j), <span style="color:var(--rd)">rouge URGENT (+7j)</span>.</p>
+<p style="color:var(--rd)"><strong>JAMAIS WhatsApp pour demander du personnel.</strong> Utilise toujours cette section. Ca reste enregistre officiellement.</p>`,
+    a:'ملي كتحتاج موظفين زايدين، طلبهم هنا. ختار البوسط والاستعجال. كل طلب كيبيّن أشحال من يوم فاتت. ما تستعملش الواتساب أبدا.'},
+
+  // === CHECKLIST + BANNERS ===
+  {type:'center',t:'17/18 — Ton checklist et les alertes',
+    d:`<p><strong>Chaque jour en ouvrant l'app tu vois :</strong></p>
+<p>📋 <strong>Checklist du jour</strong> : tes taches pendantes avec un bouton "Go" qui t'emmene directement a l'action.</p>
+<p>🟡🟠🔴 <strong>Banners d'urgence</strong> : si tu es en retard pour cloturer, un message apparait sur TOUTES les pages.</p>
+<p>📩 <strong>Messages de RH</strong> : si RH t'envoie un rappel, tu vois un banner rouge impossible a ignorer. Tu dois cliquer "Lu" pour le fermer.</p>
+<p>⚙️ <strong>Guide de configuration</strong> : si ton local n'est pas configure (pas d'employes, pas d'heures, pas de planning), l'app te guide etape par etape.</p>`,
+    a:'كل نهار ملي كتفتح التطبيق كتشوف: الشيكليست ديالك، البانيرات ديال الاستعجال، رسائل RH. إلا اللوكال ما مضبوطش التطبيق كيوجّهك خطوة بخطوة.'},
+
+  // === REGLES D'OR ===
+  {type:'center',t:'18/18 — Les regles d\'or du gerant',
+    d:`<div style="display:grid;gap:8px;text-align:left;font-size:.82rem">
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--ac)">⚙️ <strong>Premiere fois</strong> : configurer les heures du local (Matin/Soir/Labo)<span class="tri-ar">أول مرة : ضبط الساعات</span></div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--ac)">📅 <strong>Chaque dimanche avant 00:00</strong> : publier le planning + envoyer au WhatsApp<span class="tri-ar">كل حد قبل نص الليل : نشر البلانينغ + واتساب</span></div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--gn)">☀️ <strong>Chaque jour</strong> : cloturer Matin dans la fenetre d'heures configuree<span class="tri-ar">كل نهار : سكّر الصباح فالوقت</span></div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--or)">🌙 <strong>Chaque jour</strong> : cloturer Soir dans la fenetre d'heures configuree<span class="tri-ar">كل نهار : سكّر العشية فالوقت</span></div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--bl)">🆕 <strong>Nouvel employe</strong> : l'ajouter dans Equipe le jour meme de son arrivee<span class="tri-ar">موظف جديد : زيدو نفس النهار</span></div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚪 <strong>Depart</strong> : 1) retour uniforme 2) desactiver avec motif + note<span class="tri-ar">مغادرة : 1) رجّع اللباس 2) عطّل مع السبب</span></div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">🚫 <strong>JAMAIS</strong> utiliser WhatsApp pour demander du personnel → Demandes<span class="tri-ar">ما تستعملش الواتساب باش تطلب موظفين</span></div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--or)">👕 <strong>3 jours maximum</strong> pour recuperer l'uniforme apres un depart<span class="tri-ar">3 أيام الحد الأقصى باش ترجّع اللباس</span></div>
     </div>`,
     a:'',btn:"J'ai compris / فهمت ✅"}
 ];
