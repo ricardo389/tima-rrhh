@@ -3056,49 +3056,158 @@ const DEMO_STEPS=[
 let demoIdx=0;
 
 const RH_DEMO_STEPS=[
+  // === BIENVENIDA ===
   {type:'center',t:'Bienvenue RH / مرحبا بالموارد البشرية',
-    d:`<p style="font-size:.9rem">Bienvenue sur <strong>Tima RRHH — Espace RH</strong>.</p>
-<p>Tu supervises TOUS les locaux. Tu controles que les gerants font leur travail, tu geres le personnel globalement, et tu generes les rapports pour la comptabilite.</p>
-<p>Ce tour t'explique tout en 5 minutes.</p>`,
-    a:'مرحبا فمساحة الموارد البشرية. نتا كتراقب كل اللوكالات. كتتأكد أن المسؤولين كيديرو خدمتهم. هاد الجولة غادي تعلّمك كلشي.',
+    d:`<p style="font-size:.95rem"><strong>Bienvenue dans ton espace RH.</strong></p>
+<p>Tu es le responsable de TOUS les locaux de Tima Grupo. Tu controles que chaque gerant fait son travail quotidien, tu geres le personnel a l'echelle globale, et tu generes les rapports pour la comptabilite.</p>
+<p><strong>D'ou viennent les donnees ?</strong> Chaque gerant enregistre dans son local : les presences (qui a travaille), les absences (qui a manque), le planning (les horaires), les uniformes et les demandes de personnel. Toi tu vois TOUT, de TOUS les locaux, en temps reel.</p>
+<p>Ce tour va t'expliquer chaque section en detail.</p>`,
+    a:'مرحبا فمساحة الموارد البشرية. نتا المسؤول على كل اللوكالات ديال تيما ڭروبو. كل مسؤول كيسجّل فاللوكال ديالو: الحضور، الغياب، البلانينغ، اللباس. نتا كتشوف كلشي ديال كلشي فالوقت الحقيقي.',
     btn:'Commencer / نبداو'},
-  {type:'tab',tab:0,sel:'.stat-row',t:'1/5 — Dashboard / لوحة التحكم',
-    d:`<p><strong>Ton centre de controle.</strong> Tu vois en un coup d'oeil :</p>
-<p>• Combien de turnos sont clotures aujourd'hui</p>
-<p>• Quels locaux n'ont pas publie le planning</p>
-<p>• Les absences du jour et les demandes en attente</p>
-<p><strong>Bouton Rappel</strong> : envoie un message directement au gerant en faute.</p>
-<p>Le gerant verra ton message en ouvrant l'app — il ne peut pas l'ignorer.</p>`,
-    a:'مركز التحكم ديالك. كتشوف كلشي بنظرة وحدة: شحال من شيفت تسكّر، شنو اللوكالات اللي ما نشروش البلانينغ. زر "تذكير" كيصيفط رسالة مباشرة للمسؤول.'},
-  {type:'tab',tab:1,sel:'.table-wrap',t:'2/5 — Effectifs / الموظفين',
-    d:`<p><strong>Gestion globale du personnel.</strong></p>
-<p>• Ajouter/modifier des employes dans n'importe quel local</p>
-<p>• <strong>📎 Colonne contrat</strong> : uploade le contrat de chaque employe (PDF ou photo). ⚠️ = pas de contrat.</p>
-<p>• Genere les <strong>PDF Presences</strong> et <strong>PDF Absences</strong> pour la comptabilite</p>
-<p>• Filtre par local pour voir un seul restaurant</p>`,
-    a:'تدبير شامل ديال الموظفين. زيد، عدّل، حمّل العقود. ولّد PDF ديال الحضور والغياب للمحاسبة.'},
-  {type:'tab',tab:3,sel:'.alert-card,.table-wrap',t:'3/5 — Uniformes / اللباس',
-    d:`<p><strong>Suivi global des uniformes.</strong></p>
-<p>• En haut : les <strong>alertes rouges</strong> = employes partis sans rendre l'uniforme</p>
-<p>• Delai max : <strong>3 jours</strong> apres la baja pour recuperer. Apres → alerte critique.</p>
-<p>• Bouton <strong>Retour ✅</strong> pour marquer chaque piece retournee</p>
-<p>• <strong>PDF Uniformes</strong> pour le bilan complet</p>`,
-    a:'متابعة شاملة ديال اللباس. الإنذارات الحمر = موظفين مشاو بلا ما رجّعو. 3 أيام هو الحد الأقصى.'},
-  {type:'tab',tab:4,sel:'.stat-row',t:'4/5 — Presences & Rapports / الحضور والتقارير',
-    d:`<p><strong>Historique complet des presences et absences.</strong></p>
-<p>• Filtre par local pour voir un seul restaurant</p>
-<p>• <strong>Reouvrir</strong> un turno si le gerant a fait une erreur</p>
-<p>• Absences <strong style="color:var(--rd)">sans preavis</strong> en rouge = les plus graves</p>
-<p>• C'est ici que tu generes le <strong>rapport mensuel pour la comptable</strong></p>`,
-    a:'التاريخ الكامل ديال الحضور والغياب. فتح شيفت إلا غلط المسؤول. الغياب بلا ما خبّر بالأحمر. هنا كتولّد التقرير الشهري.'},
-  {type:'center',t:'⭐ Tes responsabilites / المسؤوليات ديالك',
-    d:`<div style="display:grid;gap:8px;text-align:left;font-size:.84rem">
-      <div style="padding:8px;background:var(--s2);border-radius:6px">🔍 <strong>Chaque jour</strong> : verifier la compliance des locaux sur le Dashboard</div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">📩 <strong>Si non-compliance</strong> : envoyer un Rappel au gerant</div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">📎 <strong>Nouvel employe</strong> : uploader son contrat dans Effectifs</div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">📋 <strong>Fin de mois</strong> : generer PDF presences + absences pour la comptable</div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">👕 <strong>Depart employe</strong> : verifier retour uniforme dans les 3 jours</div>
-      <div style="padding:8px;background:var(--s2);border-radius:6px">🔓 <strong>Erreur gerant</strong> : reouvrir un turno ferme par erreur dans Presences</div>
+
+  // === DASHBOARD: VUE GLOBALE ===
+  {type:'tab',tab:0,sel:'.stat-row',t:'1/14 — Dashboard: KPIs en temps reel',
+    d:`<p><strong>Les chiffres cles de toute l'entreprise.</strong></p>
+<p>• <strong>Employes actifs</strong> : total de tous les locaux</p>
+<p>• <strong>Turnos clotures</strong> : combien de turnos Matin/Soir sont deja fermes aujourd'hui vs le total attendu. Si le chiffre est bas → des gerants n'ont pas fait leur travail.</p>
+<p>• <strong>Absences</strong> : total du jour + combien sont "sans preavis" (les plus graves)</p>
+<p>• <strong>Plannings publies</strong> : X/7 locaux. Si un local n'a pas publie → son equipe ne sait pas ses horaires.</p>
+<p>• <strong>Demandes ouvertes</strong> : postes non pourvus + urgentes en rouge</p>
+<p>• <strong>Uniformes en baja</strong> : employes partis avec des uniformes non retournes</p>`,
+    a:'الأرقام الرئيسية ديال الشركة كاملة. الشيفتات المسكّرين، الغياب، البلانينغ المنشورين، الطلبات، اللباس. كلشي فنظرة وحدة.'},
+
+  // === DASHBOARD: COMPLIANCE TABLE ===
+  {type:'tab',tab:0,sel:'.table-wrap',t:'2/14 — Dashboard: Tableau de compliance',
+    d:`<p><strong>Une ligne par local. Tu vois instantanement qui respecte les regles et qui non.</strong></p>
+<p>• <span class="badge b-gn">✅ 09:15</span> = turno cloture a l'heure. Tout va bien.</p>
+<p>• <span class="badge b-or">⏳</span> = turno pas encore cloture mais dans les delais.</p>
+<p>• <span class="badge b-rd">❌</span> = planning non publie ou turno en retard.</p>
+<p><strong>D'ou vient cette info ?</strong> Quand le gerant appuie sur "Cloturer" dans Presences, ca met a jour cette colonne en temps reel. S'il ne le fait pas → tu le vois ici.</p>
+<p>Tu peux naviguer entre semaines avec les fleches ← →.</p>`,
+    a:'جدول الالتزام: سطر واحد لكل لوكال. ✅ = سكّر فالوقت. ⏳ = مازال. ❌ = ما دارش. المعلومات كتجي مباشرة ملي المسؤول كيسكّر الحضور.'},
+
+  // === DASHBOARD: RAPPEL ===
+  {type:'tab',tab:0,sel:'.btn-d,.btn-s',t:'3/14 — Dashboard: Envoyer un Rappel',
+    d:`<p><strong>Le bouton Rappel est ton outil de pression.</strong></p>
+<p>Quand tu vois qu'un local n'a pas fait son travail → clique sur <strong>"Rappel"</strong>.</p>
+<p>L'app detecte automatiquement les problemes de ce local (presences non cloturees, planning non publie, uniformes pendants) et propose un message pre-ecrit.</p>
+<p>Tu peux modifier le message avant de l'envoyer.</p>
+<p><strong>Ce qui se passe ensuite :</strong> Le gerant voit un banner ROUGE impossible a ignorer quand il ouvre l'app. Il doit cliquer "Lu / قريت" pour le fermer. Tu sais donc s'il l'a vu ou non.</p>`,
+    a:'زر التذكير هو أداة الضغط ديالك. ملي كتشوف لوكال ما دارش خدمتو، ضغط على "تذكير". التطبيق كيكتشف المشاكل أوتوماتيك وكيقترح رسالة. المسؤول كيشوف بانير أحمر ما يمكنش يتجاهلو.'},
+
+  // === DASHBOARD: CHECKLIST RH ===
+  {type:'center',t:'4/14 — Ta checklist quotidienne',
+    d:`<p><strong>En haut du Dashboard tu as ta propre checklist :</strong></p>
+<p>• ☐ Verifier compliance → <strong>Go</strong> t'emmene directement au tableau</p>
+<p>• ☐ Locaux sans planning → <strong>Go</strong> ouvre le rappel</p>
+<p>• ☐ Absences sans motif → <strong>Go</strong> t'emmene a l'historique</p>
+<p>• ☐ Demandes +7 jours → <strong>Go</strong> ouvre le pipeline recrutement</p>
+<p>• ☐ Uniformes en baja → <strong>Go</strong> ouvre la section alertes uniformes</p>
+<p>• ☐ Rapport mensuel (fin de mois) → <strong>Go</strong> lance le generateur PDF</p>
+<p>Chaque tache se coche automatiquement quand elle est resolue. Le bouton <strong>Go</strong> t'emmene exactement la ou tu dois agir.</p>`,
+    a:'الشيكليست ديالك فأعلى الداشبورد: كل مهمة فيها زر Go كياخدك مباشرة فين خاصك تدير. كل مهمة كتتعلّم أوتوماتيك ملي كتحلّها.'},
+
+  // === EFFECTIFS: GESTION GLOBALE ===
+  {type:'tab',tab:1,sel:'.stat-row',t:'5/14 — Effectifs: Vue globale du personnel',
+    d:`<p><strong>Tous les employes actifs de tous les locaux.</strong></p>
+<p>Les chiffres en haut te montrent la repartition : combien dans chaque local.</p>
+<p><strong>D'ou viennent ces donnees ?</strong> Quand un gerant ajoute un employe dans son local, il apparait ici automatiquement. Quand il le desactive (baja), il disparait de cette liste mais reste dans l'historique.</p>
+<p>Tu peux filtrer par local avec le selecteur, et chercher par nom.</p>`,
+    a:'كل الموظفين النشطين ديال كل اللوكالات. الأرقام فالفوق كيبيّنو التوزيع. ملي مسؤول كيزيد واحد فاللوكال ديالو، كيبان هنا أوتوماتيك.'},
+
+  // === EFFECTIFS: CONTRATS ===
+  {type:'tab',tab:1,sel:'.table-wrap',t:'6/14 — Effectifs: Contrats et documents',
+    d:`<p><strong>La colonne 📎 te montre le statut des contrats :</strong></p>
+<p>• <span style="color:var(--gn)">📎2</span> = l'employe a 2 documents uploades (contrat, photo...)</p>
+<p>• <span style="color:var(--rd)">⚠️</span> = AUCUN document. C'est un risque legal.</p>
+<p><strong>Comment uploader :</strong> Clique sur ✏️ a cote de l'employe → dans le formulaire tu verras la section "Documents / Contrat" → selectionne un PDF ou une photo (max 5MB) → sauvegarde.</p>
+<p><strong>C'est TA responsabilite</strong> de s'assurer que chaque employe a son contrat uploade. Direction peut te demander a tout moment.</p>`,
+    a:'عمود 📎 كيبيّن حالة العقود: 📎2 = عندو وثائق. ⚠️ = ما عندو والو. ضغط على ✏️ باش تحمّل العقد (PDF ولا صورة). هادي مسؤوليتك نتا.'},
+
+  // === EFFECTIFS: PDFs ===
+  {type:'tab',tab:1,sel:'.btn-g',t:'7/14 — Effectifs: Rapports pour la comptable',
+    d:`<p><strong>Deux boutons essentiels :</strong></p>
+<p>• <strong>PDF Presences</strong> : genere le rapport mensuel des jours travailles par employe. Tu choisis le local, le mois (ou des dates personnalisees). UN PDF par local, pas tout melange.</p>
+<p>• <strong>PDF Absences</strong> : liste toutes les absences du mois avec motifs. "Sans preavis" en rouge.</p>
+<p><strong>Quand l'utiliser ?</strong> A la fin de chaque mois, la comptable a besoin de ces donnees pour calculer les paies. C'est toi qui les generes et les envoies.</p>
+<p><strong>D'ou viennent les chiffres ?</strong> De chaque "Cloturer" fait par les gerants. Si un gerant n'a pas cloture un jour → ce jour n'apparait pas dans le rapport → les paies seront incorrectes.</p>`,
+    a:'زرين مهمين: PDF ديال الحضور (أيام الخدمة لكل موظف) و PDF ديال الغياب. كل آخر شهر المحاسبة كتحتاج هاد التقارير. نتا كتولّدهم وتصيفطهم.'},
+
+  // === RECRUTEMENT ===
+  {type:'tab',tab:2,sel:'.pipeline,.pipe-col',t:'8/14 — Recrutement: Pipeline de candidats',
+    d:`<p><strong>Quand un gerant a besoin de personnel</strong>, il cree une "Demande" depuis son app. Cette demande apparait ici.</p>
+<p>Le pipeline montre les etapes : Recu → Entretien → Selectionne → Embauche.</p>
+<p>Chaque demande affiche <strong>les jours ouverts</strong> : vert (0-3j), orange (4-7j), <strong style="color:var(--rd)">rouge URGENT (+7j)</strong>.</p>
+<p><strong>Ton role :</strong></p>
+<p>1) Recevoir les demandes des gerants</p>
+<p>2) Ajouter des candidats dans le pipeline</p>
+<p>3) Les faire avancer d'etape en etape</p>
+<p>4) Quand c'est pourvu → "Marquer pourvu"</p>`,
+    a:'ملي مسؤول كيحتاج موظفين كيدير "طلب" من التطبيق ديالو. كيبان هنا. كل طلب كيبيّن أشحال من يوم فاتت. نتا كتزيد المترشحين وكتنقّلهم فالمراحل.'},
+
+  // === UNIFORMES: VUE GLOBALE ===
+  {type:'tab',tab:3,sel:'.alert-card',t:'9/14 — Uniformes: Alertes de bajas',
+    d:`<p><strong>Section la plus critique des uniformes.</strong></p>
+<p>En haut tu vois les <strong>alertes rouges</strong> : employes qui sont partis (desactives) mais qui n'ont PAS rendu leur uniforme.</p>
+<p><strong>Delai :</strong> Le gerant a <strong>3 jours maximum</strong> apres le depart pour recuperer l'uniforme. Apres → alerte critique ici.</p>
+<p>Chaque alerte montre : nom, local, pieces pendantes, jours depuis la baja.</p>
+<p>Tu peux cliquer <strong>"Retour ✅"</strong> pour marquer chaque piece retournee individuellement.</p>
+<p><strong>D'ou vient cette info ?</strong> Quand le gerant desactive un employe, l'app verifie ses uniformes. S'il y a des pieces non retournees, l'alerte se cree automatiquement.</p>`,
+    a:'الإنذارات الحمر: موظفين مشاو ولكن ما رجّعوش اللباس. 3 أيام هو الحد. بعد هادشي كيولّي إنذار أحمر. ضغط "رجوع ✅" لكل قطعة.'},
+
+  // === UNIFORMES: STOCK ===
+  {type:'tab',tab:3,sel:'.table-wrap',t:'10/14 — Uniformes: Stock par local',
+    d:`<p><strong>Tableau de stock</strong> : par local, par type de piece.</p>
+<p>• <strong>Stock</strong> = total de pieces achetees</p>
+<p>• <strong>Assigne</strong> = combien sont distribues aux employes</p>
+<p>• <strong>Dispo</strong> = stock restant. <strong style="color:var(--rd)">Rouge si < 2</strong> = il faut commander.</p>
+<p><strong>D'ou vient cette info ?</strong> Le gerant cree les types de pieces dans son local (camiseta, pantalon, gorra...) et les assigne a chaque employe avec la taille et la date.</p>
+<p>Le bouton <strong>PDF Uniformes</strong> genere un rapport complet pour Direction.</p>`,
+    a:'جدول الستوك: كل لوكال، كل نوع ديال القطعة. ستوك، موزّع، متبقّي. أحمر = خاصك تكوموندي. المسؤول كيزيد القطع وكيوزّعهم.'},
+
+  // === PRESENCES: HISTORIQUE ===
+  {type:'tab',tab:4,sel:'.stat-row',t:'11/14 — Presences: Historique complet',
+    d:`<p><strong>L'historique de toutes les presences et absences</strong> de tous les locaux.</p>
+<p>Les stats en haut : total absences, combien "sans preavis", total registres.</p>
+<p><strong>D'ou viennent ces donnees ?</strong> Chaque fois qu'un gerant appuie sur "Cloturer" un turno, tous les employes presents et absents de ce turno sont enregistres ici. Si un employe est marque absent et le gerant choisit un motif → l'absence apparait aussi.</p>
+<p>Filtre par local pour analyser un seul restaurant.</p>`,
+    a:'التاريخ الكامل ديال الحضور والغياب ديال كل اللوكالات. المعلومات كتجي من كل "إغلاق" كيدير المسؤول.'},
+
+  // === PRESENCES: REOUVRIR ===
+  {type:'tab',tab:4,sel:'.table-wrap',t:'12/14 — Presences: Reouvrir un turno',
+    d:`<p><strong>Erreur d'un gerant ?</strong> Tu es le seul a pouvoir reouvrir un turno ferme.</p>
+<p>Dans le tableau des presences recentes, chaque turno cloture a un bouton <strong>"Reouvrir"</strong>.</p>
+<p>Si tu l'utilises → le gerant peut re-editer ce turno : corriger qui etait present ou absent.</p>
+<p><strong>Attention :</strong> Utilise-le uniquement si le gerant te confirme qu'il y a eu une erreur. Chaque reouverture est tracee.</p>
+<p><strong>Absences en rouge</strong> = "sans preavis". C'est le motif le plus grave. Ces absences generent des alertes automatiques pour Direction.</p>`,
+    a:'غلط ديال المسؤول؟ نتا بوحدك اللي يقدر يفتح شيفت مسكّر. ضغط "فتح من جديد". استعملو غير إلا أكّد المسؤول أنه غلط.'},
+
+  // === FLUX DES DONNEES ===
+  {type:'center',t:'13/14 — Comment circulent les donnees',
+    d:`<p><strong>Le flux complet des donnees dans Tima RRHH :</strong></p>
+<div style="text-align:left;font-size:.82rem">
+<p>1️⃣ <strong>Le gerant</strong> ajoute ses employes → ils apparaissent dans <strong>Effectifs</strong></p>
+<p>2️⃣ <strong>Le gerant</strong> publie le planning de la semaine → alimente les <strong>Presences</strong> (Matin/Soir/Labo)</p>
+<p>3️⃣ <strong>Le gerant</strong> cloture les presences chaque jour → les donnees arrivent dans ton <strong>Dashboard</strong> et <strong>Presences</strong></p>
+<p>4️⃣ <strong>Le gerant</strong> signale une absence → apparait dans <strong>Presences</strong> avec le motif</p>
+<p>5️⃣ <strong>Le gerant</strong> desactive un employe → apparait dans <strong>Mouvements</strong> + verifie les uniformes</p>
+<p>6️⃣ <strong>Toi (RH)</strong> tu uploades le contrat → visible dans <strong>Effectifs 📎</strong></p>
+<p>7️⃣ <strong>Toi (RH)</strong> tu generes les PDF → pour la <strong>comptable</strong></p>
+<p>8️⃣ <strong>Toi (RH)</strong> tu envoies des rappels → le gerant voit un <strong>banner rouge</strong></p>
+</div>`,
+    a:''},
+
+  // === RESPONSABILITES ===
+  {type:'center',t:'14/14 — Tes responsabilites quotidiennes',
+    d:`<div style="display:grid;gap:8px;text-align:left;font-size:.82rem">
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--gn)">🔍 <strong>Chaque matin</strong> : ouvrir le Dashboard → verifier que tous les turnos de la veille sont clotures</div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--or)">📩 <strong>Si non-compliance</strong> : envoyer un Rappel au gerant depuis le tableau → il recoit un message rouge impossible a ignorer</div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--ac)">📎 <strong>Nouvel employe</strong> : verifier que le gerant l'a ajoute + uploader son contrat (PDF ou photo) dans Effectifs</div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--bl)">📋 <strong>Fin de mois</strong> : generer les PDF Presences + Absences par local → envoyer a la comptable</div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">👕 <strong>Depart d'un employe</strong> : verifier que l'uniforme est retourne dans les 3 jours. Apres → alerte critique.</div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--ac2)">🔓 <strong>Erreur d'un gerant</strong> : reouvrir un turno ferme par erreur dans Presences → le gerant peut corriger</div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--or)">🔍 <strong>Chaque semaine</strong> : verifier les demandes ouvertes +7 jours → relancer le recrutement</div>
+      <div style="padding:10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--rd)">📊 <strong>Chaque semaine</strong> : generer PDF Semaine pour Direction si demande</div>
     </div>`,
     a:'',btn:"J'ai compris / فهمت ✅"}
 ];
