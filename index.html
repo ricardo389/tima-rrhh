@@ -3104,13 +3104,19 @@ const RH_DEMO_STEPS=[
 ];
 
 function startFullDemo(){
-  const steps=role==='rh'?RH_DEMO_STEPS:DEMO_STEPS;
-  // Temporarily swap
-  const orig=[...DEMO_STEPS];
-  DEMO_STEPS.length=0;DEMO_STEPS.push(...steps);
-  demoIdx=0;
-  const origEnd=endDemo;
-  endDemo=function(){document.getElementById('tourContainer').innerHTML='';localStorage.setItem('tima_tour_done_'+role,'1');DEMO_STEPS.length=0;DEMO_STEPS.push(...orig);endDemo=origEnd};
+  const isRH=role==='rh';
+  if(isRH){
+    // Swap in RH steps temporarily
+    const orig=[...DEMO_STEPS];
+    DEMO_STEPS.length=0;DEMO_STEPS.push(...RH_DEMO_STEPS);
+    demoIdx=0;
+    const origEnd=endDemo;
+    endDemo=function(){document.getElementById('tourContainer').innerHTML='';localStorage.setItem('tima_tour_done_rh','1');DEMO_STEPS.length=0;DEMO_STEPS.push(...orig);endDemo=origEnd};
+  }else{
+    demoIdx=0;
+    const origEnd=endDemo;
+    endDemo=function(){document.getElementById('tourContainer').innerHTML='';localStorage.setItem('tima_tour_done_gerant','1');endDemo=origEnd};
+  }
   showDemoStep();
 }
 function startTour(){if(!localStorage.getItem('tima_tour_done_'+role))startFullDemo();}
